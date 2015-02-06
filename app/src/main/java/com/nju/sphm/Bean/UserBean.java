@@ -1,11 +1,9 @@
 package com.nju.sphm.Bean;
 
-import java.io.Serializable;
-
 /**
  * Created by HuangQiushuo on 2015/2/4.
  */
-public class UserBean  implements Serializable {
+public class UserBean  {
     private String _id;
     private String username;
     private String password;

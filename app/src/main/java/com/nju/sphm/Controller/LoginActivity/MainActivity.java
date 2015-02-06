@@ -14,9 +14,8 @@ import android.widget.Toast;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
-import com.nju.sphm.Bean.Users;
+import com.nju.sphm.Bean.LoginBean;
 import com.nju.sphm.Controller.ChooseProjectsActivity.ChooseTestProject;
-import com.nju.sphm.Model.DataHelper.LoginHelper;
 import com.nju.sphm.Model.DataHelper.NetWorkHelper;
 import com.nju.sphm.Model.Login.Login;
 import com.nju.sphm.R;
@@ -59,20 +58,11 @@ public class MainActivity extends Activity {
         String schoolName=intent.getStringExtra("schoolname");
         schoolid=intent.getStringExtra("schoolid");
         schoolPath=intent.getStringExtra("schoolpath");
-        System.out.println(schoolPath);
-
-
-
+        //System.out.println(schoolPath);
 
         if(schoolName!=null) {
             chooseSchool.setText(schoolName);
             chooseSchool.setTextColor(Color.BLACK);
-
-            Users users=new Users();
-            users.setUsername("admin");
-            users.setPassword("123456");
-            LoginHelper loginHelper=new LoginHelper();
-            loginHelper.login(users,schoolPath);
         }
 
     }
@@ -87,15 +77,15 @@ public class MainActivity extends Activity {
     public void login(View v){
         user=userText.getText().toString();
         password=passwordText.getText().toString();
+
         if(schoolid==null){
-            //Toast toast=Toast.makeText(getApplicationContext(), "请选择学校", Toast.LENGTH_SHORT);
-            //toast.show();
-            Intent i=new Intent(MainActivity.this,ChooseTestProject.class);
-            startActivity(i);
+            Toast toast=Toast.makeText(getApplicationContext(), "请选择学校", Toast.LENGTH_SHORT);
+            toast.show();
         }
         else {
             Login loginlogic = new Login();
-            boolean infoIsTrue = loginlogic.isTrue(schoolid, user, password);
+            LoginBean loginBean=loginlogic.login(user, password, schoolPath);
+            boolean infoIsTrue = loginBean.isStatus();
             if(infoIsTrue){
                 Intent i=new Intent(MainActivity.this,ChooseTestProject.class);
                 startActivity(i);
