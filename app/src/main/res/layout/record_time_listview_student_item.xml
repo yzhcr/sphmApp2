@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/recordStudentItem"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/recordTimeItem">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dip"
+        android:text=""
+        android:id="@+id/tvStudentNumber"
+        android:layout_marginLeft="30dip"
+        android:layout_alignParentLeft="true"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dip"
+        android:text=""
+        android:id="@+id/tvStudentSex"
+        android:layout_marginRight="30dip"
+        android:layout_alignParentRight="true"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dip"
+        android:text=""
+        android:id="@+id/tvStudentName"
+        android:layout_marginLeft="30dip"
+        android:layout_centerHorizontal="true"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dip"
+        android:text=""
+        android:id="@+id/tvFullStudentNumber"
+        android:visibility="gone"
+        />
+
+</RelativeLayout>
+

@@ -1,0 +1,116 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nju.sphm.Controller.TableActivity.TableActivity">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_height="45dp"
+        android:layout_width="fill_parent"
+        android:text="身高体重"
+        android:textSize="28sp"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:background="#009DD9"
+        />
+    <RelativeLayout
+        android:id="@+id/changeClassLayout"
+        android:layout_below="@id/title"
+        android:layout_height="45dp"
+        android:layout_width="fill_parent"
+        android:background="#CCCCCC"
+        >
+        <TextView
+            android:text="当前班级:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textSize="15sp"
+            android:textColor="#000000"
+            android:layout_centerVertical="true"/>
+        <TextView
+            android:text="1年1班"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/choseclass"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="0dp"
+            android:text="编辑"
+            android:textSize="20sp"
+            android:id="@+id/changeClass"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/chooseSexLayout"
+        android:layout_height="45dp"
+        android:layout_width="fill_parent"
+        android:layout_below="@id/changeClassLayout"
+        >
+        <TextView
+            android:id="@+id/showMale"
+            android:layout_width="80sp"
+            android:layout_height="wrap_content"
+            android:text="男"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:padding="5dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/showmale"
+             android:layout_centerHorizontal="true"/>
+        <TextView
+            android:id="@+id/showAll"
+            android:layout_width="80sp"
+            android:layout_height="wrap_content"
+            android:text="全部"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:padding="5dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/showall"
+            android:layout_toLeftOf="@id/showMale"/>
+        <TextView
+            android:id="@+id/showFemale"
+            android:layout_width="80sp"
+            android:layout_height="wrap_content"
+            android:text="女"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:padding="5dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/showMale"
+            android:background="@drawable/showfemale"/>
+    </RelativeLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/chooseSexLayout"
+        >
+
+        <HorizontalScrollView android:id="@+id/HorizontalScrollView01"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_marginLeft="0dp">
+            <ListView
+                android:id="@+id/ListView01"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="10dp"
+                >
+            </ListView>
+        </HorizontalScrollView>
+    </LinearLayout>
+
+
+
+</RelativeLayout>
