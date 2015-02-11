@@ -2,6 +2,7 @@ package com.nju.sphm.Controller.TableActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,8 +11,11 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.nju.sphm.Bean.OrganizationBean;
+import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Controller.TableActivity.TableAdapter.TableCell;
 import com.nju.sphm.Controller.TableActivity.TableAdapter.TableRow;
+import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.R;
 
 import java.text.SimpleDateFormat;
@@ -22,12 +26,32 @@ public class TableActivity extends Activity {
     private Button btn_choose;
     private TextView choseclass;
     ListView lv;
+    DBManager dbManager=null;
+    String schoolid=null;
+    String schoolPath=null;
+    ArrayList<OrganizationBean> gradeList=null;
+    ArrayList<StudentBean> studentList=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_table);
         lv=(ListView)findViewById(R.id.ListView01);
+
+        Intent intent=getIntent();
+        schoolid=intent.getStringExtra("schoolid");
+        schoolPath=intent.getStringExtra("schoolpath");
+        System.out.println(schoolid);
+
+        dbManager=new DBManager(this);
+        /*gradeList=dbManager.getOrganizations(schoolid);
+        for(OrganizationBean o:gradeList){
+            System.out.println(o.getName());
+        }*/
+        studentList=dbManager.getStudents("5445f752fa40c7df3ad57f07");
+        for(StudentBean o:studentList){
+            System.out.println(o.get_id());
+        }
 
 
         ArrayList<TableRow> table=new ArrayList<TableRow>();

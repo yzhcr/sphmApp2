@@ -17,6 +17,7 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.nju.sphm.Bean.LoginBean;
 import com.nju.sphm.Controller.ChooseProjectsActivity.ChooseTestProject;
 import com.nju.sphm.Model.DataHelper.NetWorkHelper;
+import com.nju.sphm.Model.Download.DownloadWorker;
 import com.nju.sphm.Model.Login.Login;
 import com.nju.sphm.R;
 
@@ -87,7 +88,12 @@ public class MainActivity extends Activity {
             LoginBean loginBean=loginlogic.login(user, password, schoolPath);
             boolean infoIsTrue = loginBean.isStatus();
             if(infoIsTrue){
-                Intent i=new Intent(MainActivity.this,ChooseTestProject.class);
+                DownloadWorker downloadWorker=new DownloadWorker(this);
+                downloadWorker.download(schoolPath,"5445bda4fa40c7df3ad57f01",2014);
+                Intent i=new Intent();
+                i.putExtra("schoolid",schoolid);
+                i.putExtra("schoolpath",schoolPath);
+                i.setClass(MainActivity.this, ChooseTestProject.class);
                 startActivity(i);
             }
             else{
