@@ -53,7 +53,7 @@ public class DownloadWorker {
             System.out.println("class+" + classList.size());
             System.out.println("testfile+"+testFileList.size());
             dbm.addTestFiles(testFileList);
-           // dbm.addOrganizations(organizationList);
+           // dbm.addOrganizations(organizationLit);
             dbm.addOrganization(o);
             for (ClassBean cb : classList) {
                 dbm.addStudents(cb.getStudents());

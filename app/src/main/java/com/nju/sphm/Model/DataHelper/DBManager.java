@@ -143,7 +143,7 @@ public class DBManager {
                     organization.get_v(), organization.getCreateDate(),
                     organization.getFullPath(), organization.getLabel(), organization.getName(),
                     organization.getType(), children, organization.getSchoolYear()});
-            db.setTransactionSuccessful();  //设置事务成功完成
+            db.setTransactionSuccessful();  //设置事务成功
         }catch (Exception e) {
             e.printStackTrace();
         }finally
