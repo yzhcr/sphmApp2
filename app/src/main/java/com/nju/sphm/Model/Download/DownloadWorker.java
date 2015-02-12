@@ -33,14 +33,28 @@ public class DownloadWorker {
     //path是学校的路径，userid是该学校账号的oid
     public boolean download(String path, String userId, int year){
         try {
-            ArrayList<OrganizationBean> organizationList = organizationHelper.getOrganizationList(path, year);
+            String fatherPath = "";
+            String[] l = path.split("/");
+            for(int i=0;i<l.length-1;i++){
+                fatherPath = fatherPath+l[i]+"/";
+            }
+            System.out.println(fatherPath);
+            ArrayList<OrganizationBean> organizationList = organizationHelper.getOrganizationList(fatherPath, year);
+            OrganizationBean o = new OrganizationBean();
+            for(OrganizationBean organizationBean : organizationList){
+                if(organizationBean.getFullPath().equals(path)){
+                    o = organizationBean;
+                    break;
+                }
+            }
             ArrayList<StudentBean> studentList = new ArrayList<StudentBean>();
             ArrayList<ClassBean> classList = studentHelper.getClassList(path, year);
             ArrayList<TestFileBean> testFileList = testFileHelper.getTestFileList(userId, year);
             System.out.println("class+" + classList.size());
             System.out.println("testfile+"+testFileList.size());
             dbm.addTestFiles(testFileList);
-            dbm.addOrganizations(organizationList);
+           // dbm.addOrganizations(organizationList);
+            dbm.addOrganization(o);
             for (ClassBean cb : classList) {
                 dbm.addStudents(cb.getStudents());
             }

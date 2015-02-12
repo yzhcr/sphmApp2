@@ -127,6 +127,31 @@ public class DBManager {
         return list;
     }
 
+    public void addOrganization(OrganizationBean organization){
+        db.beginTransaction();  //开始事务
+        System.out.println(organization.getName());
+        try {
+            String children = "";
+            List<OrganizationBean> childrenList = organization.getChildren();
+            if(childrenList != null && childrenList.size() > 0) {
+                for (OrganizationBean child : childrenList) {
+                    children = children + child.get_id() + ";";
+                    addOrganization(child);
+                }
+            }
+            db.execSQL("REPLACE INTO organizations VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", new Object[]{organization.get_id(),
+                    organization.get_v(), organization.getCreateDate(),
+                    organization.getFullPath(), organization.getLabel(), organization.getName(),
+                    organization.getType(), children, organization.getSchoolYear()});
+            db.setTransactionSuccessful();  //设置事务成功完成
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally
+        {
+            db.endTransaction();    //结束事务
+        }
+    }
+
     public void addOrganizations(List<OrganizationBean> list){
         db.beginTransaction();  //开始事务
         try {
@@ -139,6 +164,7 @@ public class DBManager {
                     }
                     addOrganizations(childrenList);
                 }
+                System.out.println(organization.getName());
                 db.execSQL("REPLACE INTO organizations VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", new Object[]{organization.get_id(),
                         organization.get_v(), organization.getCreateDate(),
                         organization.getFullPath(), organization.getLabel(), organization.getName(),

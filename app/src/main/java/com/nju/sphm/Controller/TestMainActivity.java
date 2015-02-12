@@ -12,20 +12,17 @@ import android.widget.Button;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
-import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Controller.CountDownTimerActivity.CountDownTimerActivity;
 import com.nju.sphm.Controller.LoginActivity.MainActivity;
 import com.nju.sphm.Controller.TimerActivity.TimerActivity;
 import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.Model.DataHelper.NetWorkHelper;
-import com.nju.sphm.Model.DataHelper.OrganizationHelper;
 import com.nju.sphm.Model.Download.DownloadWorker;
 import com.nju.sphm.R;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 
 public class TestMainActivity extends ActionBarActivity {
@@ -105,17 +102,18 @@ public class TestMainActivity extends ActionBarActivity {
 //            for(StudentBean bean:s2){
 //                System.out.println(bean.getInfoJSON());
 //            }
-            OrganizationHelper helper = new OrganizationHelper();
-            ArrayList<OrganizationBean> l = helper.getOrganizationList("/运营服务中心/江苏省/南京市/江宁区/南京市江宁区铜山中心小学/",2014);
-            dbm.addOrganizations(l);
-            int size1=1;
-            int size2=0;
-            for(OrganizationBean b: l){
-                size1+=b.getChildren().size();
-                size2+=dbm.getOrganizations(b.get_id()).size();
-            }
-            System.out.println(size1+";"+size2);
+//            OrganizationHelper helper = new OrganizationHelper();
+//            ArrayList<OrganizationBean> l = helper.getOrganizationList("/运营服务中心/江苏省/南京市/江宁区/南京市江宁区铜山中心小学/",2014);
+//            dbm.addOrganizations(l);
+//            int size1=1;
+//            int size2=0;
+//            for(OrganizationBean b: l){
+//                size1+=b.getChildren().size();
+//                size2+=dbm.getOrganizations(b.get_id()).size();
+//            }
+//            System.out.println(size1+";"+size2);
 
+            System.out.println(dbm.getOrganizations("5450797e802097dd4e301d21").size());
         }catch (Exception e) {
             e.printStackTrace();
         }
