@@ -14,10 +14,12 @@ import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Controller.CountDownTimerActivity.CountDownTimerActivity;
+import com.nju.sphm.Controller.LoginActivity.MainActivity;
 import com.nju.sphm.Controller.TimerActivity.TimerActivity;
 import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.Model.DataHelper.NetWorkHelper;
 import com.nju.sphm.Model.DataHelper.OrganizationHelper;
+import com.nju.sphm.Model.Download.DownloadWorker;
 import com.nju.sphm.R;
 
 import java.io.BufferedReader;
@@ -34,6 +36,10 @@ public class TestMainActivity extends ActionBarActivity {
     Button countDownClock;
     @ViewInject(R.id.btn3)
     Button db;
+    @ViewInject(R.id.btn4)
+    Button login;
+    @ViewInject(R.id.btn5)
+    Button download;
     DBManager dbm;
 
     @Override
@@ -45,12 +51,23 @@ public class TestMainActivity extends ActionBarActivity {
         StrictMode.setThreadPolicy(policy);
         dbm = new DBManager(this);
         ViewUtils.inject(this);
-
-        String ip=readip();
+        String ip="http://192.168.204.128:8080";
         NetWorkHelper networkHelper = NetWorkHelper.getInstance();
         networkHelper.setIp(ip);
 
 
+    }
+
+    private String readip(){
+        InputStream input = getResources().openRawResource(R.raw.ipsetting);
+        BufferedReader read = new BufferedReader(new InputStreamReader(input));
+        String line = "";
+        try {
+            line=read.readLine();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return line;
     }
 
     @OnClick(R.id.btn2)
@@ -89,13 +106,9 @@ public class TestMainActivity extends ActionBarActivity {
 //                System.out.println(bean.getInfoJSON());
 //            }
             OrganizationHelper helper = new OrganizationHelper();
-            ArrayList<OrganizationBean> l = helper.getOrganizationList("/",2014);
-            for(OrganizationBean s:l){
-                System.out.println(s.get_id());
-                System.out.println(s.getName());
-            }
+            ArrayList<OrganizationBean> l = helper.getOrganizationList("/运营服务中心/江苏省/南京市/江宁区/南京市江宁区铜山中心小学/",2014);
             dbm.addOrganizations(l);
-            int size1=0;
+            int size1=1;
             int size2=0;
             for(OrganizationBean b: l){
                 size1+=b.getChildren().size();
@@ -107,19 +120,22 @@ public class TestMainActivity extends ActionBarActivity {
             e.printStackTrace();
         }
     }
-    private String readip(){
-        InputStream input = getResources().openRawResource(R.raw.ipsetting);
-        BufferedReader read = new BufferedReader(new InputStreamReader(input));
-        String line = "";
-        try {
-            line=read.readLine();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return line;
+
+    @OnClick(R.id.btn4)
+    public void login(View v){
+        Intent intent = new Intent();
+        intent.setClass(this, MainActivity.class);
+        startActivity(intent);
     }
 
+    @OnClick(R.id.btn5)
+    public void download(View v){
+        DownloadWorker dw = new DownloadWorker(this.getApplicationContext());
+        boolean success = dw.download("/运营服务中心/江苏省/南京市/江宁区/南京市江宁区铜山中心小学/", "544d9bcc802097dd4e2d0a08", 2014 );
+        if(success){
 
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -155,5 +171,4 @@ public class TestMainActivity extends ActionBarActivity {
             }
         }
     }
-
 }
