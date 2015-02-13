@@ -18,6 +18,7 @@ public class TestFileRowBean {
     String infoJSON;
 
     public String getInfoJSON() {
+        enCode();
         return infoJSON;
     }
 

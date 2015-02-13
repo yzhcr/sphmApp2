@@ -12,7 +12,7 @@ import android.widget.Button;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
-import com.nju.sphm.Bean.OrganizationBean;
+import com.nju.sphm.Bean.TestFileRowBean;
 import com.nju.sphm.Controller.CountDownTimerActivity.CountDownTimerActivity;
 import com.nju.sphm.Controller.LoginActivity.MainActivity;
 import com.nju.sphm.Controller.TimerActivity.TimerActivity;
@@ -114,10 +114,9 @@ public class TestMainActivity extends ActionBarActivity {
 //            }
 //            System.out.println(size1+";"+size2);
 
-            for(OrganizationBean b : dbm.getOrganizations("544d9ba8802097dd4e2d0a07")){
-                for(OrganizationBean a : b.getChildren()){
-                    System.out.println(a.getName());
-                }
+            for(TestFileRowBean b : dbm.getTestFileRows("54508151802097dd4e306470")){
+                    System.out.println(b.getInfoJSON());
+
 
             }
         }catch (Exception e) {

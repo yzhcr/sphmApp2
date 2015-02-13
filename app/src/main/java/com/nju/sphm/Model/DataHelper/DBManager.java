@@ -167,7 +167,7 @@ public class DBManager {
                     }
                     addOrganizations(childrenList);
                 }
-                System.out.println(organization.get_id());
+
                 db.execSQL("REPLACE INTO organizations VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", new Object[]{organization.get_id(),
                         organization.get_v(), organization.getCreateDate(),
                         organization.getFullPath(), organization.getLabel(), organization.getName(),
