@@ -12,6 +12,7 @@ import android.widget.Button;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Controller.CountDownTimerActivity.CountDownTimerActivity;
 import com.nju.sphm.Controller.LoginActivity.MainActivity;
 import com.nju.sphm.Controller.TimerActivity.TimerActivity;
@@ -113,7 +114,12 @@ public class TestMainActivity extends ActionBarActivity {
 //            }
 //            System.out.println(size1+";"+size2);
 
-            System.out.println(dbm.getOrganizations("5450797e802097dd4e301d21").size());
+            for(OrganizationBean b : dbm.getOrganizations("544d9ba8802097dd4e2d0a07")){
+                for(OrganizationBean a : b.getChildren()){
+                    System.out.println(a.getName());
+                }
+
+            }
         }catch (Exception e) {
             e.printStackTrace();
         }

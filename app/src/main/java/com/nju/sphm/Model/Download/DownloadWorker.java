@@ -38,15 +38,18 @@ public class DownloadWorker {
             for(int i=0;i<l.length-1;i++){
                 fatherPath = fatherPath+l[i]+"/";
             }
+            String name = l[l.length-1];
             System.out.println(fatherPath);
             ArrayList<OrganizationBean> organizationList = organizationHelper.getOrganizationList(fatherPath, year);
             OrganizationBean o = new OrganizationBean();
             for(OrganizationBean organizationBean : organizationList){
-                if(organizationBean.getFullPath().equals(path)){
+                if(organizationBean.getName().equals(name)){
+                    System.out.println(organizationBean.getName());
                     o = organizationBean;
                     break;
                 }
             }
+            o.setChildren(organizationHelper.getOrganizationList(path, year));
             ArrayList<StudentBean> studentList = new ArrayList<StudentBean>();
             ArrayList<ClassBean> classList = studentHelper.getClassList(path, year);
             ArrayList<TestFileBean> testFileList = testFileHelper.getTestFileList(userId, year);

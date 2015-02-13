@@ -129,21 +129,24 @@ public class DBManager {
 
     public void addOrganization(OrganizationBean organization){
         db.beginTransaction();  //开始事务
-        System.out.println(organization.getName());
+
         try {
             String children = "";
             List<OrganizationBean> childrenList = organization.getChildren();
             if(childrenList != null && childrenList.size() > 0) {
                 for (OrganizationBean child : childrenList) {
                     children = children + child.get_id() + ";";
-                    addOrganization(child);
+                    //addOrganization(child);
                 }
+                //System.out.println(children);
             }
             db.execSQL("REPLACE INTO organizations VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", new Object[]{organization.get_id(),
                     organization.get_v(), organization.getCreateDate(),
                     organization.getFullPath(), organization.getLabel(), organization.getName(),
                     organization.getType(), children, organization.getSchoolYear()});
+            addOrganizations(childrenList);
             db.setTransactionSuccessful();  //设置事务成功
+
         }catch (Exception e) {
             e.printStackTrace();
         }finally
@@ -153,7 +156,7 @@ public class DBManager {
     }
 
     public void addOrganizations(List<OrganizationBean> list){
-        db.beginTransaction();  //开始事务
+          //开始事务
         try {
             for (OrganizationBean organization : list) {
                 String children = "";
@@ -164,18 +167,18 @@ public class DBManager {
                     }
                     addOrganizations(childrenList);
                 }
-                System.out.println(organization.getName());
+                System.out.println(organization.get_id());
                 db.execSQL("REPLACE INTO organizations VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", new Object[]{organization.get_id(),
                         organization.get_v(), organization.getCreateDate(),
                         organization.getFullPath(), organization.getLabel(), organization.getName(),
                         organization.getType(), children, organization.getSchoolYear()});
             }
-            db.setTransactionSuccessful();  //设置事务成功完成
+              //设置事务成功完成
         }catch (Exception e) {
             e.printStackTrace();
         }finally
         {
-            db.endTransaction();    //结束事务
+                //结束事务
         }
     }
 
@@ -201,18 +204,21 @@ public class DBManager {
         String tmp = c.getString(c.getColumnIndex("childrens"));
         String[] childrenIDList = tmp.split(";");
         for(String childID : childrenIDList) {
+            if(childID==null||childID.equals("")){
+                continue;
+            }
             OrganizationBean bean = new OrganizationBean();
             String[] searchId = {childID};
             Cursor t = db.rawQuery("SELECT * FROM organizations WHERE _id=?", searchId);
             t.moveToNext();
-            bean.set_id(c.getString(c.getColumnIndex("_id")));
-            bean.set_v(c.getInt(c.getColumnIndex("_v")));
-            bean.setSchoolYear(c.getInt(c.getColumnIndex("schoolYear")));
-            bean.setType(c.getString(c.getColumnIndex("type")));
-            bean.setCreateDate(c.getString(c.getColumnIndex("createDate")));
-            bean.setFullPath(c.getString(c.getColumnIndex("fullPath")));
-            bean.setLabel(c.getString(c.getColumnIndex("label")));
-            bean.setName(c.getString(c.getColumnIndex("name")));
+            bean.set_id(t.getString(t.getColumnIndex("_id")));
+            bean.set_v(t.getInt(t.getColumnIndex("_v")));
+            bean.setSchoolYear(t.getInt(t.getColumnIndex("schoolYear")));
+            bean.setType(t.getString(t.getColumnIndex("type")));
+            bean.setCreateDate(t.getString(t.getColumnIndex("createDate")));
+            bean.setFullPath(t.getString(t.getColumnIndex("fullPath")));
+            bean.setLabel(t.getString(t.getColumnIndex("label")));
+            bean.setName(t.getString(t.getColumnIndex("name")));
             bean.setChildren(getOrganizations(childID));
             list.add(bean);
             t.close();
@@ -220,6 +226,5 @@ public class DBManager {
         c.close();
         return list;
     }
-
 
 }
