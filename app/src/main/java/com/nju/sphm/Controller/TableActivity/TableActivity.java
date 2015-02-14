@@ -5,12 +5,14 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.view.annotation.ViewInject;
+import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Controller.TableActivity.TableAdapter.TableCell;
@@ -18,13 +20,15 @@ import com.nju.sphm.Controller.TableActivity.TableAdapter.TableRow;
 import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.R;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
 public class TableActivity extends Activity {
+    @ViewInject(R.id.changeClass)
     private Button btn_choose;
+    @ViewInject(R.id.choseclass)
     private TextView choseclass;
+    @ViewInject(R.id.StudentList)
     ListView lv;
     DBManager dbManager=null;
     String schoolid=null;
@@ -36,7 +40,8 @@ public class TableActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_table);
-        lv=(ListView)findViewById(R.id.ListView01);
+        ViewUtils.inject(this);
+       // lv=(ListView)findViewById(R.id.ListView01);
 
         Intent intent=getIntent();
         schoolid=intent.getStringExtra("schoolid");
@@ -44,14 +49,19 @@ public class TableActivity extends Activity {
         System.out.println(schoolid);
 
         dbManager=new DBManager(this);
-        /*gradeList=dbManager.getOrganizations(schoolid);
+        gradeList=dbManager.getOrganizations(schoolid);
         for(OrganizationBean o:gradeList){
+            ArrayList<OrganizationBean> l=o.getChildren();
             System.out.println(o.getName());
-        }*/
-        studentList=dbManager.getStudents("5445f752fa40c7df3ad57f07");
+            System.out.println(l.size());
+            for(OrganizationBean oo:l){
+                System.out.println(oo.getName());
+            }
+        }
+        /*studentList=dbManager.getStudents("5445f752fa40c7df3ad57f07");
         for(StudentBean o:studentList){
             System.out.println(o.get_id());
-        }
+        }*/
 
 
         ArrayList<TableRow> table=new ArrayList<TableRow>();
@@ -84,19 +94,20 @@ public class TableActivity extends Activity {
         TableAdapter tableAdapter = new TableAdapter(this, table);
         lv.setAdapter(tableAdapter);
 
-        btn_choose=(Button)this.findViewById(R.id.changeClass);
-        choseclass=(TextView)this.findViewById(R.id.choseclass);
-        btn_choose.setOnClickListener(new OnClickListener() {
+        //btn_choose=(Button)this.findViewById(R.id.changeClass);
+        //choseclass=(TextView)this.findViewById(R.id.choseclass);
+        /*btn_choose.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDialog();
             }
-        });
+        });*/
 
     }
-    public void showDialog()
+    @OnClick(R.id.changeClass)
+    public void showDialog(View v)
     {
-        ClassPickerDialog dialog  = new ClassPickerDialog(this, System.currentTimeMillis());
+        ClassPickerDialog dialog  = new ClassPickerDialog(this);
         dialog.setOnClassSetListener(new ClassPickerDialog.OnClassSetListener() {
             public void OnClassSet(AlertDialog dialog, int choseGrade, int choseClass) {
                 choseclass.setText(choseGrade+"年"+choseClass+"班");
@@ -107,13 +118,12 @@ public class TableActivity extends Activity {
     /**
      * 将长时间格式字符串转换为时间 yyyy-MM-dd HH:mm:ss
      *
-     */
     public static String getStringDate(Long date)
     {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateString = formatter.format(date);
 
         return dateString;
-    }
+    }*/
 
 }

@@ -89,7 +89,7 @@ public class MainActivity extends Activity {
             boolean infoIsTrue = loginBean.isStatus();
             if(infoIsTrue){
                 DownloadWorker downloadWorker=new DownloadWorker(this);
-                downloadWorker.download(schoolPath,"5445bda4fa40c7df3ad57f01",2014);
+                downloadWorker.download(schoolPath,"544d9bcc802097dd4e2d0a08",2014);
                 Intent i=new Intent();
                 i.putExtra("schoolid",schoolid);
                 i.putExtra("schoolpath",schoolPath);

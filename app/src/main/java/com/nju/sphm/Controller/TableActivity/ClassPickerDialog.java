@@ -7,13 +7,11 @@ import android.content.DialogInterface.OnClickListener;
 import com.nju.sphm.Controller.TableActivity.ClassPicker.OnClassChangedListener;
 import com.nju.sphm.Model.School.GetClass;
 
-import java.util.Calendar;
-
 public class ClassPickerDialog extends AlertDialog implements OnClickListener
 {
-    private ClassPicker mDateTimePicker;
-    private Calendar mDate = Calendar.getInstance();
-    private OnClassSetListener mOnDateTimeSetListener;
+    private ClassPicker mClassPicker;
+    //private Calendar mDate = Calendar.getInstance();
+    private OnClassSetListener mOnClassSetListener;
 
     private GetClass getClassLogic=new GetClass();
     private int gradeNum=getClassLogic.getGradeNum();
@@ -21,12 +19,12 @@ public class ClassPickerDialog extends AlertDialog implements OnClickListener
     private int mChoseClass=1;
     
 	@SuppressWarnings("deprecation")
-	public ClassPickerDialog(Context context, long date)
+	public ClassPickerDialog(Context context)
 	{
 		super(context);
-		mDateTimePicker = new ClassPicker(context);
-	    setView(mDateTimePicker);
-	    mDateTimePicker.setOnClassChangedListener(new OnClassChangedListener() {
+        mClassPicker = new ClassPicker(context);
+	    setView(mClassPicker);
+        mClassPicker.setOnClassChangedListener(new OnClassChangedListener() {
             @Override
             public void onClassChanged(ClassPicker view, int choseGrade, int choseClass) {
                 mChoseGrade=choseGrade;
@@ -36,7 +34,7 @@ public class ClassPickerDialog extends AlertDialog implements OnClickListener
         setTitle("请选择班级");
 	    setButton("确定", this);
         setButton2("取消", (OnClickListener)null);
-	    mDate.setTimeInMillis(date);
+	    //mDate.setTimeInMillis(date);
 	}
 	
 	public interface OnClassSetListener
@@ -46,14 +44,14 @@ public class ClassPickerDialog extends AlertDialog implements OnClickListener
 
 	public void setOnClassSetListener(OnClassSetListener callBack)
     {
-        mOnDateTimeSetListener = callBack;
+        mOnClassSetListener = callBack;
     }
 	 
 	public void onClick(DialogInterface arg0, int arg1)
     {
-        if (mOnDateTimeSetListener != null) 
+        if (mOnClassSetListener != null)
         {
-            mOnDateTimeSetListener.OnClassSet(this, mChoseGrade,mChoseClass);
+            mOnClassSetListener.OnClassSet(this, mChoseGrade,mChoseClass);
         }
     }
 }

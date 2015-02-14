@@ -102,7 +102,7 @@
             android:layout_marginTop="0dp"
             android:layout_marginLeft="0dp">
             <ListView
-                android:id="@+id/ListView01"
+                android:id="@+id/StudentList"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_marginLeft="10dp"
