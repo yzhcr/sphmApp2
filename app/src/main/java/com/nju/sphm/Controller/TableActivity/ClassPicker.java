@@ -13,7 +13,7 @@ public class ClassPicker extends FrameLayout
 	private final NumberPicker mGradeSpinner;
 	private final NumberPicker mClassSpinner;
 
-    private GetClass getClassLogic=new GetClass();
+    private GetClass getClassLogic=GetClass.getInstance();
     private int gradeNum=getClassLogic.getGradeNum();
     private int classNum=getClassLogic.getClassNum(gradeNum / 2);
 

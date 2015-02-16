@@ -13,7 +13,7 @@ public class ClassPickerDialog extends AlertDialog implements OnClickListener
     //private Calendar mDate = Calendar.getInstance();
     private OnClassSetListener mOnClassSetListener;
 
-    private GetClass getClassLogic=new GetClass();
+    private GetClass getClassLogic=GetClass.getInstance();
     private int gradeNum=getClassLogic.getGradeNum();
     private int mChoseGrade=gradeNum/2;
     private int mChoseClass=1;

@@ -18,6 +18,7 @@ import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Controller.TableActivity.TableAdapter.TableCell;
 import com.nju.sphm.Controller.TableActivity.TableAdapter.TableRow;
 import com.nju.sphm.Model.DataHelper.DBManager;
+import com.nju.sphm.Model.School.GetClass;
 import com.nju.sphm.R;
 
 import java.util.ArrayList;
@@ -46,18 +47,9 @@ public class TableActivity extends Activity {
         Intent intent=getIntent();
         schoolid=intent.getStringExtra("schoolid");
         schoolPath=intent.getStringExtra("schoolpath");
-        System.out.println(schoolid);
+        //System.out.println(schoolid);
+        addClassInfo();
 
-        dbManager=new DBManager(this);
-        gradeList=dbManager.getOrganizations(schoolid);
-        for(OrganizationBean o:gradeList){
-            ArrayList<OrganizationBean> l=o.getChildren();
-            System.out.println(o.getName());
-            System.out.println(l.size());
-            for(OrganizationBean oo:l){
-                System.out.println(oo.getName());
-            }
-        }
         /*studentList=dbManager.getStudents("5445f752fa40c7df3ad57f07");
         for(StudentBean o:studentList){
             System.out.println(o.get_id());
@@ -111,10 +103,128 @@ public class TableActivity extends Activity {
         dialog.setOnClassSetListener(new ClassPickerDialog.OnClassSetListener() {
             public void OnClassSet(AlertDialog dialog, int choseGrade, int choseClass) {
                 choseclass.setText(choseGrade+"年"+choseClass+"班");
+                System.out.println(findClassId(choseGrade,choseClass));
             }
         });
         dialog.show();
     }
+
+    private void addClassInfo(){
+        dbManager=new DBManager(this);
+        gradeList=dbManager.getOrganizations(schoolid);
+        ArrayList<OrganizationBean> sortGradeList=new ArrayList<OrganizationBean>();
+        int gradeNum=gradeList.size();
+        if(gradeNum==3){
+            for(OrganizationBean o:gradeList){
+                if(o.getName().equals("一年级")){
+                    sortGradeList.add(o);
+                }
+            }
+            for(OrganizationBean o:gradeList){
+                if(o.getName().equals("二年级")){
+                    sortGradeList.add(o);
+                }
+            }
+            for(OrganizationBean o:gradeList){
+                if(o.getName().equals("三年级")){
+                    sortGradeList.add(o);
+                }
+            }
+        }
+        if(gradeNum==6){
+            for(OrganizationBean o:gradeList){
+                if(o.getName().equals("一年级")){
+                    sortGradeList.add(o);
+                }
+            }
+            for(OrganizationBean o:gradeList){
+                if(o.getName().equals("二年级")){
+                    sortGradeList.add(o);
+                }
+            }
+            for(OrganizationBean o:gradeList){
+                if(o.getName().equals("三年级")){
+                    sortGradeList.add(o);
+                }
+            }
+            for(OrganizationBean o:gradeList){
+                if(o.getName().equals("四年级")){
+                    sortGradeList.add(o);
+                }
+            }
+            for(OrganizationBean o:gradeList){
+                if(o.getName().equals("五年级")){
+                    sortGradeList.add(o);
+                }
+            }
+            for(OrganizationBean o:gradeList){
+                if(o.getName().equals("六年级")){
+                    sortGradeList.add(o);
+                }
+            }
+        }
+        GetClass getClass=GetClass.getInstance();
+        getClass.setGradeList(sortGradeList);
+    }
+
+    private String findClassId(int gradeNum,int classNum){
+        GetClass getClass=GetClass.getInstance();
+        ArrayList<OrganizationBean> sortGradeList=getClass.getGradeList();
+        ArrayList<OrganizationBean> classList=sortGradeList.get(gradeNum-1).getChildren();
+        String classId=null;
+        switch (gradeNum){
+            case 1:
+                for(OrganizationBean o:classList){
+                    if(o.getName().equals("一（"+classNum+"）班")) {
+                        classId = o.get_id();
+                        break;
+                    }
+                }
+                break;
+            case 2:
+                for(OrganizationBean o:classList){
+                    if(o.getName().equals("二（"+classNum+"）班")) {
+                        classId = o.get_id();
+                        break;
+                    }
+                }
+                break;
+            case 3:
+                for(OrganizationBean o:classList){
+                    if(o.getName().equals("三（"+classNum+"）班")) {
+                        classId = o.get_id();
+                        break;
+                    }
+                }
+                break;
+            case 4:
+                for(OrganizationBean o:classList){
+                    if(o.getName().equals("四（"+classNum+"）班")) {
+                        classId = o.get_id();
+                        break;
+                    }
+                }
+                break;
+            case 5:
+                for(OrganizationBean o:classList){
+                    if(o.getName().equals("五（"+classNum+"）班")) {
+                        classId = o.get_id();
+                        break;
+                    }
+                }
+                break;
+            case 6:
+                for(OrganizationBean o:classList){
+                    if(o.getName().equals("六（"+classNum+"）班")) {
+                        classId = o.get_id();
+                        break;
+                    }
+                }
+                break;
+        }
+        return classId;
+    }
+
     /**
      * 将长时间格式字符串转换为时间 yyyy-MM-dd HH:mm:ss
      *
