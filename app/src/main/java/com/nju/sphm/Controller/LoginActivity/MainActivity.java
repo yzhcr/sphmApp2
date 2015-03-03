@@ -1,12 +1,16 @@
 package com.nju.sphm.Controller.LoginActivity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,10 +41,13 @@ public class MainActivity extends Activity {
     EditText userText;
     @ViewInject(R.id.password)
     EditText passwordText;
+    @ViewInject(R.id.autologin)
+    CheckBox autoLogin;
     String password=null;
     String user=null;
     String schoolid=null;
     String schoolPath=null;
+    boolean isautoLogin=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,15 +62,27 @@ public class MainActivity extends Activity {
         networkHelper.setIp(ip);
 
         ViewUtils.inject(this);
-        Intent intent=getIntent();
-        String schoolName=intent.getStringExtra("schoolname");
-        schoolid=intent.getStringExtra("schoolid");
-        schoolPath=intent.getStringExtra("schoolpath");
-        //System.out.println(schoolPath);
 
-        if(schoolName!=null) {
-            chooseSchool.setText(schoolName);
-            chooseSchool.setTextColor(Color.BLACK);
+        SharedPreferences sharedPreferences =getSharedPreferences("loginMessage", Context.MODE_PRIVATE);
+        isautoLogin=sharedPreferences.getBoolean("isAutoLogin",false);
+        if(isautoLogin){
+            schoolid=sharedPreferences.getString("schoolid",null);
+            schoolPath=sharedPreferences.getString("schoolPath",null);
+            user=sharedPreferences.getString("user",null);
+            password=sharedPreferences.getString("password",null);
+            login.performClick();
+        }
+        else {
+            Intent intent = getIntent();
+            String schoolName = intent.getStringExtra("schoolname");
+            schoolid = intent.getStringExtra("schoolid");
+            schoolPath = intent.getStringExtra("schoolpath");
+            //System.out.println(schoolPath);
+
+            if (schoolName != null) {
+                chooseSchool.setText(schoolName);
+                chooseSchool.setTextColor(Color.BLACK);
+            }
         }
 
     }
@@ -76,9 +95,25 @@ public class MainActivity extends Activity {
 
     @OnClick(R.id.login)
     public void login(View v){
-        user=userText.getText().toString();
-        password=passwordText.getText().toString();
-
+        if(user==null||password==null) {
+            user = userText.getText().toString();
+            password = passwordText.getText().toString();
+        }
+        if(autoLogin.isChecked()){
+            SharedPreferences sharedPreferences =getSharedPreferences("loginMessage", Context.MODE_PRIVATE);
+            Editor editor = sharedPreferences.edit();//获取编辑器
+            editor.putString("user", user);
+            editor.putString("password", password);
+            editor.putString("schoolPath",schoolPath);
+            editor.putString("schoolid",schoolid);
+            editor.putBoolean("isAutoLogin",true);
+            editor.commit();
+        }
+        else {
+            SharedPreferences sharedPreferences =getSharedPreferences("loginMessage", Context.MODE_PRIVATE);
+            Editor editor = sharedPreferences.edit();
+            editor.putBoolean("isAutoLogin",false);
+        }
         if(schoolid==null){
             Toast toast=Toast.makeText(getApplicationContext(), "请选择学校", Toast.LENGTH_SHORT);
             toast.show();

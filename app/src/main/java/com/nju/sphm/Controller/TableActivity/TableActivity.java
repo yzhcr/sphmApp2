@@ -31,9 +31,12 @@ public class TableActivity extends Activity {
     private TextView choseclass;
     @ViewInject(R.id.StudentList)
     ListView lv;
+    @ViewInject(R.id.title)
+    TextView title;
     DBManager dbManager=null;
     String schoolid=null;
     String schoolPath=null;
+    String testProject=null;
     ArrayList<OrganizationBean> gradeList=null;
     ArrayList<StudentBean> studentList=null;
     @Override
@@ -47,6 +50,8 @@ public class TableActivity extends Activity {
         Intent intent=getIntent();
         schoolid=intent.getStringExtra("schoolid");
         schoolPath=intent.getStringExtra("schoolpath");
+        testProject=intent.getStringExtra("testProject");
+        title.setText(testProject);
         //System.out.println(schoolid);
         addClassInfo();
 

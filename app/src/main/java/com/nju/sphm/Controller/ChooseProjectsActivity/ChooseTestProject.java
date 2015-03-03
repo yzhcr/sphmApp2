@@ -5,7 +5,11 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.GridView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.lidroid.xutils.ViewUtils;
@@ -19,14 +23,15 @@ import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ChooseTestProject extends Activity {
-    @ViewInject(R.id.chooseTestProject)
-    Button chooseTestProject;
     @ViewInject(R.id.changeTestData)
     Button changeTestData;
     @ViewInject(R.id.chosetestdata)
     TextView choseTestData;
+    @ViewInject(R.id.gridview)
+    GridView gridView;
     DBManager dbManager=null;
     ArrayList<TestFileBean> testFileList;
     ArrayList<TestFileRowBean> testFileRowList;
@@ -64,17 +69,115 @@ public class ChooseTestProject extends Activity {
         //System.out.println("*************");
         //System.out.println(t.getInfoJSON());
 
+        ArrayList<HashMap<String, Object>> lstImageItem = new ArrayList<HashMap<String, Object>>();
+        HashMap<String, Object> bmi = new HashMap<String, Object>();
+        bmi.put("ItemImage", R.drawable.bmi);
+        bmi.put("ItemText", "BMI");
+        HashMap<String, Object> fei = new HashMap<String, Object>();
+        fei.put("ItemImage", R.drawable.feihuoliang);
+        fei.put("ItemText", "肺活量");
+        HashMap<String, Object> zuowei = new HashMap<String, Object>();
+        zuowei.put("ItemImage", R.drawable.zuowei);
+        zuowei.put("ItemText", "坐位体前屈");
+        HashMap<String, Object> fiftyM = new HashMap<String, Object>();
+        fiftyM.put("ItemImage", R.drawable.fifty_m);
+        fiftyM.put("ItemText", "50米");
+        HashMap<String, Object> fiftyMeight = new HashMap<String, Object>();
+        fiftyMeight.put("ItemImage", R.drawable.fifty_m_eight);
+        fiftyMeight.put("ItemText", "50*8米");
+        HashMap<String, Object> yangwo = new HashMap<String, Object>();
+        yangwo.put("ItemImage", R.drawable.yangwo);
+        yangwo.put("ItemText", "1分钟仰卧起坐");
+        HashMap<String, Object> tiaosheng = new HashMap<String, Object>();
+        tiaosheng.put("ItemImage", R.drawable.tiaosheng);
+        tiaosheng.put("ItemText", "1分钟跳绳");
+        lstImageItem.add(bmi);
+        lstImageItem.add(fei);
+        lstImageItem.add(zuowei);
+        lstImageItem.add(fiftyM);
+        lstImageItem.add(fiftyMeight);
+        lstImageItem.add(yangwo);
+        lstImageItem.add(tiaosheng);
 
+        SimpleAdapter saImageItems = new SimpleAdapter(this,
+                lstImageItem,//数据来源
+                R.layout.testprojectietm,
+                //动态数组与ImageItem对应的子项
+                new String[] {"ItemImage","ItemText"},
+                //ImageItem的XML文件里面的一个ImageView,两个TextView ID
+                new int[] {R.id.ItemImage,R.id.ItemText});
+
+        gridView.setAdapter(saImageItems);
+        //添加消息处理
+        gridView.setOnItemClickListener(new ItemClickListener());
     }
 
-    @OnClick(R.id.chooseTestProject)
-    public void chooseTestProject(View v){
+    class  ItemClickListener implements OnItemClickListener {
+        public void onItemClick(AdapterView<?> arg0,//The AdapterView where the click happened
+                                View arg1,//The view within the AdapterView that was clicked
+                                int arg2,//The position of the view in the adapter
+                                long arg3//The row id of the item that was clicked
+        ) {
+            //在本例中arg2=arg3
+            HashMap<String, Object> item = (HashMap<String, Object>) arg0.getItemAtPosition(arg2);
+            //显示所选Item的ItemText
+            //setTitle((String) item.get("ItemText"));
+            /*Toast.makeText(getApplicationContext(), (String) item.get("ItemText"),
+                    Toast.LENGTH_SHORT).show();*/
+            String choseProject=(String) item.get("ItemText");
+            switch (choseProject){
+                case "BMI": {
+                    Intent i = new Intent();
+                    i.putExtra("schoolid", schoolid);
+                    i.putExtra("schoolpath", schoolPath);
+                    i.putExtra("testProject","BMI");
+                    i.setClass(ChooseTestProject.this, TableActivity.class);
+                    startActivity(i);
+                    break;
+                }
+                case "肺活量": {
+                    Intent i = new Intent();
+                    i.putExtra("schoolid", schoolid);
+                    i.putExtra("schoolpath", schoolPath);
+                    i.putExtra("testProject","肺活量");
+                    i.setClass(ChooseTestProject.this, TableActivity.class);
+                    startActivity(i);
+                    break;
+                }
+                case "坐位体前屈": {
+                    Intent i = new Intent();
+                    i.putExtra("schoolid", schoolid);
+                    i.putExtra("schoolpath", schoolPath);
+                    i.putExtra("testProject","坐位体前屈");
+                    i.setClass(ChooseTestProject.this, TableActivity.class);
+                    startActivity(i);
+                    break;
+                }
+                case "50米": {
+                    break;
+                }
+                case "50*8米": {
+                    break;
+                }
+                case "1分钟仰卧起坐": {
+                    break;
+                }
+                case "1分钟跳绳": {
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+        }
+    }
+    /*public void chooseTestProject(View v){
         Intent i=new Intent();
         i.putExtra("schoolid",schoolid);
         i.putExtra("schoolpath",schoolPath);
         i.setClass(ChooseTestProject.this, TableActivity.class);
         startActivity(i);
-    }
+    }*/
 
     @OnClick(R.id.changeTestData)
     public void showDialog(View v)
