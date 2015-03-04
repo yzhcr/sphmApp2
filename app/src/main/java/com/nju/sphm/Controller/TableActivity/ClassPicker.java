@@ -14,11 +14,13 @@ public class ClassPicker extends FrameLayout
 	private final NumberPicker mClassSpinner;
 
     private GetClass getClassLogic=GetClass.getInstance();
-    private int gradeNum=getClassLogic.getGradeNum();
-    private int classNum=getClassLogic.getClassNum(gradeNum / 2);
+    private int choseGrade=getClassLogic.getChoseGrade();
+    private int choseClass=getClassLogic.getChoseClass();
+    private int gradeNumMax=getClassLogic.getGradeNumMax();
+    private int gradeNumMin=getClassLogic.getGradeNumMin();
+    private int classNum=getClassLogic.getClassNum(choseGrade);
 
-    private int choseGrade=gradeNum / 2;
-    private int choseClass=1;
+
 
     private OnClassChangedListener mOnClassChangedListener;
     
@@ -31,16 +33,16 @@ public class ClassPicker extends FrameLayout
         mGradeSpinner=(NumberPicker)this.findViewById(R.id.chooseGrade);
         mClassSpinner=(NumberPicker)this.findViewById(R.id.chooseClass);
 
-        mGradeSpinner.setMinValue(1);
-        mGradeSpinner.setMaxValue(gradeNum);
-        mGradeSpinner.setValue(gradeNum / 2);
+        mGradeSpinner.setMinValue(gradeNumMin);
+        mGradeSpinner.setMaxValue(gradeNumMax);
+        mGradeSpinner.setValue(choseGrade);
 
         mGradeSpinner.setOnValueChangedListener(mOnChooseGradeChangedListener);
 
 
         mClassSpinner.setMaxValue(classNum);
         mClassSpinner.setMinValue(1);
-        mClassSpinner.setValue(1);
+        mClassSpinner.setValue(choseClass);
         mClassSpinner.setOnValueChangedListener(mOnChooseClassChangedListener);
 
 	}

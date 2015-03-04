@@ -14,9 +14,9 @@ public class ClassPickerDialog extends AlertDialog implements OnClickListener
     private OnClassSetListener mOnClassSetListener;
 
     private GetClass getClassLogic=GetClass.getInstance();
-    private int gradeNum=getClassLogic.getGradeNum();
-    private int mChoseGrade=gradeNum/2;
-    private int mChoseClass=1;
+    //private int gradeNum=getClassLogic.getGradeNum();
+    private int mChoseGrade=getClassLogic.getChoseGrade();
+    private int mChoseClass=getClassLogic.getChoseClass();
     
 	@SuppressWarnings("deprecation")
 	public ClassPickerDialog(Context context)
