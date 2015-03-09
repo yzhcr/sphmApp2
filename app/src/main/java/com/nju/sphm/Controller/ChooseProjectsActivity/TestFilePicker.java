@@ -18,7 +18,7 @@ public class TestFilePicker extends FrameLayout
     private int testFileNum=testFileList.size();
     //private int classNum=getClassLogic.getClassNum(gradeNum / 2);
 
-    private int choseTestFile=1;
+    private int choseTestFile=ChooseTestFiles.getInstance().getChosenTestFile()+1;
     //private int choseClass=1;
 
     private OnTestFileChangedListener mOnTestFileChangedListener;
@@ -37,7 +37,7 @@ public class TestFilePicker extends FrameLayout
         mTestFileSpinner.setDisplayedValues(testFile);
         mTestFileSpinner.setMinValue(1);
         mTestFileSpinner.setMaxValue(testFileNum);
-        mTestFileSpinner.setValue(1);
+        mTestFileSpinner.setValue(choseTestFile);
 
         mTestFileSpinner.setOnValueChangedListener(mOnChooseTestFileChangedListener);
 

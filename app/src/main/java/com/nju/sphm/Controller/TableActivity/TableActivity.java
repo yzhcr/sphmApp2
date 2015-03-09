@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout.LayoutParams;
@@ -22,6 +23,9 @@ import com.nju.sphm.Model.School.GetClass;
 import com.nju.sphm.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 
 public class TableActivity extends Activity {
@@ -39,6 +43,7 @@ public class TableActivity extends Activity {
     String testProject=null;
     ArrayList<OrganizationBean> gradeList=null;
     ArrayList<StudentBean> studentList=null;
+    GetClass getClass=GetClass.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,44 +57,20 @@ public class TableActivity extends Activity {
         schoolPath=intent.getStringExtra("schoolpath");
         testProject=intent.getStringExtra("testProject");
         title.setText(testProject);
+        int choseGrade=getClass.getChoseGrade();
+        int choseClass=getClass.getChoseClass();
+        choseclass.setText(choseGrade+"年"+choseClass+"班");
         //System.out.println(schoolid);
         addClassInfo();
-
+        //getStudentInfo();
+        setTable();
         /*studentList=dbManager.getStudents("5445f752fa40c7df3ad57f07");
         for(StudentBean o:studentList){
             System.out.println(o.get_id());
         }*/
 
 
-        ArrayList<TableRow> table=new ArrayList<TableRow>();
-        TableCell[] titles=new TableCell[4];
-        int width = this.getWindowManager().getDefaultDisplay().getWidth()/titles.length;
-        titles[0]=new TableCell("1",width,LayoutParams.FILL_PARENT,TableCell.STRING);
-        titles[1]=new TableCell("2",width,LayoutParams.FILL_PARENT,TableCell.STRING);
-        titles[2]=new TableCell("3",width,LayoutParams.FILL_PARENT,TableCell.STRING);
-        titles[3]=new TableCell("4",width,LayoutParams.FILL_PARENT,TableCell.STRING);
 
-        table.add(new TableRow(titles));
-
-        //for(int i=0;i<cityList.size();i++){
-
-            TableCell[] cells = new TableCell[4];
-            cells[0]=new TableCell(1,
-                    titles[0].width,LayoutParams.FILL_PARENT,
-                    TableCell.STRING);
-            cells[1]=new TableCell("李二宇",
-                    titles[1].width,LayoutParams.FILL_PARENT,
-                    TableCell.STRING);
-            cells[2]=new TableCell("",
-                    titles[2].width,LayoutParams.FILL_PARENT,
-                    TableCell.INPUT);
-            cells[3]=new TableCell("",
-                    titles[3].width,LayoutParams.FILL_PARENT,
-                    TableCell.INPUT);
-            table.add(new TableRow(cells));
-        //}
-        TableAdapter tableAdapter = new TableAdapter(this, table);
-        lv.setAdapter(tableAdapter);
 
         //btn_choose=(Button)this.findViewById(R.id.changeClass);
         //choseclass=(TextView)this.findViewById(R.id.choseclass);
@@ -117,8 +98,8 @@ public class TableActivity extends Activity {
         dialog.show();
     }
 
+    //将班级信息添加到GetCLass中，方便使用
     private void addClassInfo(){
-        GetClass getClass=GetClass.getInstance();
         dbManager=new DBManager(this);
         gradeList=dbManager.getOrganizations(schoolid);
         ArrayList<OrganizationBean> sortGradeList=new ArrayList<OrganizationBean>();
@@ -180,7 +161,125 @@ public class TableActivity extends Activity {
         getClass.setGradeList(sortGradeList);
     }
 
+    private void getStudentInfo(){
+        int chosenGrade=getClass.getChoseGrade();
+        int chosenClass=getClass.getChoseClass();
+        String classID=getClass.findClassId(chosenGrade,chosenClass);
+        ArrayList<StudentBean> studentList=dbManager.getStudents(classID);
+        for(StudentBean s:studentList){
+            HashMap<String, Object> info=s.getInfo();
+            Iterator iterator = info.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry entry = (Map.Entry) iterator.next();
+                Object key = entry.getKey();
+                Object val = entry.getValue();
+                System.out.println(key);
+                System.out.println(val);
+                System.out.println("-----------------");
+            }
+            System.out.println("******************");
+        }
+    }
 
+    private void setTable(){
+        if(testProject.equals("BMI")) {
+            ArrayList<TableRow> table = new ArrayList<TableRow>();
+            TableCell[] titles = new TableCell[5];
+            int width = this.getWindowManager().getDefaultDisplay().getWidth() / titles.length;
+            titles[0] = new TableCell("学号", width, LayoutParams.FILL_PARENT, TableCell.STRING);
+            titles[1] = new TableCell("姓名", width, LayoutParams.FILL_PARENT, TableCell.STRING);
+            titles[2] = new TableCell("性别", width, LayoutParams.FILL_PARENT, TableCell.STRING);
+            titles[3] = new TableCell("身高(cm)", width, LayoutParams.FILL_PARENT, TableCell.STRING);
+            titles[4] = new TableCell("体重(kg)", width, LayoutParams.FILL_PARENT, TableCell.STRING);
+
+            table.add(new TableRow(titles));
+
+            //for(int i=0;i<cityList.size();i++){
+
+            TableCell[] cells = new TableCell[5];
+            cells[0] = new TableCell(1,
+                    titles[0].width, LayoutParams.FILL_PARENT,
+                    TableCell.STRING);
+            cells[1] = new TableCell("李二宇",
+                    titles[1].width, LayoutParams.FILL_PARENT,
+                    TableCell.STRING);
+            cells[2] = new TableCell("男",
+                    titles[2].width, LayoutParams.FILL_PARENT,
+                    TableCell.STRING);
+            cells[3] = new TableCell("",
+                    titles[3].width, LayoutParams.FILL_PARENT,
+                    TableCell.INPUT);
+            cells[4] = new TableCell("",
+                    titles[4].width, LayoutParams.FILL_PARENT,
+                    TableCell.INPUT);
+            table.add(new TableRow(cells));
+            //}
+            TableAdapter tableAdapter = new TableAdapter(this, table);
+            lv.setAdapter(tableAdapter);
+        }
+        else if(testProject.equals("肺活量")){
+            ArrayList<TableRow> table = new ArrayList<TableRow>();
+            TableCell[] titles = new TableCell[4];
+            int width = this.getWindowManager().getDefaultDisplay().getWidth() / titles.length;
+            titles[0] = new TableCell("学号", width, LayoutParams.FILL_PARENT, TableCell.STRING);
+            titles[1] = new TableCell("姓名", width, LayoutParams.FILL_PARENT, TableCell.STRING);
+            titles[2] = new TableCell("性别", width, LayoutParams.FILL_PARENT, TableCell.STRING);
+            titles[3] = new TableCell("肺活量(ml)", width, LayoutParams.FILL_PARENT, TableCell.STRING);
+
+            table.add(new TableRow(titles));
+
+            //for(int i=0;i<cityList.size();i++){
+
+            TableCell[] cells = new TableCell[4];
+            cells[0] = new TableCell(1,
+                    titles[0].width, LayoutParams.FILL_PARENT,
+                    TableCell.STRING);
+            cells[1] = new TableCell("李二宇",
+                    titles[1].width, LayoutParams.FILL_PARENT,
+                    TableCell.STRING);
+            cells[2] = new TableCell("男",
+                    titles[2].width, LayoutParams.FILL_PARENT,
+                    TableCell.STRING);
+            cells[3] = new TableCell("",
+                    titles[3].width, LayoutParams.FILL_PARENT,
+                    TableCell.INPUT);
+            table.add(new TableRow(cells));
+            //}
+            TableAdapter tableAdapter = new TableAdapter(this, table);
+            lv.setAdapter(tableAdapter);
+        }
+        else if(testProject.equals("坐位体前屈")){
+            ArrayList<TableRow> table = new ArrayList<TableRow>();
+            TableCell[] titles = new TableCell[4];
+            int width = this.getWindowManager().getDefaultDisplay().getWidth() / titles.length;
+            titles[0] = new TableCell("学号", width, LayoutParams.FILL_PARENT, TableCell.STRING);
+            titles[1] = new TableCell("姓名", width, LayoutParams.FILL_PARENT, TableCell.STRING);
+            titles[2] = new TableCell("性别", width, LayoutParams.FILL_PARENT, TableCell.STRING);
+            titles[3] = new TableCell("长度(cm)", width, LayoutParams.FILL_PARENT, TableCell.STRING);
+
+            table.add(new TableRow(titles));
+
+            //for(int i=0;i<cityList.size();i++){
+
+            TableCell[] cells = new TableCell[4];
+            cells[0] = new TableCell(1,
+                    titles[0].width, LayoutParams.FILL_PARENT,
+                    TableCell.STRING);
+            cells[1] = new TableCell("李二宇",
+                    titles[1].width, LayoutParams.FILL_PARENT,
+                    TableCell.STRING);
+            cells[2] = new TableCell("男",
+                    titles[2].width, LayoutParams.FILL_PARENT,
+                    TableCell.STRING);
+            cells[3] = new TableCell("",
+                    titles[3].width, LayoutParams.FILL_PARENT,
+                    TableCell.INPUT);
+            table.add(new TableRow(cells));
+            //}
+            TableAdapter tableAdapter = new TableAdapter(this, table);
+            lv.setAdapter(tableAdapter);
+        }
+    }
     /**
      * 将长时间格式字符串转换为时间 yyyy-MM-dd HH:mm:ss
      *
@@ -191,5 +290,9 @@ public class TableActivity extends Activity {
 
         return dateString;
     }*/
-
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+                this.finish();
+        return super.onKeyDown(keyCode, event);
+    }
 }

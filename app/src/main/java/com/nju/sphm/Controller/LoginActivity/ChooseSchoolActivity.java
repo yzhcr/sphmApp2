@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.nju.sphm.Model.FinishTheApp.SaveMainActivity;
 import com.nju.sphm.Model.Login.GetOrganization;
 import com.nju.sphm.R;
 
@@ -65,12 +67,14 @@ public class ChooseSchoolActivity extends Activity {
 
 
             if (!treeNode.isHasChildren()) {
+                SaveMainActivity.getInstance().getMainActivity().finish();
                 Intent intent = new Intent();
                 intent.putExtra("schoolname",treeNode.getContentText());
                 intent.putExtra("schoolid",treeNode.getId());
                 intent.putExtra("schoolpath",treeNode.getPath());
                 intent.setClass(ChooseSchoolActivity.this, MainActivity.class);
                 startActivity(intent);
+                ChooseSchoolActivity.this.finish();
             }
 
             if (treeNode.isExpanded()) {
@@ -99,6 +103,12 @@ public class ChooseSchoolActivity extends Activity {
             }
         }
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        this.finish();
+        return super.onKeyDown(keyCode, event);
     }
 
 }

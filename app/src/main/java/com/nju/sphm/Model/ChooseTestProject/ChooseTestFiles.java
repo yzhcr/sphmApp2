@@ -9,6 +9,7 @@ import java.util.ArrayList;
  */
 public class ChooseTestFiles {
     ArrayList<TestFileBean> testFileList;
+    private int chosenTestFile=0;
     private ChooseTestFiles(){
     }
 
@@ -28,4 +29,17 @@ public class ChooseTestFiles {
     public ArrayList<TestFileBean> getTestFileList() {
         return testFileList;
     }
+
+    public int getChosenTestFile() {
+        return chosenTestFile;
+    }
+
+    public void setChosenTestFile(int chosenTestFile) {
+        this.chosenTestFile = chosenTestFile;
+    }
+
+    public String getChosenTestFileId(){
+        return testFileList.get(chosenTestFile).get_id();
+    }
+
 }

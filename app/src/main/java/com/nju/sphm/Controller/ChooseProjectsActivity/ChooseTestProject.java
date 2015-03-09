@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
@@ -20,6 +22,7 @@ import com.nju.sphm.Bean.TestFileRowBean;
 import com.nju.sphm.Controller.TableActivity.TableActivity;
 import com.nju.sphm.Model.ChooseTestProject.ChooseTestFiles;
 import com.nju.sphm.Model.DataHelper.DBManager;
+import com.nju.sphm.Model.FinishTheApp.SaveMainActivity;
 import com.nju.sphm.R;
 
 import java.util.ArrayList;
@@ -37,7 +40,8 @@ public class ChooseTestProject extends Activity {
     ArrayList<TestFileRowBean> testFileRowList;
     String schoolid=null;
     String schoolPath=null;
-    TestFileBean chosenTestFile=null;
+    //TestFileBean chosenTestFile=null;
+    ChooseTestFiles chooseTestFiles=ChooseTestFiles.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,8 +55,9 @@ public class ChooseTestProject extends Activity {
 
         dbManager=new DBManager(this);
         testFileList=dbManager.getTestFiles(schoolid);
-        ChooseTestFiles.getInstance().setTestFileList(testFileList);
-        chosenTestFile=testFileList.get(0);
+        chooseTestFiles.setTestFileList(testFileList);
+        chooseTestFiles.setChosenTestFile(0);
+        //chosenTestFile=testFileList.get(0);
 
         /*testFileRowList=dbManager.getTestFileRows(chosenTestFile.get_id());
         TestFileRowBean t=testFileRowList.get(1);
@@ -186,9 +191,27 @@ public class ChooseTestProject extends Activity {
         dialog.setOnTestFileSetListener(new TestFilePickerDialog.OnTestFileSetListener() {
             public void OnTestFileSet(AlertDialog dialog, int choseTestFile) {
                 choseTestData.setText(testFileList.get(choseTestFile-1).getFileName());
+                chooseTestFiles.setChosenTestFile(choseTestFile-1);
+                System.out.println(chooseTestFiles.getChosenTestFileId());
             }
         });
         dialog.show();
+    }
+
+    private long exitTime = 0;
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
+            if((System.currentTimeMillis()-exitTime) > 2000){
+                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
+            } else {
+                    SaveMainActivity.getInstance().getMainActivity().finish();
+                    this.finish();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 }

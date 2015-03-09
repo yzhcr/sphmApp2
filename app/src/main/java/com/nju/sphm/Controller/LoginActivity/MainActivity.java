@@ -8,6 +8,7 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -22,6 +23,7 @@ import com.nju.sphm.Bean.LoginBean;
 import com.nju.sphm.Controller.ChooseProjectsActivity.ChooseTestProject;
 import com.nju.sphm.Model.DataHelper.NetWorkHelper;
 import com.nju.sphm.Model.Download.DownloadWorker;
+import com.nju.sphm.Model.FinishTheApp.SaveMainActivity;
 import com.nju.sphm.Model.Login.Login;
 import com.nju.sphm.R;
 
@@ -56,10 +58,12 @@ public class MainActivity extends Activity {
 
         StrictMode.ThreadPolicy policy=new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
+        //根据文件里的ip设置好ip
         String ip=readip();
         NetWorkHelper networkHelper = NetWorkHelper.getInstance();
         networkHelper.setIp(ip);
+        //存下mainactivity，方便和chooseTestProject一起退出
+        SaveMainActivity.getInstance().setMainActivity(this);
 
         ViewUtils.inject(this);
 
@@ -155,5 +159,20 @@ public class MainActivity extends Activity {
             e.printStackTrace();
         }
         return line;
+    }
+
+    private long exitTime = 0;
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
+            if((System.currentTimeMillis()-exitTime) > 2000){
+                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
+            } else {
+                this.finish();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

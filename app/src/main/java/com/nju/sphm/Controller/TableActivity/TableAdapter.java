@@ -57,7 +57,7 @@ public class TableAdapter extends BaseAdapter {
 					textCell.setBackgroundColor(Color.TRANSPARENT);//背景黑色
 					textCell.setText(String.valueOf(tableCell.value));
 					textCell.setTextColor(Color.BLACK);
-					
+					textCell.setTextSize(15);
 					addView(textCell, layoutParams);
 				}
                 if(tableCell.type == TableCell.INPUT){
@@ -68,7 +68,7 @@ public class TableAdapter extends BaseAdapter {
                     editText.setText(String.valueOf(tableCell.value));
                     editText.setTextColor(Color.BLACK);
                     editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-
+                    editText.setTextSize(15);
                     addView(editText, layoutParams);
                 }
 			}
