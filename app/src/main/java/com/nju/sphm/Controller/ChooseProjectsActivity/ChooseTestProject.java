@@ -42,9 +42,10 @@ public class ChooseTestProject extends Activity {
     private ArrayList<TestFileRowBean> testFileRowList;
     private String schoolid=null;
     private String schoolPath=null;
-    private String testFileId=null;
+
     //TestFileBean chosenTestFile=null;
     private ChooseTestFiles chooseTestFiles=ChooseTestFiles.getInstance();
+    private String testFileId=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +60,7 @@ public class ChooseTestProject extends Activity {
         dbManager=new DBManager(this);
         testFileList=dbManager.getTestFiles(schoolid);
         chooseTestFiles.setTestFileList(testFileList);
+        testFileId=chooseTestFiles.getChosenTestFileId();
         //chooseTestFiles.setChosenTestFile(0);
         //chosenTestFile=testFileList.get(0);
 
