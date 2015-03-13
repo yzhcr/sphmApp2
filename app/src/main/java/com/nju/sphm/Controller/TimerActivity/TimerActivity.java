@@ -5,6 +5,7 @@ package com.nju.sphm.Controller.TimerActivity;
  */
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,6 +20,11 @@ import android.widget.TextView;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.nju.sphm.Bean.OrganizationBean;
+import com.nju.sphm.Bean.StudentBean;
+import com.nju.sphm.Controller.TableActivity.ClassPickerDialog;
+import com.nju.sphm.Model.DataHelper.DBManager;
+import com.nju.sphm.Model.School.GetClass;
 import com.nju.sphm.R;
 
 import java.util.ArrayList;
@@ -52,6 +58,21 @@ public class TimerActivity extends Activity {
     private ArrayList<String> timeList = new ArrayList<String>();
     private LinkedList<Map<String, Object>> timeItemList;
     private SimpleAdapter adapter;
+    @ViewInject(R.id.changeClass)
+    private Button btn_choose;
+    @ViewInject(R.id.choseclass)
+    private TextView choseclass;
+    @ViewInject(R.id.StudentList)
+    ListView lv;
+    @ViewInject(R.id.title)
+    TextView title;
+    DBManager dbManager=null;
+    String schoolid=null;
+    String schoolPath=null;
+    String testProject=null;
+    ArrayList<OrganizationBean> gradeList=null;
+    ArrayList<StudentBean> studentList=null;
+    GetClass getClass=GetClass.getInstance();
 
 
     /**
@@ -65,7 +86,31 @@ public class TimerActivity extends Activity {
         tvTime.setText("00:00.00");
         initHandler();
         initListView();
+        Intent intent=getIntent();
+        schoolid=intent.getStringExtra("schoolid");
+        schoolPath=intent.getStringExtra("schoolpath");
+        testProject=intent.getStringExtra("testProject");
+        title.setText(testProject);
+        int choseGrade=getClass.getChoseGrade();
+        int choseClass=getClass.getChoseClass();
+        choseclass.setText(choseGrade+"年"+choseClass+"班");
 
+    }
+
+    @OnClick(R.id.changeClass)
+    public void showDialog(View v)
+    {
+        ClassPickerDialog dialog  = new ClassPickerDialog(this);
+        dialog.setOnClassSetListener(new ClassPickerDialog.OnClassSetListener() {
+            public void OnClassSet(AlertDialog dialog, int choseGrade, int choseClass) {
+                choseclass.setText(choseGrade+"年"+choseClass+"班");
+                GetClass getClass=GetClass.getInstance();
+                getClass.setChoseGrade(choseGrade);
+                getClass.setChoseClass(choseClass);
+                System.out.println(getClass.findClassId(choseGrade,choseClass));
+            }
+        });
+        dialog.show();
     }
 
     private void initListView() {

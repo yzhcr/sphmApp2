@@ -7,6 +7,7 @@ package com.nju.sphm.Controller.CountDownTimerActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -18,13 +19,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.nju.sphm.Bean.OrganizationBean;
+import com.nju.sphm.Bean.StudentBean;
+import com.nju.sphm.Controller.TableActivity.ClassPickerDialog;
+import com.nju.sphm.Model.DataHelper.DBManager;
+import com.nju.sphm.Model.School.GetClass;
 import com.nju.sphm.R;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -58,6 +66,23 @@ public class CountDownTimerActivity extends Activity {
     private int totalSec = 0;
     private SoundPool soundPool;
     private int playRingId;
+    private String startTime;
+
+    @ViewInject(R.id.changeClass)
+    private Button btn_choose;
+    @ViewInject(R.id.choseclass)
+    private TextView choseclass;
+    @ViewInject(R.id.StudentList)
+    ListView lv;
+    @ViewInject(R.id.title)
+    TextView title;
+    DBManager dbManager=null;
+    String schoolid=null;
+    String schoolPath=null;
+    String testProject=null;
+    ArrayList<OrganizationBean> gradeList=null;
+    ArrayList<StudentBean> studentList=null;
+    GetClass getClass=GetClass.getInstance();
 
 
     /**
@@ -68,9 +93,36 @@ public class CountDownTimerActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.timer);
         ViewUtils.inject(this);
-        tvTime.setText("00:00");
+        tvTime.setText("01:00");
         initDialog();
         initRing();
+        Intent intent=getIntent();
+        schoolid=intent.getStringExtra("schoolid");
+        schoolPath=intent.getStringExtra("schoolpath");
+        testProject=intent.getStringExtra("testProject");
+        startTime=intent.getStringExtra("starttime");
+        tvTime.setText(startTime);
+        tvTime.setClickable(false);
+        title.setText(testProject);
+        int choseGrade=getClass.getChoseGrade();
+        int choseClass=getClass.getChoseClass();
+        choseclass.setText(choseGrade+"年"+choseClass+"班");
+    }
+
+    @OnClick(R.id.changeClass)
+    public void showDialog(View v)
+    {
+        ClassPickerDialog dialog  = new ClassPickerDialog(this);
+        dialog.setOnClassSetListener(new ClassPickerDialog.OnClassSetListener() {
+            public void OnClassSet(AlertDialog dialog, int choseGrade, int choseClass) {
+                choseclass.setText(choseGrade+"年"+choseClass+"班");
+                GetClass getClass=GetClass.getInstance();
+                getClass.setChoseGrade(choseGrade);
+                getClass.setChoseClass(choseClass);
+                System.out.println(getClass.findClassId(choseGrade,choseClass));
+            }
+        });
+        dialog.show();
     }
 
     public void initRing() {
@@ -82,7 +134,7 @@ public class CountDownTimerActivity extends Activity {
     public void initDialog() {
         LayoutInflater factory = LayoutInflater.from(this);
         View view = factory.inflate(R.layout.set_time_window, null);
-        btnStart.setClickable(false);
+        btnStart.setClickable(true);
         setTimeWindow = new AlertDialog.Builder(this)
                 .setTitle("设置初始时间")
                 .setView(view)
