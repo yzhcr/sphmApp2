@@ -32,18 +32,19 @@ import java.util.HashMap;
 
 public class ChooseTestProject extends Activity {
     @ViewInject(R.id.changeTestData)
-    Button changeTestData;
+    private Button changeTestData;
     @ViewInject(R.id.chosetestdata)
-    TextView choseTestData;
+    private TextView choseTestData;
     @ViewInject(R.id.gridview)
-    GridView gridView;
-    DBManager dbManager=null;
-    ArrayList<TestFileBean> testFileList;
-    ArrayList<TestFileRowBean> testFileRowList;
-    String schoolid=null;
-    String schoolPath=null;
+    private GridView gridView;
+    private DBManager dbManager=null;
+    private ArrayList<TestFileBean> testFileList;
+    private ArrayList<TestFileRowBean> testFileRowList;
+    private String schoolid=null;
+    private String schoolPath=null;
+    private String testFileId=null;
     //TestFileBean chosenTestFile=null;
-    ChooseTestFiles chooseTestFiles=ChooseTestFiles.getInstance();
+    private ChooseTestFiles chooseTestFiles=ChooseTestFiles.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,6 +139,7 @@ public class ChooseTestProject extends Activity {
                     i.putExtra("schoolid", schoolid);
                     i.putExtra("schoolpath", schoolPath);
                     i.putExtra("testProject","BMI");
+                    i.putExtra("testFileId",testFileId);
                     i.setClass(ChooseTestProject.this, TableActivity.class);
                     startActivity(i);
                     break;
@@ -147,6 +149,7 @@ public class ChooseTestProject extends Activity {
                     i.putExtra("schoolid", schoolid);
                     i.putExtra("schoolpath", schoolPath);
                     i.putExtra("testProject","肺活量");
+                    i.putExtra("testFileId",testFileId);
                     i.setClass(ChooseTestProject.this, TableActivity.class);
                     startActivity(i);
                     break;
@@ -156,6 +159,7 @@ public class ChooseTestProject extends Activity {
                     i.putExtra("schoolid", schoolid);
                     i.putExtra("schoolpath", schoolPath);
                     i.putExtra("testProject","坐位体前屈");
+                    i.putExtra("testFileId",testFileId);
                     i.setClass(ChooseTestProject.this, TableActivity.class);
                     startActivity(i);
                     break;
@@ -213,7 +217,7 @@ public class ChooseTestProject extends Activity {
             public void OnTestFileSet(AlertDialog dialog, int choseTestFile) {
                 choseTestData.setText(testFileList.get(choseTestFile-1).getFileName());
                 chooseTestFiles.setChosenTestFile(choseTestFile-1);
-                System.out.println(chooseTestFiles.getChosenTestFileId());
+                testFileId=chooseTestFiles.getChosenTestFileId();
             }
         });
         dialog.show();

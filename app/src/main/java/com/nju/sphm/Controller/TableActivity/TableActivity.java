@@ -61,7 +61,7 @@ public class TableActivity extends Activity {
         int choseClass=getClass.getChoseClass();
         choseclass.setText(choseGrade+"年"+choseClass+"班");
         //System.out.println(schoolid);
-        //getStudentInfo();
+        getStudentInfo();
 
         setTable();
         /*studentList=dbManager.getStudents("5445f752fa40c7df3ad57f07");
@@ -97,8 +97,6 @@ public class TableActivity extends Activity {
         });
         dialog.show();
     }
-
-
 
     private void getStudentInfo(){
         int chosenGrade=getClass.getChoseGrade();
