@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
@@ -64,6 +65,8 @@ public class TimerActivity extends Activity {
     private TextView choseclass;
     @ViewInject(R.id.StudentList)
     ListView lv;
+    @ViewInject(R.id.chooseSexLayout)
+    RelativeLayout chooseSexLayout;
     @ViewInject(R.id.title)
     TextView title;
     DBManager dbManager=null;
@@ -94,7 +97,90 @@ public class TimerActivity extends Activity {
         int choseGrade=getClass.getChoseGrade();
         int choseClass=getClass.getChoseClass();
         choseclass.setText(choseGrade+"年"+choseClass+"班");
+        chooseSexLayout.setVisibility(View.GONE);
+    }
 
+    //将班级信息添加到GetCLass中，方便使用
+    private void addClassInfo(){
+        dbManager=new DBManager(this);
+        gradeList=dbManager.getOrganizations(schoolid);
+        ArrayList<OrganizationBean> sortGradeList=new ArrayList<OrganizationBean>();
+        int gradeNum=gradeList.size();
+        if(gradeNum==3){
+            getClass.setGradeNumMax(3);
+            getClass.setGradeNumMin(1);
+            for(OrganizationBean o:gradeList){
+                if(o.getName().equals("一年级")){
+                    sortGradeList.add(o);
+                }
+            }
+            for(OrganizationBean o:gradeList){
+                if(o.getName().equals("二年级")){
+                    sortGradeList.add(o);
+                }
+            }
+            for(OrganizationBean o:gradeList){
+                if(o.getName().equals("三年级")){
+                    sortGradeList.add(o);
+                }
+            }
+        }
+        if(gradeNum==6){
+            if(testProject.equals("50*8米")) {
+                getClass.setGradeNumMax(6);
+                getClass.setGradeNumMin(5);
+                getClass.setChoseGrade(5);
+                getClass.setChoseClass(1);
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("五年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("六年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+            }
+            else{
+                getClass.setGradeNumMax(6);
+                getClass.setGradeNumMin(1);
+                getClass.setChoseGrade(1);
+                getClass.setChoseClass(1);
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("一年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("二年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("三年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("四年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("五年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("六年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+            }
+        }
+
+        getClass.setGradeList(sortGradeList);
     }
 
     @OnClick(R.id.changeClass)
