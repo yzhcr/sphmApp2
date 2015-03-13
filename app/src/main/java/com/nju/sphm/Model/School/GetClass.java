@@ -36,7 +36,7 @@ public class GetClass {
     }
 
     public int getClassNum(int gradeNum){
-        return gradeList.get(gradeNum-1).getChildren().size();
+        return gradeList.get(gradeNum-GradeNumMin).getChildren().size();
     }
 
     public int getChoseGrade() {
@@ -73,7 +73,7 @@ public class GetClass {
 
     //传入年级与班级，传回班级的id
     public String findClassId(int gradeNum,int classNum){
-        ArrayList<OrganizationBean> classList=gradeList.get(gradeNum-1).getChildren();
+        ArrayList<OrganizationBean> classList=gradeList.get(gradeNum-GradeNumMin).getChildren();
         String classId=null;
         switch (gradeNum){
             case 1:

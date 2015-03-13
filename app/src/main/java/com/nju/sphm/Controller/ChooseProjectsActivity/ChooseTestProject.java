@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
-import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.TestFileBean;
 import com.nju.sphm.Bean.TestFileRowBean;
 import com.nju.sphm.Controller.CountDownTimerActivity.CountDownTimerActivity;
@@ -26,7 +25,6 @@ import com.nju.sphm.Controller.TimerActivity.TimerActivity;
 import com.nju.sphm.Model.ChooseTestProject.ChooseTestFiles;
 import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.Model.FinishTheApp.SaveMainActivity;
-import com.nju.sphm.Model.School.GetClass;
 import com.nju.sphm.R;
 
 import java.util.ArrayList;
@@ -56,8 +54,6 @@ public class ChooseTestProject extends Activity {
         Intent intent=getIntent();
         schoolid=intent.getStringExtra("schoolid");
         schoolPath=intent.getStringExtra("schoolpath");
-
-        addClassInfo();
 
         dbManager=new DBManager(this);
         testFileList=dbManager.getTestFiles(schoolid);
@@ -223,70 +219,8 @@ public class ChooseTestProject extends Activity {
         dialog.show();
     }
 
-    //将班级信息添加到GetCLass中，方便使用
-    ArrayList<OrganizationBean> gradeList=null;
-    GetClass getClass=GetClass.getInstance();
-    private void addClassInfo(){
-        dbManager=new DBManager(this);
-        gradeList=dbManager.getOrganizations(schoolid);
-        ArrayList<OrganizationBean> sortGradeList=new ArrayList<OrganizationBean>();
-        int gradeNum=gradeList.size();
-        if(gradeNum==3){
-            getClass.setGradeNumMax(3);
-            getClass.setGradeNumMin(1);
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("一年级")){
-                    sortGradeList.add(o);
-                }
-            }
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("二年级")){
-                    sortGradeList.add(o);
-                }
-            }
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("三年级")){
-                    sortGradeList.add(o);
-                }
-            }
-        }
-        if(gradeNum==6){
-            getClass.setGradeNumMax(6);
-            getClass.setGradeNumMin(1);
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("一年级")){
-                    sortGradeList.add(o);
-                }
-            }
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("二年级")){
-                    sortGradeList.add(o);
-                }
-            }
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("三年级")){
-                    sortGradeList.add(o);
-                }
-            }
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("四年级")){
-                    sortGradeList.add(o);
-                }
-            }
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("五年级")){
-                    sortGradeList.add(o);
-                }
-            }
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("六年级")){
-                    sortGradeList.add(o);
-                }
-            }
-        }
 
-        getClass.setGradeList(sortGradeList);
-    }
+
 
     private long exitTime = 0;
     @Override
