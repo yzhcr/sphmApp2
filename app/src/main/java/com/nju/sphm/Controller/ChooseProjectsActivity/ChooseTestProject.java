@@ -20,7 +20,9 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.TestFileBean;
 import com.nju.sphm.Bean.TestFileRowBean;
+import com.nju.sphm.Controller.CountDownTimerActivity.CountDownTimerActivity;
 import com.nju.sphm.Controller.TableActivity.TableActivity;
+import com.nju.sphm.Controller.TimerActivity.TimerActivity;
 import com.nju.sphm.Model.ChooseTestProject.ChooseTestFiles;
 import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.Model.FinishTheApp.SaveMainActivity;
@@ -163,15 +165,41 @@ public class ChooseTestProject extends Activity {
                     break;
                 }
                 case "50米": {
+                    Intent i = new Intent();
+                    i.putExtra("schoolid", schoolid);
+                    i.putExtra("schoolpath", schoolPath);
+                    i.putExtra("testProject","50米");
+                    i.setClass(ChooseTestProject.this, TimerActivity.class);
+                    startActivity(i);
                     break;
                 }
                 case "50*8米": {
+                    Intent i = new Intent();
+                    i.putExtra("schoolid", schoolid);
+                    i.putExtra("schoolpath", schoolPath);
+                    i.putExtra("testProject","50*8米");
+                    i.setClass(ChooseTestProject.this, TimerActivity.class);
+                    startActivity(i);
                     break;
                 }
                 case "1分钟仰卧起坐": {
+                    Intent i = new Intent();
+                    i.putExtra("schoolid", schoolid);
+                    i.putExtra("schoolpath", schoolPath);
+                    i.putExtra("testProject","1分钟仰卧起坐");
+                    i.putExtra("starttime","01:00");
+                    i.setClass(ChooseTestProject.this, CountDownTimerActivity.class);
+                    startActivity(i);
                     break;
                 }
                 case "1分钟跳绳": {
+                    Intent i = new Intent();
+                    i.putExtra("schoolid", schoolid);
+                    i.putExtra("schoolpath", schoolPath);
+                    i.putExtra("starttime","01:00");
+                    i.putExtra("testProject","1分钟跳绳");
+                    i.setClass(ChooseTestProject.this, CountDownTimerActivity.class);
+                    startActivity(i);
                     break;
                 }
                 default: {
@@ -180,13 +208,6 @@ public class ChooseTestProject extends Activity {
             }
         }
     }
-    /*public void chooseTestProject(View v){
-        Intent i=new Intent();
-        i.putExtra("schoolid",schoolid);
-        i.putExtra("schoolpath",schoolPath);
-        i.setClass(ChooseTestProject.this, TableActivity.class);
-        startActivity(i);
-    }*/
 
     @OnClick(R.id.changeTestData)
     public void showDialog(View v)
