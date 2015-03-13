@@ -56,7 +56,7 @@ public class ChooseTestProject extends Activity {
         dbManager=new DBManager(this);
         testFileList=dbManager.getTestFiles(schoolid);
         chooseTestFiles.setTestFileList(testFileList);
-        chooseTestFiles.setChosenTestFile(0);
+        //chooseTestFiles.setChosenTestFile(0);
         //chosenTestFile=testFileList.get(0);
 
         /*testFileRowList=dbManager.getTestFileRows(chosenTestFile.get_id());
