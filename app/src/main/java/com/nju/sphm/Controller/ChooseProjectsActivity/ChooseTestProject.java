@@ -169,6 +169,7 @@ public class ChooseTestProject extends Activity {
                     i.putExtra("schoolid", schoolid);
                     i.putExtra("schoolpath", schoolPath);
                     i.putExtra("testProject","50米");
+                    i.putExtra("testFileId",testFileId);
                     i.setClass(ChooseTestProject.this, TimerActivity.class);
                     startActivity(i);
                     break;
@@ -178,6 +179,7 @@ public class ChooseTestProject extends Activity {
                     i.putExtra("schoolid", schoolid);
                     i.putExtra("schoolpath", schoolPath);
                     i.putExtra("testProject","50*8米");
+                    i.putExtra("testFileId",testFileId);
                     i.setClass(ChooseTestProject.this, TimerActivity.class);
                     startActivity(i);
                     break;
@@ -188,6 +190,7 @@ public class ChooseTestProject extends Activity {
                     i.putExtra("schoolpath", schoolPath);
                     i.putExtra("testProject","1分钟仰卧起坐");
                     i.putExtra("starttime","01:00");
+                    i.putExtra("testFileId",testFileId);
                     i.setClass(ChooseTestProject.this, CountDownTimerActivity.class);
                     startActivity(i);
                     break;
@@ -198,6 +201,7 @@ public class ChooseTestProject extends Activity {
                     i.putExtra("schoolpath", schoolPath);
                     i.putExtra("starttime","01:00");
                     i.putExtra("testProject","1分钟跳绳");
+                    i.putExtra("testFileId",testFileId);
                     i.setClass(ChooseTestProject.this, CountDownTimerActivity.class);
                     startActivity(i);
                     break;
