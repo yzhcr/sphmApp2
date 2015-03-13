@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lidroid.xutils.ViewUtils;
@@ -83,6 +84,8 @@ public class CountDownTimerActivity extends Activity {
     ArrayList<OrganizationBean> gradeList=null;
     ArrayList<StudentBean> studentList=null;
     GetClass getClass=GetClass.getInstance();
+    @ViewInject(R.id.chooseSexLayout)
+    RelativeLayout chooseSexLayout;
 
 
     /**
@@ -104,9 +107,104 @@ public class CountDownTimerActivity extends Activity {
         tvTime.setText(startTime);
         tvTime.setClickable(false);
         title.setText(testProject);
+        addClassInfo();
         int choseGrade=getClass.getChoseGrade();
         int choseClass=getClass.getChoseClass();
         choseclass.setText(choseGrade+"年"+choseClass+"班");
+        chooseSexLayout.setVisibility(View.GONE);
+
+    }
+
+    private void addClassInfo(){
+        dbManager=new DBManager(this);
+        gradeList=dbManager.getOrganizations(schoolid);
+        ArrayList<OrganizationBean> sortGradeList=new ArrayList<OrganizationBean>();
+        int gradeNum=gradeList.size();
+        if(gradeNum==3){
+            getClass.setGradeNumMax(3);
+            getClass.setGradeNumMin(1);
+            for(OrganizationBean o:gradeList){
+                if(o.getName().equals("一年级")){
+                    sortGradeList.add(o);
+                }
+            }
+            for(OrganizationBean o:gradeList){
+                if(o.getName().equals("二年级")){
+                    sortGradeList.add(o);
+                }
+            }
+            for(OrganizationBean o:gradeList){
+                if(o.getName().equals("三年级")){
+                    sortGradeList.add(o);
+                }
+            }
+        }
+        if(gradeNum==6){
+            if(testProject.equals("1分钟仰卧起坐")) {
+                getClass.setGradeNumMax(6);
+                getClass.setGradeNumMin(3);
+                getClass.setChoseGrade(3);
+                getClass.setChoseClass(1);
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("三年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("四年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("五年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("六年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+            }
+            else{
+                getClass.setGradeNumMax(6);
+                getClass.setGradeNumMin(1);
+                getClass.setChoseGrade(1);
+                getClass.setChoseClass(1);
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("一年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("二年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("三年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("四年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("五年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("六年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+            }
+        }
+
+        getClass.setGradeList(sortGradeList);
     }
 
     @OnClick(R.id.changeClass)
