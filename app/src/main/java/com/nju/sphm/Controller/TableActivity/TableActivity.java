@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
-import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Controller.TableActivity.TableAdapter.TableCell;
 import com.nju.sphm.Controller.TableActivity.TableAdapter.TableRow;
@@ -41,8 +40,6 @@ public class TableActivity extends Activity {
     String schoolid=null;
     String schoolPath=null;
     String testProject=null;
-    ArrayList<OrganizationBean> gradeList=null;
-    ArrayList<StudentBean> studentList=null;
     GetClass getClass=GetClass.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +58,6 @@ public class TableActivity extends Activity {
         int choseClass=getClass.getChoseClass();
         choseclass.setText(choseGrade+"年"+choseClass+"班");
         //System.out.println(schoolid);
-        addClassInfo();
         //getStudentInfo();
         setTable();
         /*studentList=dbManager.getStudents("5445f752fa40c7df3ad57f07");
@@ -98,68 +94,7 @@ public class TableActivity extends Activity {
         dialog.show();
     }
 
-    //将班级信息添加到GetCLass中，方便使用
-    private void addClassInfo(){
-        dbManager=new DBManager(this);
-        gradeList=dbManager.getOrganizations(schoolid);
-        ArrayList<OrganizationBean> sortGradeList=new ArrayList<OrganizationBean>();
-        int gradeNum=gradeList.size();
-        if(gradeNum==3){
-            getClass.setGradeNumMax(3);
-            getClass.setGradeNumMin(1);
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("一年级")){
-                    sortGradeList.add(o);
-                }
-            }
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("二年级")){
-                    sortGradeList.add(o);
-                }
-            }
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("三年级")){
-                    sortGradeList.add(o);
-                }
-            }
-        }
-        if(gradeNum==6){
-            getClass.setGradeNumMax(6);
-            getClass.setGradeNumMin(1);
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("一年级")){
-                    sortGradeList.add(o);
-                }
-            }
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("二年级")){
-                    sortGradeList.add(o);
-                }
-            }
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("三年级")){
-                    sortGradeList.add(o);
-                }
-            }
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("四年级")){
-                    sortGradeList.add(o);
-                }
-            }
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("五年级")){
-                    sortGradeList.add(o);
-                }
-            }
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("六年级")){
-                    sortGradeList.add(o);
-                }
-            }
-        }
 
-        getClass.setGradeList(sortGradeList);
-    }
 
     private void getStudentInfo(){
         int chosenGrade=getClass.getChoseGrade();
