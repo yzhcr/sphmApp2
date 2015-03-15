@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 /**
  * Created by hcr1 on 2015/1/12.
@@ -22,11 +23,16 @@ public class LoginHelper {
 
         String json="{\"username\":\""+username+"\",\"password\":\""+password+"\"}";
         //System.out.println(json);
-        String LoginURL=networkHelper.getIp()+"/api/user/login"+path;
         LoginBean loginBean=null;
+
         try{
             // Configure and open a connection to the site you will send the request
+            System.out.println(path);
+            path = URLEncoder.encode(path, "UTF-8");
+            String LoginURL=networkHelper.getIp()+"/api/user/login"+path;
+
             URL url = new URL(LoginURL);
+
             HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
             // 设置doOutput属性为true表示将使用此urlConnection写入数据
             urlConnection.setDoOutput(true);
@@ -40,6 +46,7 @@ public class LoginHelper {
             OutputStreamWriter out = new OutputStreamWriter(
                     urlConnection.getOutputStream(), "UTF-8");
             out.append(json);
+            System.out.println(json);
             out.flush();
             out.close();
 
@@ -53,6 +60,7 @@ public class LoginHelper {
             }
             in.close();
             String result = sb.toString();
+            System.out.println(result);
             if(result != null){
                 Gson gson = new Gson();
                 loginBean = gson.fromJson(result, LoginBean.class);

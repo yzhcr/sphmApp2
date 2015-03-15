@@ -56,7 +56,12 @@ public class ChooseTestProject extends Activity {
         schoolPath=intent.getStringExtra("schoolpath");
 
         dbManager=new DBManager(this);
-        testFileList=dbManager.getTestFiles(schoolid);
+        //testFileList=dbManager.getTestFiles(schoolid);
+        testFileList = new ArrayList<TestFileBean>();
+        TestFileBean bean = new TestFileBean();
+        bean.setSchoolYear(2014);
+        bean.setFileName("2014-2015学年国标上报数据");
+        testFileList.add(bean);
         chooseTestFiles.setTestFileList(testFileList);
         //chooseTestFiles.setChosenTestFile(0);
         //chosenTestFile=testFileList.get(0);

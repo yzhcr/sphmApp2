@@ -2,6 +2,7 @@ package com.nju.sphm.Controller.TimerActivity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,7 +17,8 @@ import android.widget.SimpleAdapter;
 
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
-import com.nju.sphm.Model.School.Student;
+import com.nju.sphm.Bean.StudentBean;
+import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.R;
 
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ import java.util.Map;
  */
 public class TimeRecordActivity extends Activity {
     private ArrayList<String> timeList;
-    private ArrayList<Student> studentList;
+    private ArrayList<StudentBean> studentList;
     @ViewInject(R.id.listRecordTimeList)
     private ListView timeListView;
     @ViewInject(R.id.listStudentSearchListView)
@@ -47,14 +49,18 @@ public class TimeRecordActivity extends Activity {
     private SimpleAdapter timeAdapter;
     private LinkedList<Map<String, Object>> studentItemList;
     private SimpleAdapter studentAdapter;
+    private String classId;
+    private DBManager dbManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.record_time);
         ViewUtils.inject(this);
-        Bundle bundle = this.getIntent().getExtras();
-        timeList = bundle.getStringArrayList("timelist");
+        Intent intent = this.getIntent();
+        timeList = intent.getStringArrayListExtra("timelist");
+        classId = intent.getStringExtra("classId");
+        dbManager = new DBManager(this);
         inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         recordMap = new HashMap<String, String>();
         initListView();
@@ -63,6 +69,7 @@ public class TimeRecordActivity extends Activity {
         initSearchText();
         recordTimeMainView.setVisibility(View.VISIBLE);
         recordTimeSearchView.setVisibility(View.GONE);
+
     }
 
     private void initListView() {
@@ -114,22 +121,8 @@ public class TimeRecordActivity extends Activity {
     }
 
     private void initStudentList(String classpath) {
-        studentList = new ArrayList<Student>();
-        Student s1 = new Student();
-        s1.setName("王立军");
-        s1.setSex(Student.MALE);
-        s1.setStudentNumber("111111111111111111");
-        Student s2 = new Student();
-        s2.setName("孙俪");
-        s2.setSex(Student.FEMALE);
-        s2.setStudentNumber("111111111112222222");
-        Student s3 = new Student();
-        s3.setName("王思聪");
-        s3.setSex(Student.MALE);
-        s3.setStudentNumber("111111111111333333");
-        studentList.add(s1);
-        studentList.add(s2);
-        studentList.add(s3);
+        System.out.println(classId);
+        studentList = dbManager.getStudents(classId);
     }
 
     private void initTimeList() {
@@ -164,7 +157,7 @@ public class TimeRecordActivity extends Activity {
                         String num = s.toString();
                         studentItemList.clear();
                         if (!num.equals("")){
-                            for (Student student : studentList) {
+                            for (StudentBean student : studentList) {
                                 if (student.getStudentNumberLastSixNum().contains(num)) {
                                     addSearchItem(student);
                                 }
@@ -177,12 +170,12 @@ public class TimeRecordActivity extends Activity {
     }
 
 
-    private void addSearchItem(Student student) {
+    private void addSearchItem(StudentBean student) {
         Map<String, Object> item = new HashMap<String, Object>();
         item.put("studentName", student.getName());
         item.put("studentSex", student.getSex());
         item.put("studentNumber", student.getStudentNumberLastSixNum());
-        item.put("fullStudentNumber", student.getStudentNumber());
+        item.put("fullStudentNumber", student.getStudentCode());
         studentItemList.push(item);
     }
 

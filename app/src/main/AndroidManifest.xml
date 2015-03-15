@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
         <activity
-            android:name=".Controller.TestMainActivity"
+            android:name=".Controller.LoginActivity.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,10 +22,6 @@
         <activity
             android:name=".Controller.LoginActivity.ChooseSchoolActivity"
             android:label="@string/title_activity_choose_school" >
-        </activity>
-        <activity
-            android:name=".Controller.LoginActivity.MainActivity"
-            >
         </activity>
         <activity
             android:name=".Controller.ChooseProjectsActivity.ChooseTestProject"

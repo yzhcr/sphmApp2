@@ -36,6 +36,7 @@ public class NetWorkHelper {
         BufferedReader in = null;
         String result = null;
         try {
+
             HttpGet request = new HttpGet(url);
             HttpResponse response = client.execute(request);
             in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));

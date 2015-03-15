@@ -64,7 +64,7 @@ public class TimerActivity extends Activity {
     @ViewInject(R.id.choseclass)
     private TextView choseclass;
     @ViewInject(R.id.StudentList)
-    ListView lv;
+    private ListView lv;
     @ViewInject(R.id.chooseSexLayout)
     RelativeLayout chooseSexLayout;
     @ViewInject(R.id.title)
@@ -76,6 +76,9 @@ public class TimerActivity extends Activity {
     ArrayList<OrganizationBean> gradeList=null;
     ArrayList<StudentBean> studentList=null;
     GetClass getClass=GetClass.getInstance();
+    private String classId;
+    private int choseGrade;
+    private int choseClass;
 
 
     /**
@@ -94,8 +97,9 @@ public class TimerActivity extends Activity {
         schoolPath=intent.getStringExtra("schoolpath");
         testProject=intent.getStringExtra("testProject");
         title.setText(testProject);
-        int choseGrade=getClass.getChoseGrade();
-        int choseClass=getClass.getChoseClass();
+        addClassInfo();
+        choseGrade=getClass.getChoseGrade();
+        choseClass=getClass.getChoseClass();
         choseclass.setText(choseGrade+"年"+choseClass+"班");
         chooseSexLayout.setVisibility(View.GONE);
     }
@@ -193,7 +197,6 @@ public class TimerActivity extends Activity {
                 GetClass getClass=GetClass.getInstance();
                 getClass.setChoseGrade(choseGrade);
                 getClass.setChoseClass(choseClass);
-                System.out.println(getClass.findClassId(choseGrade,choseClass));
             }
         });
         dialog.show();
@@ -246,11 +249,9 @@ public class TimerActivity extends Activity {
         if (isStop) {
             //跳转到登记界面，待实现
             Intent intent = new Intent(this, TimeRecordActivity.class);
-
-            //用Bundle携带数据
-            Bundle bundle = new Bundle();
-            bundle.putStringArrayList("timelist", timeList);
-            intent.putExtras(bundle);
+            classId = getClass.findClassId(choseGrade,choseClass);
+            intent.putExtra("timelist", timeList);
+            intent.putExtra("classId", classId);
             startActivity(intent);
         } else {
             if (null == timer) {

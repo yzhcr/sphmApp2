@@ -81,4 +81,23 @@ public class StudentBean {
         Gson gson = new Gson();
         info = gson.fromJson(infoJSON, HashMap.class);
     }
+
+    public String getStudentNumberLastSixNum() {
+        return studentCode.substring(studentCode.length() - 6, studentCode.length());
+    }
+
+    public String getName(){
+        return (String)info.get("姓名");
+    }
+
+    public String getSex() {
+        Double sex = (Double)info.get("性别");
+        if(sex == 1.0){
+            return "男生";
+        }else{
+            return "女生";
+        }
+    }
+
+
 }
