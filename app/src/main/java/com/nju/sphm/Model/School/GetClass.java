@@ -69,6 +69,10 @@ public class GetClass {
 
     public void setGradeNumMin(int gradeNumMin) {
         GradeNumMin = gradeNumMin;
+        if(choseGrade<GradeNumMin){
+            choseGrade=GradeNumMin;
+            choseClass=1;
+        }
     }
 
     //传入年级与班级，传回班级的id

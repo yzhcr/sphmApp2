@@ -2,6 +2,8 @@ package com.nju.sphm.Model.DataHelper;
 
 import com.google.gson.Gson;
 import com.nju.sphm.Bean.LoginBean;
+import com.nju.sphm.Bean.UserBean;
+import com.nju.sphm.Bean.UserListBean;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,6 +13,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 /**
  * Created by hcr1 on 2015/1/12.
@@ -27,9 +30,15 @@ public class LoginHelper {
 
         try{
             // Configure and open a connection to the site you will send the request
-            System.out.println(path);
-            path = URLEncoder.encode(path, "UTF-8");
-            String LoginURL=networkHelper.getIp()+"/api/user/login"+path;
+            //System.out.println(path);
+            String[] pathsplit=path.split("/");
+            String newPath="";
+            for(int i=0;i<pathsplit.length;i++){
+                newPath=newPath+URLEncoder.encode(pathsplit[i],"UTF-8")+"/";
+            }
+
+
+            String LoginURL=networkHelper.getIp()+"/api/user/login"+newPath;
 
             URL url = new URL(LoginURL);
 
@@ -46,7 +55,7 @@ public class LoginHelper {
             OutputStreamWriter out = new OutputStreamWriter(
                     urlConnection.getOutputStream(), "UTF-8");
             out.append(json);
-            System.out.println(json);
+            //System.out.println(json);
             out.flush();
             out.close();
 
@@ -60,7 +69,7 @@ public class LoginHelper {
             }
             in.close();
             String result = sb.toString();
-            System.out.println(result);
+            //System.out.println(result);
             if(result != null){
                 Gson gson = new Gson();
                 loginBean = gson.fromJson(result, LoginBean.class);
@@ -69,5 +78,19 @@ public class LoginHelper {
             e.printStackTrace();
         }
         return loginBean;
+    }
+
+    public ArrayList<UserBean> getUserId(String path){
+        ArrayList<UserBean> beanList = new ArrayList<UserBean>();
+         NetWorkHelper networkHelper = NetWorkHelper.getInstance();
+         String urlHead = networkHelper.getIp()+"/api/user";
+         String returnString = networkHelper.requestDataByGet(urlHead + path);
+        if(returnString != null){
+            Gson gson = new Gson();
+            UserListBean userListBean = gson.fromJson(returnString, UserListBean.class);
+            if(userListBean.getStatus())
+                beanList = userListBean.getData();
+        }
+        return  beanList;
     }
 }

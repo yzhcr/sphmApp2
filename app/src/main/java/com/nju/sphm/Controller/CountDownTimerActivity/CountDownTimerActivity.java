@@ -143,8 +143,8 @@ public class CountDownTimerActivity extends Activity {
             if(testProject.equals("1分钟仰卧起坐")) {
                 getClass.setGradeNumMax(6);
                 getClass.setGradeNumMin(3);
-                getClass.setChoseGrade(3);
-                getClass.setChoseClass(1);
+                //getClass.setChoseGrade(3);
+                //getClass.setChoseClass(1);
                 for (OrganizationBean o : gradeList) {
                     if (o.getName().equals("三年级")) {
                         sortGradeList.add(o);
@@ -169,8 +169,8 @@ public class CountDownTimerActivity extends Activity {
             else{
                 getClass.setGradeNumMax(6);
                 getClass.setGradeNumMin(1);
-                getClass.setChoseGrade(1);
-                getClass.setChoseClass(1);
+                //getClass.setChoseGrade(1);
+                //getClass.setChoseClass(1);
                 for (OrganizationBean o : gradeList) {
                     if (o.getName().equals("一年级")) {
                         sortGradeList.add(o);

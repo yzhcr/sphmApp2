@@ -133,8 +133,8 @@ public class TimerActivity extends Activity {
             if(testProject.equals("50*8米")) {
                 getClass.setGradeNumMax(6);
                 getClass.setGradeNumMin(5);
-                getClass.setChoseGrade(5);
-                getClass.setChoseClass(1);
+                //getClass.setChoseGrade(5);
+                //getClass.setChoseClass(1);
                 for (OrganizationBean o : gradeList) {
                     if (o.getName().equals("五年级")) {
                         sortGradeList.add(o);
@@ -149,8 +149,8 @@ public class TimerActivity extends Activity {
             else{
                 getClass.setGradeNumMax(6);
                 getClass.setGradeNumMin(1);
-                getClass.setChoseGrade(1);
-                getClass.setChoseClass(1);
+                //getClass.setChoseGrade(1);
+                //getClass.setChoseClass(1);
                 for (OrganizationBean o : gradeList) {
                     if (o.getName().equals("一年级")) {
                         sortGradeList.add(o);

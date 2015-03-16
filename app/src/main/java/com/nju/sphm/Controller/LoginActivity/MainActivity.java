@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -99,45 +98,52 @@ public class MainActivity extends Activity {
 
     @OnClick(R.id.login)
     public void login(View v){
-        if(user==null||password==null) {
-            user = userText.getText().toString();
-            password = passwordText.getText().toString();
-        }
-        if(autoLogin.isChecked()){
-            SharedPreferences sharedPreferences =getSharedPreferences("loginMessage", Context.MODE_PRIVATE);
-            Editor editor = sharedPreferences.edit();//获取编辑器
-            editor.putString("user", user);
-            editor.putString("password", password);
-            editor.putString("schoolPath",schoolPath);
-            editor.putString("schoolid",schoolid);
-            editor.putBoolean("isAutoLogin",true);
-            editor.commit();
-        }
-        else {
-            SharedPreferences sharedPreferences =getSharedPreferences("loginMessage", Context.MODE_PRIVATE);
-            Editor editor = sharedPreferences.edit();
-            editor.putBoolean("isAutoLogin",false);
-        }
-        if(schoolid==null){
-            Toast toast=Toast.makeText(getApplicationContext(), "请选择学校", Toast.LENGTH_SHORT);
+
+        if(userText.getText()==null||passwordText.getText()==null){
+            Toast toast=Toast.makeText(getApplicationContext(), "请输入用户名密码", Toast.LENGTH_SHORT);
             toast.show();
         }
         else {
-            Login loginlogic = new Login();
-            LoginBean loginBean=loginlogic.login(user, password, schoolPath);
-            boolean infoIsTrue = loginBean.isStatus();
-            if(infoIsTrue){
-                DownloadWorker downloadWorker=new DownloadWorker(this);
-                downloadWorker.download(schoolPath,"544d9bcc802097dd4e2d0a08",2014);
-                Intent i=new Intent();
-                i.putExtra("schoolid",schoolid);
-                i.putExtra("schoolpath",schoolPath);
-                i.setClass(MainActivity.this, ChooseTestProject.class);
-                startActivity(i);
+            if (user == null || password == null) {
+                user = userText.getText().toString();
+                password = passwordText.getText().toString();
             }
-            else{
-                Toast toast=Toast.makeText(getApplicationContext(), "用户名密码错误", Toast.LENGTH_SHORT);
+            if (schoolid == null) {
+                Toast toast = Toast.makeText(getApplicationContext(), "请选择学校", Toast.LENGTH_SHORT);
                 toast.show();
+            } else {
+                Login loginlogic = new Login();
+                LoginBean loginBean = loginlogic.login(user, password, schoolPath);
+                boolean infoIsTrue = loginBean.isStatus();
+                if (infoIsTrue) {
+                    if (autoLogin.isChecked()) {
+                        SharedPreferences sharedPreferences = getSharedPreferences("loginMessage", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();//获取编辑器
+                        editor.putString("user", user);
+                        editor.putString("password", password);
+                        editor.putString("schoolPath", schoolPath);
+                        editor.putString("schoolid", schoolid);
+                        editor.putBoolean("isAutoLogin", true);
+                        editor.commit();
+                    } else {
+                        SharedPreferences sharedPreferences = getSharedPreferences("loginMessage", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("isAutoLogin", false);
+                    }
+                    String userId = loginlogic.getUserID(user, schoolPath);
+                    DownloadWorker downloadWorker = new DownloadWorker(this);
+                    downloadWorker.download(schoolPath, userId, 2014);
+                    Intent i = new Intent();
+                    i.putExtra("schoolid", schoolid);
+                    i.putExtra("schoolpath", schoolPath);
+                    i.setClass(MainActivity.this, ChooseTestProject.class);
+                    startActivity(i);
+                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(), "用户名密码错误", Toast.LENGTH_SHORT);
+                    toast.show();
+                    user = null;
+                    password = null;
+                }
             }
         }
     }
