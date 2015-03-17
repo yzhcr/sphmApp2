@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.StrictMode;
 import android.view.KeyEvent;
 import android.view.View;
@@ -49,6 +51,8 @@ public class MainActivity extends Activity {
     String schoolid=null;
     String schoolPath=null;
     boolean isautoLogin=false;
+    private Thread thread;
+    private String userId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,9 +134,10 @@ public class MainActivity extends Activity {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putBoolean("isAutoLogin", false);
                     }
-                    String userId = loginlogic.getUserID(user, schoolPath);
-                    DownloadWorker downloadWorker = new DownloadWorker(this);
-                    downloadWorker.download(schoolPath, userId, 2014);
+                    userId = loginlogic.getUserID(user, schoolPath);
+                    thread = new Thread(runnable);
+                    thread.start();
+
                     Intent i = new Intent();
                     i.putExtra("schoolid", schoolid);
                     i.putExtra("schoolpath", schoolPath);
@@ -147,6 +152,44 @@ public class MainActivity extends Activity {
             }
         }
     }
+
+    private Handler mHandler = new Handler() {
+        // 重写handleMessage()方法，此方法在UI线程运行
+                @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                // 如果成功，则显示从网络获取到的图片
+                case 1:
+                    Toast.makeText(getApplication(),
+                            "下载成功",
+                            Toast.LENGTH_LONG).show();
+                    break;
+                // 否则提示失败
+                case 0:
+                    Toast.makeText(getApplication(),
+                            "下载失败",
+                            Toast.LENGTH_LONG).show();
+                    break;
+                }
+            }
+        };
+    Runnable runnable = new Runnable() {
+        // 重写run()方法，此方法在新的线程中运行
+                @Override
+        public void run() {
+            try{
+                DownloadWorker downloadWorker = new DownloadWorker(getApplication());
+                boolean ok = downloadWorker.download(schoolPath, userId, 2014);
+                if(ok){
+                    mHandler.obtainMessage(1).sendToTarget();
+                }else{
+                    mHandler.obtainMessage(0).sendToTarget();
+                }
+                } catch (Exception e) {
+                mHandler.obtainMessage(0).sendToTarget();
+                }
+            }
+        };
 
     /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
