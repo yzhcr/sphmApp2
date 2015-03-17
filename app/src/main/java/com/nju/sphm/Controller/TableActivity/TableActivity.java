@@ -3,11 +3,16 @@ package com.nju.sphm.Controller.TableActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.InputType;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.ListView;
+import android.widget.EditText;
+import android.widget.TableRow.LayoutParams;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.lidroid.xutils.ViewUtils;
@@ -16,8 +21,6 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Bean.TestFileRowBean;
-import com.nju.sphm.Controller.TableActivity.TableAdapter.TableCell;
-import com.nju.sphm.Controller.TableActivity.TableAdapter.TableRow;
 import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.Model.School.GetClass;
 import com.nju.sphm.R;
@@ -30,10 +33,12 @@ public class TableActivity extends Activity {
     private Button btn_choose;
     @ViewInject(R.id.choseclass)
     private TextView choseclass;
-    @ViewInject(R.id.StudentList)
-    private ListView lv;
+    /*@ViewInject(R.id.StudentList)
+    private ListView lv;*/
     @ViewInject(R.id.title)
     private TextView title;
+    @ViewInject(R.id.tablelayout)
+    private TableLayout table;
     private DBManager dbManager=null;
     private String schoolid=null;
     private String schoolPath=null;
@@ -65,19 +70,46 @@ public class TableActivity extends Activity {
         //System.out.println(schoolid);
         getStudentInfo();
 
-        setTable();
-        /*studentList=dbManager.getStudents("5445f752fa40c7df3ad57f07");
-        for(StudentBean o:studentList){
-            System.out.println(o.get_id());
-        }*/
-        //btn_choose=(Button)this.findViewById(R.id.changeClass);
-        //choseclass=(TextView)this.findViewById(R.id.choseclass);
-        /*btn_choose.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog();
+        //setTable();
+        table.setStretchAllColumns(true);
+        for (int i = 0; i < 60; i++) {
+            TableRow tablerow = new TableRow(TableActivity.this);
+            tablerow.setBackgroundColor(Color.WHITE);
+            for (int j = 0; j < 4; j++) {
+                int width = this.getWindowManager().getDefaultDisplay().getWidth() / 4;
+                LayoutParams layoutParams=new LayoutParams(width,LayoutParams.FILL_PARENT);
+                layoutParams.setMargins(0,0,1,0);
+                if (j<3) {
+                    TextView textView=new TextView(TableActivity.this);
+                    textView.setLines(1);
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setBackgroundColor(Color.TRANSPARENT);//背景黑色
+                    textView.setText(String.valueOf(1));
+                    textView.setTextColor(Color.BLACK);
+                    textView.setTextSize(15);
+                    textView.setPadding(0,10,0,10);
+                    tablerow.addView(textView,layoutParams);
+                } else {
+                    EditText editText = new EditText(TableActivity.this);
+                    //testview.setBackgroundResource(R.drawable.shape);
+                    // testview.setText("选择");
+                    editText.setLines(1);
+                    editText.setGravity(Gravity.CENTER);
+                    editText.setBackgroundColor(Color.TRANSPARENT);//背景黑色
+                    //editText.setText(String.valueOf(tableCell.value));
+                    editText.setTextColor(Color.BLACK);
+                    editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    editText.setTextSize(15);
+                    editText.setPadding(0,10,0,10);
+                    tablerow.addView(editText,layoutParams);
+                }
+
             }
-        });*/
+            TableLayout.LayoutParams tableParam=new TableLayout.LayoutParams(
+                    LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+            tableParam.setMargins(0,1,0,1);
+            table.addView(tablerow,tableParam);
+        }
 
     }
     @OnClick(R.id.changeClass)
@@ -91,7 +123,7 @@ public class TableActivity extends Activity {
                 getClass.setChoseGrade(choseGrade);
                 getClass.setChoseClass(choseClass);
                 getStudentInfo();
-                setTable();
+                //setTable();
             }
         });
         dialog.show();
@@ -117,7 +149,7 @@ public class TableActivity extends Activity {
         }*/
     }
 
-    private void setTable(){
+    /*private void setTable(){
         if(testProject.equals("BMI")) {
             ArrayList<TableRow> table = new ArrayList<TableRow>();
             TableCell[] titles = new TableCell[5];
@@ -215,7 +247,7 @@ public class TableActivity extends Activity {
             TableAdapter tableAdapter = new TableAdapter(this, table);
             lv.setAdapter(tableAdapter);
         }
-    }
+    }*/
     //将班级信息添加到GetCLass中，方便使用
     private void addClassInfo(){
 

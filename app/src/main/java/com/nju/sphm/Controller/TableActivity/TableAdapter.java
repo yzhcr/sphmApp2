@@ -52,16 +52,16 @@ public class TableAdapter extends BaseAdapter {
 				layoutParams.setMargins(0, 0, 1, 1);//预留空隙制造边框
 				if (tableCell.type == TableCell.STRING) {//如果格单元是文本内容
 					TextView textCell = new TextView(context);
-					textCell.setLines(1);
-					textCell.setGravity(Gravity.CENTER);
-					textCell.setBackgroundColor(Color.TRANSPARENT);//背景黑色
-					textCell.setText(String.valueOf(tableCell.value));
-					textCell.setTextColor(Color.BLACK);
-					textCell.setTextSize(15);
+                    textCell.setLines(1);
+                    textCell.setGravity(Gravity.CENTER);
+                    textCell.setBackgroundColor(Color.TRANSPARENT);//背景黑色
+                    textCell.setText(String.valueOf(tableCell.value));
+                    textCell.setTextColor(Color.BLACK);
+                    textCell.setTextSize(15);
 					addView(textCell, layoutParams);
 				}
                 if(tableCell.type == TableCell.INPUT){
-                    EditText editText = new EditText(context);
+                    final EditText editText = new EditText(context);
                     editText.setLines(1);
                     editText.setGravity(Gravity.CENTER);
                     editText.setBackgroundColor(Color.TRANSPARENT);//背景黑色
