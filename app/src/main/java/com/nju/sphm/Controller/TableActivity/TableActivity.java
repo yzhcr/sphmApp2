@@ -15,6 +15,7 @@ import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.StudentBean;
+import com.nju.sphm.Bean.TestFileRowBean;
 import com.nju.sphm.Controller.TableActivity.TableAdapter.TableCell;
 import com.nju.sphm.Controller.TableActivity.TableAdapter.TableRow;
 import com.nju.sphm.Model.DataHelper.DBManager;
@@ -30,16 +31,17 @@ public class TableActivity extends Activity {
     @ViewInject(R.id.choseclass)
     private TextView choseclass;
     @ViewInject(R.id.StudentList)
-    ListView lv;
+    private ListView lv;
     @ViewInject(R.id.title)
-    TextView title;
-    DBManager dbManager=null;
-    String schoolid=null;
-    String schoolPath=null;
-    String testProject=null;
-    ArrayList<OrganizationBean> gradeList=null;
-    GetClass getClass=GetClass.getInstance();
-    ArrayList<StudentBean> studentList=null;
+    private TextView title;
+    private DBManager dbManager=null;
+    private String schoolid=null;
+    private String schoolPath=null;
+    private String testProject=null;
+    private ArrayList<OrganizationBean> gradeList=null;
+    private GetClass getClass=GetClass.getInstance();
+    private ArrayList<StudentBean> studentList=null;
+    private ArrayList<TestFileRowBean> testFileRowList=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,11 +49,14 @@ public class TableActivity extends Activity {
         setContentView(R.layout.activity_table);
         ViewUtils.inject(this);
        // lv=(ListView)findViewById(R.id.ListView01);
+        dbManager=new DBManager(this);
 
         Intent intent=getIntent();
         schoolid=intent.getStringExtra("schoolid");
         schoolPath=intent.getStringExtra("schoolpath");
         testProject=intent.getStringExtra("testProject");
+        String testFileId=intent.getStringExtra("testFileId");
+        testFileRowList=dbManager.getTestFileRows(testFileId);
         title.setText(testProject);
         addClassInfo();
         int choseGrade=getClass.getChoseGrade();
@@ -213,7 +218,7 @@ public class TableActivity extends Activity {
     }
     //将班级信息添加到GetCLass中，方便使用
     private void addClassInfo(){
-        dbManager=new DBManager(this);
+
         gradeList=dbManager.getOrganizations(schoolid);
         ArrayList<OrganizationBean> sortGradeList=new ArrayList<OrganizationBean>();
         int gradeNum=gradeList.size();
