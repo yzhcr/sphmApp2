@@ -5,6 +5,8 @@ import android.content.Context;
 import com.nju.sphm.Bean.ClassBean;
 import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.StudentBean;
+import com.nju.sphm.Bean.TestFileBean;
+import com.nju.sphm.Bean.TestFileRowBean;
 import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.Model.DataHelper.OrganizationHelper;
 import com.nju.sphm.Model.DataHelper.StudentHelper;
@@ -42,7 +44,7 @@ public class DownloadWorker {
             OrganizationBean o = new OrganizationBean();
             for(OrganizationBean organizationBean : organizationList){
                 if(organizationBean.getName().equals(name)){
-                    System.out.println(organizationBean.getName());
+                    //System.out.println(organizationBean.getName());
                     o = organizationBean;
                     break;
                 }
@@ -50,19 +52,19 @@ public class DownloadWorker {
             o.setChildren(organizationHelper.getOrganizationList(path, year));
             ArrayList<StudentBean> studentList = new ArrayList<StudentBean>();
             ArrayList<ClassBean> classList = studentHelper.getClassList(path, year);
-            //ArrayList<TestFileBean> testFileList = testFileHelper.getTestFileList(userId, year);
+            ArrayList<TestFileBean> testFileList = testFileHelper.getTestFileList(userId, year);
             System.out.println("class+" + classList.size());
-            //System.out.println("testfile+"+testFileList.size());
-            //dbm.addTestFiles(testFileList);
-            //dbm.addOrganizations(organizationLit);
+            System.out.println("testfile+"+testFileList.size());
+            dbm.addTestFiles(testFileList);
+            dbm.addOrganizations(organizationList);
             dbm.addOrganization(o);
             for (ClassBean cb : classList) {
                 dbm.addStudents(cb.getStudents());
             }
-           // for (TestFileBean tfb : testFileList) {
-            //    ArrayList<TestFileRowBean> testFileRowBeanList = testFileHelper.getTestFileRowList(tfb.get_id());
-            //    dbm.addTestFileRows(testFileRowBeanList);
-            //}
+            for (TestFileBean tfb : testFileList) {
+                ArrayList<TestFileRowBean> testFileRowBeanList = testFileHelper.getTestFileRowList(tfb.get_id());
+                dbm.addTestFileRows(testFileRowBeanList);
+            }
         } catch (Exception e){
             e.printStackTrace();
             return false;
