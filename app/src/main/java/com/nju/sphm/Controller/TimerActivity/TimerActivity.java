@@ -63,8 +63,6 @@ public class TimerActivity extends Activity {
     private Button btn_choose;
     @ViewInject(R.id.choseclass)
     private TextView choseclass;
-    @ViewInject(R.id.StudentList)
-    private ListView lv;
     @ViewInject(R.id.chooseSexLayout)
     RelativeLayout chooseSexLayout;
     @ViewInject(R.id.title)

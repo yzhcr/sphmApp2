@@ -74,6 +74,7 @@ public class CountDownTimerActivity extends Activity {
     @ViewInject(R.id.choseclass)
     private TextView choseclass;
     @ViewInject(R.id.studentListView)
+    //
     private ListView lv;
     @ViewInject(R.id.title)
     private TextView title;
