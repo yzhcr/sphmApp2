@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Controller.TableActivity.ClassPickerDialog;
+import com.nju.sphm.Controller.TableActivity.TableAdapter;
 import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.Model.School.GetClass;
 import com.nju.sphm.R;
@@ -45,7 +47,6 @@ public class CountDownTimerActivity extends Activity {
     private Button btnStart;
     @ViewInject(R.id.btnStop)
     private Button btnStop;
-    @ViewInject(R.id.listTimeList)
     private EditText etMin;
     @ViewInject(R.id.btnListen)
     private Button btnListen;
@@ -68,24 +69,34 @@ public class CountDownTimerActivity extends Activity {
     private SoundPool soundPool;
     private int playRingId;
     private String startTime;
-
     @ViewInject(R.id.changeClass)
     private Button btn_choose;
     @ViewInject(R.id.choseclass)
     private TextView choseclass;
-    @ViewInject(R.id.StudentList)
-    ListView lv;
+    @ViewInject(R.id.studentListView)
+    private ListView lv;
     @ViewInject(R.id.title)
-    TextView title;
-    DBManager dbManager=null;
-    String schoolid=null;
-    String schoolPath=null;
-    String testProject=null;
-    ArrayList<OrganizationBean> gradeList=null;
-    ArrayList<StudentBean> studentList=null;
-    GetClass getClass=GetClass.getInstance();
+    private TextView title;
+    private DBManager dbManager=null;
+    private String schoolid=null;
+    private String schoolPath=null;
+    private String testProject=null;
+    private ArrayList<OrganizationBean> gradeList=null;
+    private ArrayList<StudentBean> studentList=null;
+    private GetClass getClass=GetClass.getInstance();
     @ViewInject(R.id.chooseSexLayout)
-    RelativeLayout chooseSexLayout;
+    private RelativeLayout chooseSexLayout;
+    @ViewInject(R.id.timeListView)
+    private LinearLayout timeListView;
+    @ViewInject(R.id.recordTableView)
+    private LinearLayout recordTableView;
+    @ViewInject(R.id.recordTableReturn)
+    private Button returnBtn;
+    @ViewInject(R.id.listTimeList)
+    private ListView recordTimeListView;
+    private String classId;
+    private int choseGrade;
+    private int choseClass;
 
 
     /**
@@ -96,7 +107,6 @@ public class CountDownTimerActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.timer);
         ViewUtils.inject(this);
-        tvTime.setText("01:00");
         initDialog();
         initRing();
         Intent intent=getIntent();
@@ -105,15 +115,27 @@ public class CountDownTimerActivity extends Activity {
         testProject=intent.getStringExtra("testProject");
         startTime=intent.getStringExtra("starttime");
         tvTime.setText(startTime);
+        initTime(startTime);
         tvTime.setClickable(false);
         title.setText(testProject);
         addClassInfo();
-        int choseGrade=getClass.getChoseGrade();
-        int choseClass=getClass.getChoseClass();
+        choseGrade=getClass.getChoseGrade();
+        choseClass=getClass.getChoseClass();
         choseclass.setText(choseGrade+"年"+choseClass+"班");
         chooseSexLayout.setVisibility(View.GONE);
+        recordTimeListView.setVisibility(View.GONE);
+        initTable();
 
     }
+
+    private void initTime(String time){
+        String[] times = time.split(":");
+        etMin.setText(times[0]);
+        etSec.setText(times[1]);
+        timeOK();
+
+    }
+
 
     private void addClassInfo(){
         dbManager=new DBManager(this);
@@ -217,7 +239,7 @@ public class CountDownTimerActivity extends Activity {
                 GetClass getClass=GetClass.getInstance();
                 getClass.setChoseGrade(choseGrade);
                 getClass.setChoseClass(choseClass);
-                System.out.println(getClass.findClassId(choseGrade,choseClass));
+                initTable();
             }
         });
         dialog.show();
@@ -344,17 +366,29 @@ public class CountDownTimerActivity extends Activity {
 
             timer = new Timer(true);
             timer.schedule(task, mlTimerUnit, mlTimerUnit); // set timer duration
-
-
-            // start
-            if (!bIsRunningFlg) {
-                bIsRunningFlg = true;
-                btnStart.setClickable(false);
-                btnStop.setText("停止");
-            } else {
-                //跳转到记录界面
-            }
         }
+
+        // start
+        if (!bIsRunningFlg) {
+            bIsRunningFlg = true;
+            btnStart.setClickable(false);
+            btnStop.setText("停止");
+        } else {
+            //跳转到记录界面
+            System.out.println("jieshu");
+            showRecordTableView();
+        }
+    }
+
+    private void showRecordTableView(){
+        recordTableView.setVisibility(View.VISIBLE);
+        timeListView.setVisibility(View.GONE);
+    }
+
+    @OnClick(R.id.recordTableReturn)
+    private void hideRecordTableView(View v){
+        recordTableView.setVisibility(View.GONE);
+        timeListView.setVisibility(View.VISIBLE);
     }
 
     @OnClick(R.id.btnStop)
@@ -366,6 +400,7 @@ public class CountDownTimerActivity extends Activity {
             btnStop.setText("重置");
             btnStart.setText("登记");
             isTimeOver = false;
+            bIsRunningFlg = true;
         } else {
             reset();
         }
@@ -447,7 +482,6 @@ public class CountDownTimerActivity extends Activity {
         isTimeOver = true;
         btnStop.setText("结束");
         ringOn();
-
     }
 
     @OnClick(R.id.btnListen)
@@ -459,7 +493,6 @@ public class CountDownTimerActivity extends Activity {
             ringOn();
             btnListen.setText("停止");
         }
-
     }
 
     public void ringOn() {
@@ -472,5 +505,38 @@ public class CountDownTimerActivity extends Activity {
         soundPool.stop(playRingId);
     }
 
+    private void initTable(){
+
+        studentList = dbManager.getStudents(getClass.findClassId(choseGrade,choseClass));
+        ArrayList<TableAdapter.TableRow> table = new ArrayList<TableAdapter.TableRow>();
+        TableAdapter.TableCell[] titles = new TableAdapter.TableCell[4];
+        int width = this.getWindowManager().getDefaultDisplay().getWidth() / titles.length;
+        titles[0] = new TableAdapter.TableCell("学号", width, LinearLayout.LayoutParams.FILL_PARENT, TableAdapter.TableCell.STRING);
+        titles[1] = new TableAdapter.TableCell("姓名", width, LinearLayout.LayoutParams.FILL_PARENT, TableAdapter.TableCell.STRING);
+        titles[2] = new TableAdapter.TableCell("性别", width, LinearLayout.LayoutParams.FILL_PARENT, TableAdapter.TableCell.STRING);
+        titles[3] = new TableAdapter.TableCell("成绩", width, LinearLayout.LayoutParams.FILL_PARENT, TableAdapter.TableCell.STRING);
+
+        table.add(new TableAdapter.TableRow(titles));
+
+        for(StudentBean student:studentList){
+
+            TableAdapter.TableCell[] cells = new TableAdapter.TableCell[4];
+            cells[0] = new TableAdapter.TableCell(student.getStudentNumberLastSixNum(),
+                    titles[0].width, LinearLayout.LayoutParams.FILL_PARENT,
+                    TableAdapter.TableCell.STRING);
+            cells[1] = new TableAdapter.TableCell(student.getName(),
+                    titles[1].width, LinearLayout.LayoutParams.FILL_PARENT,
+                    TableAdapter.TableCell.STRING);
+            cells[2] = new TableAdapter.TableCell(student.getSex(),
+                    titles[2].width, LinearLayout.LayoutParams.FILL_PARENT,
+                    TableAdapter.TableCell.STRING);
+            cells[3] = new TableAdapter.TableCell("",
+                    titles[3].width, LinearLayout.LayoutParams.FILL_PARENT,
+                    TableAdapter.TableCell.INPUT);
+            table.add(new TableAdapter.TableRow(cells));
+        }
+        TableAdapter tableAdapter = new TableAdapter(this, table);
+        lv.setAdapter(tableAdapter);
+    }
 
 }

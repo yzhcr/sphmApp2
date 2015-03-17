@@ -2,10 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
     >
     <include
         layout="@layout/choose_class_based" />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/timeListView"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        >
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -52,9 +58,9 @@
             />
 
     </LinearLayout>
+        </LinearLayout>
     <include
         layout="@layout/record_time_listviews" />
-
-
-
+    <include
+        layout="@layout/record_table" />
 </LinearLayout>
