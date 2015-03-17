@@ -76,6 +76,7 @@ public class ClassPicker extends FrameLayout
         classNum=getClassLogic.getClassNum(mGradeSpinner.getValue());
         mClassSpinner.setMaxValue(classNum);
         mClassSpinner.setValue(1);
+        choseClass=1;
         mClassSpinner.invalidate();
     }
 	

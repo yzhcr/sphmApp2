@@ -22,9 +22,6 @@ import com.nju.sphm.Model.School.GetClass;
 import com.nju.sphm.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 
 public class TableActivity extends Activity {
@@ -42,6 +39,7 @@ public class TableActivity extends Activity {
     String testProject=null;
     ArrayList<OrganizationBean> gradeList=null;
     GetClass getClass=GetClass.getInstance();
+    ArrayList<StudentBean> studentList=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,17 +58,13 @@ public class TableActivity extends Activity {
         int choseClass=getClass.getChoseClass();
         choseclass.setText(choseGrade+"年"+choseClass+"班");
         //System.out.println(schoolid);
-        //getStudentInfo();
+        getStudentInfo();
 
         setTable();
         /*studentList=dbManager.getStudents("5445f752fa40c7df3ad57f07");
         for(StudentBean o:studentList){
             System.out.println(o.get_id());
         }*/
-
-
-
-
         //btn_choose=(Button)this.findViewById(R.id.changeClass);
         //choseclass=(TextView)this.findViewById(R.id.choseclass);
         /*btn_choose.setOnClickListener(new OnClickListener() {
@@ -91,7 +85,8 @@ public class TableActivity extends Activity {
                 GetClass getClass=GetClass.getInstance();
                 getClass.setChoseGrade(choseGrade);
                 getClass.setChoseClass(choseClass);
-                System.out.println(getClass.findClassId(choseGrade,choseClass));
+                getStudentInfo();
+                setTable();
             }
         });
         dialog.show();
@@ -101,8 +96,8 @@ public class TableActivity extends Activity {
         int chosenGrade=getClass.getChoseGrade();
         int chosenClass=getClass.getChoseClass();
         String classID=getClass.findClassId(chosenGrade,chosenClass);
-        ArrayList<StudentBean> studentList=dbManager.getStudents(classID);
-        for(StudentBean s:studentList){
+        studentList=dbManager.getStudents(classID);
+        /*for(StudentBean s:studentList){
             HashMap<String, Object> info=s.getInfo();
             Iterator iterator = info.entrySet().iterator();
             while (iterator.hasNext()) {
@@ -114,7 +109,7 @@ public class TableActivity extends Activity {
                 System.out.println("-----------------");
             }
             System.out.println("******************");
-        }
+        }*/
     }
 
     private void setTable(){
@@ -130,26 +125,26 @@ public class TableActivity extends Activity {
 
             table.add(new TableRow(titles));
 
-            //for(int i=0;i<cityList.size();i++){
+            for(StudentBean student:studentList){
 
-            TableCell[] cells = new TableCell[5];
-            cells[0] = new TableCell(1,
+                TableCell[] cells = new TableCell[5];
+                cells[0] = new TableCell(student.getStudentNumberLastSixNum(),
                     titles[0].width, LayoutParams.FILL_PARENT,
                     TableCell.STRING);
-            cells[1] = new TableCell("李二宇",
+                cells[1] = new TableCell(student.getName(),
                     titles[1].width, LayoutParams.FILL_PARENT,
                     TableCell.STRING);
-            cells[2] = new TableCell("男",
+                cells[2] = new TableCell(student.getSex(),
                     titles[2].width, LayoutParams.FILL_PARENT,
                     TableCell.STRING);
-            cells[3] = new TableCell("",
+                cells[3] = new TableCell("",
                     titles[3].width, LayoutParams.FILL_PARENT,
                     TableCell.INPUT);
-            cells[4] = new TableCell("",
+                cells[4] = new TableCell("",
                     titles[4].width, LayoutParams.FILL_PARENT,
                     TableCell.INPUT);
-            table.add(new TableRow(cells));
-            //}
+                table.add(new TableRow(cells));
+            }
             TableAdapter tableAdapter = new TableAdapter(this, table);
             lv.setAdapter(tableAdapter);
         }
@@ -164,23 +159,23 @@ public class TableActivity extends Activity {
 
             table.add(new TableRow(titles));
 
-            //for(int i=0;i<cityList.size();i++){
+            for(StudentBean student:studentList){
 
-            TableCell[] cells = new TableCell[4];
-            cells[0] = new TableCell(1,
+                TableCell[] cells = new TableCell[4];
+                cells[0] = new TableCell(student.getStudentNumberLastSixNum(),
                     titles[0].width, LayoutParams.FILL_PARENT,
                     TableCell.STRING);
-            cells[1] = new TableCell("李二宇",
+                cells[1] = new TableCell(student.getName(),
                     titles[1].width, LayoutParams.FILL_PARENT,
                     TableCell.STRING);
-            cells[2] = new TableCell("男",
+                cells[2] = new TableCell(student.getSex(),
                     titles[2].width, LayoutParams.FILL_PARENT,
                     TableCell.STRING);
-            cells[3] = new TableCell("",
+                cells[3] = new TableCell("",
                     titles[3].width, LayoutParams.FILL_PARENT,
                     TableCell.INPUT);
-            table.add(new TableRow(cells));
-            //}
+                table.add(new TableRow(cells));
+            }
             TableAdapter tableAdapter = new TableAdapter(this, table);
             lv.setAdapter(tableAdapter);
         }
@@ -195,23 +190,23 @@ public class TableActivity extends Activity {
 
             table.add(new TableRow(titles));
 
-            //for(int i=0;i<cityList.size();i++){
+            for(StudentBean student:studentList){
 
-            TableCell[] cells = new TableCell[4];
-            cells[0] = new TableCell(1,
+                TableCell[] cells = new TableCell[4];
+                cells[0] = new TableCell(student.getStudentNumberLastSixNum(),
                     titles[0].width, LayoutParams.FILL_PARENT,
                     TableCell.STRING);
-            cells[1] = new TableCell("李二宇",
+                cells[1] = new TableCell(student.getName(),
                     titles[1].width, LayoutParams.FILL_PARENT,
                     TableCell.STRING);
-            cells[2] = new TableCell("男",
+                cells[2] = new TableCell(student.getSex(),
                     titles[2].width, LayoutParams.FILL_PARENT,
                     TableCell.STRING);
-            cells[3] = new TableCell("",
+                cells[3] = new TableCell("",
                     titles[3].width, LayoutParams.FILL_PARENT,
                     TableCell.INPUT);
-            table.add(new TableRow(cells));
-            //}
+                table.add(new TableRow(cells));
+            }
             TableAdapter tableAdapter = new TableAdapter(this, table);
             lv.setAdapter(tableAdapter);
         }
@@ -280,19 +275,5 @@ public class TableActivity extends Activity {
 
         getClass.setGradeList(sortGradeList);
     }
-    /**
-     * 将长时间格式字符串转换为时间 yyyy-MM-dd HH:mm:ss
-     *
-    public static String getStringDate(Long date)
-    {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateString = formatter.format(date);
 
-        return dateString;
-    }*/
-    /*@Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-                this.finish();
-        return super.onKeyDown(keyCode, event);
-    }*/
 }
