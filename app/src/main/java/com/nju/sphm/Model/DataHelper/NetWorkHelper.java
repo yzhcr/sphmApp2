@@ -22,7 +22,7 @@ import java.net.URL;
 public class NetWorkHelper {
     private NetWorkHelper(){}
     private static NetWorkHelper instance=null;
-
+    private static String sessionid = null;
     public static NetWorkHelper getInstance(){
         if(instance==null){
             instance=new NetWorkHelper();
@@ -46,6 +46,10 @@ public class NetWorkHelper {
         try {
 
             HttpGet request = new HttpGet(url);
+            if(sessionid != null) {
+                System.out.println(sessionid);
+                request.addHeader("Cookie", sessionid);
+            }
             HttpResponse response = client.execute(request);
             in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
             StringBuffer sb = new StringBuffer("");
@@ -94,6 +98,11 @@ public class NetWorkHelper {
             }
             in.close();
             result = sb.toString();
+
+            String cookieval = urlConnection.getHeaderField("set-cookie");
+            if(cookieval != null) {
+                sessionid = cookieval.substring(0, cookieval.indexOf(";"));
+            }
 
         }catch(IOException e){
             e.printStackTrace();

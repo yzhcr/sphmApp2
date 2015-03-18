@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class TestFileHelper {
     private NetWorkHelper networkHelper = NetWorkHelper.getInstance();
     private String testFileHead = networkHelper.getIp()+"/api/testfile/testfilelist/?";
+    //private String testFileHead = networkHelper.getIp()+"/api/testfile/user/?";
     private String yearHead = "schoolYear=";
     private String userHead = "user=";
     private String testFileRowHead = networkHelper.getIp()+"/api/testfile/";
@@ -33,6 +34,8 @@ public class TestFileHelper {
     public ArrayList<TestFileBean> getTestFileList(String userId, int schoolYear) {
         ArrayList<TestFileBean> testFileBeanList = new ArrayList<TestFileBean>();
         String returnString = networkHelper.requestDataByGet(testFileHead + yearHead + schoolYear + "&" + userHead + userId);
+        //String returnString = networkHelper.requestDataByGet(testFileHead + yearHead + schoolYear);
+        System.out.println(returnString);
         if(returnString != null){
             Gson gson = new Gson();
             TestFileListBean testFileListBean = gson.fromJson(returnString, TestFileListBean.class);
