@@ -47,25 +47,21 @@ public class TableActivity extends Activity {
     private GetClass getClass=GetClass.getInstance();
     private ArrayList<StudentBean> studentList=null;
     private ArrayList<TestFileRowBean> testFileRowList=null;
-    private int columnNum;
-    private String test1Name;
-    private String test2Name;
+    private String tableTitleString;
+    @ViewInject(R.id.tabletitle)
+    private TableLayout tableTitle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_table);
+
         Intent intent=getIntent();
         schoolid=intent.getStringExtra("schoolid");
         schoolPath=intent.getStringExtra("schoolpath");
         testProject=intent.getStringExtra("testProject");
         String testFileId=intent.getStringExtra("testFileId");
-        columnNum=Integer.parseInt(intent.getStringExtra("columnNum"));
-        test1Name=intent.getStringExtra("test1Name");
-        if(columnNum==4) {
-            setContentView(R.layout.activity_table);
-        }else if(columnNum==5){
-            test2Name=intent.getStringExtra("test2Name");
-            setContentView(R.layout.activity_table_two_data);
-        }
+        tableTitleString=intent.getStringExtra("tableTitle");
+
         ViewUtils.inject(this);
        // lv=(ListView)findViewById(R.id.ListView01);
         dbManager=new DBManager(this);
@@ -77,6 +73,7 @@ public class TableActivity extends Activity {
         choseclass.setText(choseGrade+"年"+choseClass+"班");
         //System.out.println(schoolid);
         getStudentInfo();
+        setTableTitle();
         setTable();
 
 
@@ -118,63 +115,90 @@ public class TableActivity extends Activity {
         }*/
     }
 
+    private void setTableTitle(){
+        tableTitle.setStretchAllColumns(true);
+        String[] titles=tableTitleString.split(":");
+
+        TableRow tablerow = new TableRow(TableActivity.this);
+        tablerow.setBackgroundColor(Color.WHITE);
+        int width = this.getWindowManager().getDefaultDisplay().getWidth() / titles.length;
+        LayoutParams layoutParams=new LayoutParams(width,LayoutParams.FILL_PARENT);
+        layoutParams.setMargins(0,0,1,0);
+        for(int i=0;i<titles.length;i++){
+            TextView textView=new TextView(TableActivity.this);
+            textView.setLines(1);
+            textView.setGravity(Gravity.CENTER);
+            textView.setBackgroundColor(Color.TRANSPARENT);//背景黑色
+            textView.setText(titles[i]);
+            textView.setTextColor(Color.BLACK);
+            textView.setTextSize(15);
+            textView.getPaint().setFakeBoldText(true);
+            //textView.setPadding(0,10,0,10);
+            tablerow.addView(textView,layoutParams);
+        }
+        TableLayout.LayoutParams tableParam=new TableLayout.LayoutParams(
+                LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+        tableParam.setMargins(0,1,0,1);
+        tableTitle.addView(tablerow,tableParam);
+    }
+
     private void setTable(){
         table.setStretchAllColumns(true);
-        for (int i = 0; i < studentList.size(); i++) {
+        String[] titles=tableTitleString.split(":");
+        for (StudentBean student:studentList) {
             TableRow tablerow = new TableRow(TableActivity.this);
             tablerow.setBackgroundColor(Color.WHITE);
-            for (int j = 0; j < columnNum; j++) {
-                int width = this.getWindowManager().getDefaultDisplay().getWidth() / 4;
+            for (int i = 0; i < titles.length; i++) {
+                int width = this.getWindowManager().getDefaultDisplay().getWidth() / titles.length;
                 LayoutParams layoutParams=new LayoutParams(width,LayoutParams.FILL_PARENT);
                 layoutParams.setMargins(0,0,1,0);
-                if (j==1) {
-                    TextView textView=new TextView(TableActivity.this);
-                    textView.setLines(1);
-                    textView.setGravity(Gravity.CENTER);
-                    textView.setBackgroundColor(Color.TRANSPARENT);//背景黑色
-                    textView.setText(studentList.get(i).getStudentNumberLastSixNum());
-                    textView.setTextColor(Color.BLACK);
-                    textView.setTextSize(15);
-                    textView.setPadding(0,10,0,10);
-                    tablerow.addView(textView,layoutParams);
-                }
-                if (j==2) {
-                    TextView textView=new TextView(TableActivity.this);
-                    textView.setLines(1);
-                    textView.setGravity(Gravity.CENTER);
-                    textView.setBackgroundColor(Color.TRANSPARENT);//背景黑色
-                    textView.setText(studentList.get(i).getName());
-                    textView.setTextColor(Color.BLACK);
-                    textView.setTextSize(15);
-                    textView.setPadding(0,10,0,10);
-                    tablerow.addView(textView,layoutParams);
-                }
-                if (j==3) {
-                    TextView textView=new TextView(TableActivity.this);
-                    textView.setLines(1);
-                    textView.setGravity(Gravity.CENTER);
-                    textView.setBackgroundColor(Color.TRANSPARENT);//背景黑色
-                    textView.setText(studentList.get(i).getName());
-                    textView.setTextColor(Color.BLACK);
-                    textView.setTextSize(15);
-                    textView.setPadding(0,10,0,10);
-                    tablerow.addView(textView,layoutParams);
-                }
-                if(j==4){
-                    EditText editText = new EditText(TableActivity.this);
-                    //testview.setBackgroundResource(R.drawable.shape);
-                    // testview.setText("选择");
-                    editText.setLines(1);
-                    editText.setGravity(Gravity.CENTER);
-                    editText.setBackgroundColor(Color.TRANSPARENT);//背景黑色
-                    //editText.setText(String.valueOf(tableCell.value));
-                    editText.setTextColor(Color.BLACK);
-                    editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-                    editText.setTextSize(15);
-                    editText.setPadding(0,10,0,10);
-                    tablerow.addView(editText,layoutParams);
-                }
 
+                TextView textView=new TextView(TableActivity.this);
+                textView.setLines(1);
+                textView.setGravity(Gravity.CENTER);
+                textView.setBackgroundColor(Color.TRANSPARENT);//背景黑色
+                //textView.setText(student.getStudentNumberLastSixNum());
+                textView.setTextColor(Color.BLACK);
+                textView.setTextSize(15);
+                textView.setPadding(0,10,0,10);
+
+                EditText editText = new EditText(TableActivity.this);
+                //testview.setBackgroundResource(R.drawable.shape);
+                // testview.setText("选择");
+                editText.setLines(1);
+                editText.setGravity(Gravity.CENTER);
+                editText.setBackgroundColor(Color.TRANSPARENT);//背景黑色
+                //editText.setText(String.valueOf(tableCell.value));
+                editText.setTextColor(Color.BLACK);
+                editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                editText.setTextSize(15);
+                editText.setPadding(0,10,0,10);
+
+                switch (i) {
+                    case 0:{
+                        textView.setText(student.getStudentNumberLastSixNum());
+                        tablerow.addView(textView,layoutParams);
+                        break;
+                    }
+                    case 1:{
+                        textView.setText(student.getName());
+                        tablerow.addView(textView,layoutParams);
+                        break;
+                    }
+                    case 2:{
+                        textView.setText(student.getSex());
+                        tablerow.addView(textView,layoutParams);
+                        break;
+                    }
+                    case 3:{
+                        tablerow.addView(editText,layoutParams);
+                        break;
+                    }
+                    case 4:{
+                        tablerow.addView(editText,layoutParams);
+                        break;
+                    }
+                }
             }
             TableLayout.LayoutParams tableParam=new TableLayout.LayoutParams(
                     LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);

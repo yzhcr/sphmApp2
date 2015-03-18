@@ -150,9 +150,7 @@ public class ChooseTestProject extends Activity {
                     i.putExtra("schoolpath", schoolPath);
                     i.putExtra("testProject","BMI");
                     i.putExtra("testFileId",testFileId);
-                    i.putExtra("columnNum",5);
-                    i.putExtra("test1Name","身高(cm)");
-                    i.putExtra("test2Name","体重(kg)");
+                    i.putExtra("tableTitle","学号:姓名:性别:身高(cm):体重(kg)");
                     i.setClass(ChooseTestProject.this, TableActivity.class);
                     startActivity(i);
                     break;
@@ -163,8 +161,7 @@ public class ChooseTestProject extends Activity {
                     i.putExtra("schoolpath", schoolPath);
                     i.putExtra("testProject","肺活量");
                     i.putExtra("testFileId",testFileId);
-                    i.putExtra("columnNum",4);
-                    i.putExtra("test1Name","肺活量(ml)");
+                    i.putExtra("tableTitle","学号:姓名:性别:肺活量(ml)");
                     i.setClass(ChooseTestProject.this, TableActivity.class);
                     startActivity(i);
                     break;
@@ -175,8 +172,7 @@ public class ChooseTestProject extends Activity {
                     i.putExtra("schoolpath", schoolPath);
                     i.putExtra("testProject","坐位体前屈");
                     i.putExtra("testFileId",testFileId);
-                    i.putExtra("columnNum",4);
-                    i.putExtra("test1Name","长度(cm)");
+                    i.putExtra("tableTitle","学号:姓名:性别:长度(cm)");
                     i.setClass(ChooseTestProject.this, TableActivity.class);
                     startActivity(i);
                     break;
