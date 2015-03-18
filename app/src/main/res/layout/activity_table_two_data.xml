@@ -1,0 +1,74 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nju.sphm.Controller.TableActivity.TableActivity">
+    <include
+        android:id="@+id/chooseclassbased"
+        layout="@layout/choose_class_based" />
+
+    <TableLayout
+        android:id="@+id/tabletitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#dedcd2"
+        android:stretchColumns="*"
+        android:layout_below="@id/chooseclassbased">
+
+        <TableRow
+            android:layout_margin="0.5dip"
+            android:background="#dedcd2" >
+
+            <TextView
+                android:background="#ffffff"
+                android:gravity="center"
+                android:text="学号"
+                android:textSize="20dip"
+                android:textStyle="bold" />
+
+            <TextView
+                android:gravity="center"
+                android:background="#ffffff"
+                android:text="姓名"
+                android:textSize="20dip"
+                android:textStyle="bold" />
+
+            <TextView
+                android:gravity="center"
+                android:background="#ffffff"
+                android:text="性别"
+                android:textSize="20dip"
+                android:textStyle="bold" />
+            <TextView
+                android:gravity="center"
+                android:background="#ffffff"
+                android:text="测试1"
+                android:textSize="20dip"
+                android:textStyle="bold" />
+            <TextView
+                android:gravity="center"
+                android:background="#ffffff"
+                android:text="测试2"
+                android:textSize="20dip"
+                android:textStyle="bold" />
+        </TableRow>
+    </TableLayout>
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:layout_below="@id/tabletitle">
+        <TableLayout
+            android:id="@+id/tablelayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#dedcd2"
+            android:stretchColumns="*" >
+        </TableLayout>
+
+    </ScrollView>
+
+
+
+
+</RelativeLayout>

@@ -47,20 +47,28 @@ public class TableActivity extends Activity {
     private GetClass getClass=GetClass.getInstance();
     private ArrayList<StudentBean> studentList=null;
     private ArrayList<TestFileRowBean> testFileRowList=null;
+    private int columnNum;
+    private String test1Name;
+    private String test2Name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_table);
-        ViewUtils.inject(this);
-       // lv=(ListView)findViewById(R.id.ListView01);
-        dbManager=new DBManager(this);
-
         Intent intent=getIntent();
         schoolid=intent.getStringExtra("schoolid");
         schoolPath=intent.getStringExtra("schoolpath");
         testProject=intent.getStringExtra("testProject");
         String testFileId=intent.getStringExtra("testFileId");
+        columnNum=Integer.parseInt(intent.getStringExtra("columnNum"));
+        test1Name=intent.getStringExtra("test1Name");
+        if(columnNum==4) {
+            setContentView(R.layout.activity_table);
+        }else if(columnNum==5){
+            test2Name=intent.getStringExtra("test2Name");
+            setContentView(R.layout.activity_table_two_data);
+        }
+        ViewUtils.inject(this);
+       // lv=(ListView)findViewById(R.id.ListView01);
+        dbManager=new DBManager(this);
         testFileRowList=dbManager.getTestFileRows(testFileId);
         title.setText(testProject);
         addClassInfo();
@@ -69,47 +77,8 @@ public class TableActivity extends Activity {
         choseclass.setText(choseGrade+"年"+choseClass+"班");
         //System.out.println(schoolid);
         getStudentInfo();
+        setTable();
 
-        //setTable();
-        table.setStretchAllColumns(true);
-        for (int i = 0; i < 60; i++) {
-            TableRow tablerow = new TableRow(TableActivity.this);
-            tablerow.setBackgroundColor(Color.WHITE);
-            for (int j = 0; j < 4; j++) {
-                int width = this.getWindowManager().getDefaultDisplay().getWidth() / 4;
-                LayoutParams layoutParams=new LayoutParams(width,LayoutParams.FILL_PARENT);
-                layoutParams.setMargins(0,0,1,0);
-                if (j<3) {
-                    TextView textView=new TextView(TableActivity.this);
-                    textView.setLines(1);
-                    textView.setGravity(Gravity.CENTER);
-                    textView.setBackgroundColor(Color.TRANSPARENT);//背景黑色
-                    textView.setText(String.valueOf(1));
-                    textView.setTextColor(Color.BLACK);
-                    textView.setTextSize(15);
-                    textView.setPadding(0,10,0,10);
-                    tablerow.addView(textView,layoutParams);
-                } else {
-                    EditText editText = new EditText(TableActivity.this);
-                    //testview.setBackgroundResource(R.drawable.shape);
-                    // testview.setText("选择");
-                    editText.setLines(1);
-                    editText.setGravity(Gravity.CENTER);
-                    editText.setBackgroundColor(Color.TRANSPARENT);//背景黑色
-                    //editText.setText(String.valueOf(tableCell.value));
-                    editText.setTextColor(Color.BLACK);
-                    editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-                    editText.setTextSize(15);
-                    editText.setPadding(0,10,0,10);
-                    tablerow.addView(editText,layoutParams);
-                }
-
-            }
-            TableLayout.LayoutParams tableParam=new TableLayout.LayoutParams(
-                    LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-            tableParam.setMargins(0,1,0,1);
-            table.addView(tablerow,tableParam);
-        }
 
     }
     @OnClick(R.id.changeClass)
@@ -149,105 +118,70 @@ public class TableActivity extends Activity {
         }*/
     }
 
-    /*private void setTable(){
-        if(testProject.equals("BMI")) {
-            ArrayList<TableRow> table = new ArrayList<TableRow>();
-            TableCell[] titles = new TableCell[5];
-            int width = this.getWindowManager().getDefaultDisplay().getWidth() / titles.length;
-            titles[0] = new TableCell("学号", width, LayoutParams.FILL_PARENT, TableCell.STRING);
-            titles[1] = new TableCell("姓名", width, LayoutParams.FILL_PARENT, TableCell.STRING);
-            titles[2] = new TableCell("性别", width, LayoutParams.FILL_PARENT, TableCell.STRING);
-            titles[3] = new TableCell("身高(cm)", width, LayoutParams.FILL_PARENT, TableCell.STRING);
-            titles[4] = new TableCell("体重(kg)", width, LayoutParams.FILL_PARENT, TableCell.STRING);
+    private void setTable(){
+        table.setStretchAllColumns(true);
+        for (int i = 0; i < studentList.size(); i++) {
+            TableRow tablerow = new TableRow(TableActivity.this);
+            tablerow.setBackgroundColor(Color.WHITE);
+            for (int j = 0; j < columnNum; j++) {
+                int width = this.getWindowManager().getDefaultDisplay().getWidth() / 4;
+                LayoutParams layoutParams=new LayoutParams(width,LayoutParams.FILL_PARENT);
+                layoutParams.setMargins(0,0,1,0);
+                if (j==1) {
+                    TextView textView=new TextView(TableActivity.this);
+                    textView.setLines(1);
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setBackgroundColor(Color.TRANSPARENT);//背景黑色
+                    textView.setText(studentList.get(i).getStudentNumberLastSixNum());
+                    textView.setTextColor(Color.BLACK);
+                    textView.setTextSize(15);
+                    textView.setPadding(0,10,0,10);
+                    tablerow.addView(textView,layoutParams);
+                }
+                if (j==2) {
+                    TextView textView=new TextView(TableActivity.this);
+                    textView.setLines(1);
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setBackgroundColor(Color.TRANSPARENT);//背景黑色
+                    textView.setText(studentList.get(i).getName());
+                    textView.setTextColor(Color.BLACK);
+                    textView.setTextSize(15);
+                    textView.setPadding(0,10,0,10);
+                    tablerow.addView(textView,layoutParams);
+                }
+                if (j==3) {
+                    TextView textView=new TextView(TableActivity.this);
+                    textView.setLines(1);
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setBackgroundColor(Color.TRANSPARENT);//背景黑色
+                    textView.setText(studentList.get(i).getName());
+                    textView.setTextColor(Color.BLACK);
+                    textView.setTextSize(15);
+                    textView.setPadding(0,10,0,10);
+                    tablerow.addView(textView,layoutParams);
+                }
+                if(j==4){
+                    EditText editText = new EditText(TableActivity.this);
+                    //testview.setBackgroundResource(R.drawable.shape);
+                    // testview.setText("选择");
+                    editText.setLines(1);
+                    editText.setGravity(Gravity.CENTER);
+                    editText.setBackgroundColor(Color.TRANSPARENT);//背景黑色
+                    //editText.setText(String.valueOf(tableCell.value));
+                    editText.setTextColor(Color.BLACK);
+                    editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    editText.setTextSize(15);
+                    editText.setPadding(0,10,0,10);
+                    tablerow.addView(editText,layoutParams);
+                }
 
-            table.add(new TableRow(titles));
-
-            for(StudentBean student:studentList){
-
-                TableCell[] cells = new TableCell[5];
-                cells[0] = new TableCell(student.getStudentNumberLastSixNum(),
-                    titles[0].width, LayoutParams.FILL_PARENT,
-                    TableCell.STRING);
-                cells[1] = new TableCell(student.getName(),
-                    titles[1].width, LayoutParams.FILL_PARENT,
-                    TableCell.STRING);
-                cells[2] = new TableCell(student.getSex(),
-                    titles[2].width, LayoutParams.FILL_PARENT,
-                    TableCell.STRING);
-                cells[3] = new TableCell("",
-                    titles[3].width, LayoutParams.FILL_PARENT,
-                    TableCell.INPUT);
-                cells[4] = new TableCell("",
-                    titles[4].width, LayoutParams.FILL_PARENT,
-                    TableCell.INPUT);
-                table.add(new TableRow(cells));
             }
-            TableAdapter tableAdapter = new TableAdapter(this, table);
-            lv.setAdapter(tableAdapter);
+            TableLayout.LayoutParams tableParam=new TableLayout.LayoutParams(
+                    LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+            tableParam.setMargins(0,1,0,1);
+            table.addView(tablerow,tableParam);
         }
-        else if(testProject.equals("肺活量")){
-            ArrayList<TableRow> table = new ArrayList<TableRow>();
-            TableCell[] titles = new TableCell[4];
-            int width = this.getWindowManager().getDefaultDisplay().getWidth() / titles.length;
-            titles[0] = new TableCell("学号", width, LayoutParams.FILL_PARENT, TableCell.STRING);
-            titles[1] = new TableCell("姓名", width, LayoutParams.FILL_PARENT, TableCell.STRING);
-            titles[2] = new TableCell("性别", width, LayoutParams.FILL_PARENT, TableCell.STRING);
-            titles[3] = new TableCell("肺活量(ml)", width, LayoutParams.FILL_PARENT, TableCell.STRING);
-
-            table.add(new TableRow(titles));
-
-            for(StudentBean student:studentList){
-
-                TableCell[] cells = new TableCell[4];
-                cells[0] = new TableCell(student.getStudentNumberLastSixNum(),
-                    titles[0].width, LayoutParams.FILL_PARENT,
-                    TableCell.STRING);
-                cells[1] = new TableCell(student.getName(),
-                    titles[1].width, LayoutParams.FILL_PARENT,
-                    TableCell.STRING);
-                cells[2] = new TableCell(student.getSex(),
-                    titles[2].width, LayoutParams.FILL_PARENT,
-                    TableCell.STRING);
-                cells[3] = new TableCell("",
-                    titles[3].width, LayoutParams.FILL_PARENT,
-                    TableCell.INPUT);
-                table.add(new TableRow(cells));
-            }
-            TableAdapter tableAdapter = new TableAdapter(this, table);
-            lv.setAdapter(tableAdapter);
-        }
-        else if(testProject.equals("坐位体前屈")){
-            ArrayList<TableRow> table = new ArrayList<TableRow>();
-            TableCell[] titles = new TableCell[4];
-            int width = this.getWindowManager().getDefaultDisplay().getWidth() / titles.length;
-            titles[0] = new TableCell("学号", width, LayoutParams.FILL_PARENT, TableCell.STRING);
-            titles[1] = new TableCell("姓名", width, LayoutParams.FILL_PARENT, TableCell.STRING);
-            titles[2] = new TableCell("性别", width, LayoutParams.FILL_PARENT, TableCell.STRING);
-            titles[3] = new TableCell("长度(cm)", width, LayoutParams.FILL_PARENT, TableCell.STRING);
-
-            table.add(new TableRow(titles));
-
-            for(StudentBean student:studentList){
-
-                TableCell[] cells = new TableCell[4];
-                cells[0] = new TableCell(student.getStudentNumberLastSixNum(),
-                    titles[0].width, LayoutParams.FILL_PARENT,
-                    TableCell.STRING);
-                cells[1] = new TableCell(student.getName(),
-                    titles[1].width, LayoutParams.FILL_PARENT,
-                    TableCell.STRING);
-                cells[2] = new TableCell(student.getSex(),
-                    titles[2].width, LayoutParams.FILL_PARENT,
-                    TableCell.STRING);
-                cells[3] = new TableCell("",
-                    titles[3].width, LayoutParams.FILL_PARENT,
-                    TableCell.INPUT);
-                table.add(new TableRow(cells));
-            }
-            TableAdapter tableAdapter = new TableAdapter(this, table);
-            lv.setAdapter(tableAdapter);
-        }
-    }*/
+    }
     //将班级信息添加到GetCLass中，方便使用
     private void addClassInfo(){
 

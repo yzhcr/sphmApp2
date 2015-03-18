@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.StrictMode;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -52,6 +51,7 @@ public class MainActivity extends Activity {
     String schoolPath=null;
     boolean isautoLogin=false;
     private Thread thread;
+    private Thread loginThread;
     private String userId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +59,8 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.activity_main);
 
-        StrictMode.ThreadPolicy policy=new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+       // StrictMode.ThreadPolicy policy=new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        //StrictMode.setThreadPolicy(policy);
         //根据文件里的ip设置好ip
         String ip=readip();
         NetWorkHelper networkHelper = NetWorkHelper.getInstance();
@@ -77,7 +77,12 @@ public class MainActivity extends Activity {
             schoolPath=sharedPreferences.getString("schoolPath",null);
             user=sharedPreferences.getString("user",null);
             password=sharedPreferences.getString("password",null);
-            login.performClick();
+            //login.performClick();
+            Intent i = new Intent();
+            i.putExtra("schoolid", schoolid);
+            i.putExtra("schoolpath", schoolPath);
+            i.setClass(MainActivity.this, ChooseTestProject.class);
+            startActivity(i);
         }
         else {
             Intent intent = getIntent();
@@ -116,39 +121,8 @@ public class MainActivity extends Activity {
                 Toast toast = Toast.makeText(getApplicationContext(), "请选择学校", Toast.LENGTH_SHORT);
                 toast.show();
             } else {
-                Login loginlogic = new Login();
-                LoginBean loginBean = loginlogic.login(user, password, schoolPath);
-                boolean infoIsTrue = loginBean.isStatus();
-                if (infoIsTrue) {
-                    if (autoLogin.isChecked()) {
-                        SharedPreferences sharedPreferences = getSharedPreferences("loginMessage", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();//获取编辑器
-                        editor.putString("user", user);
-                        editor.putString("password", password);
-                        editor.putString("schoolPath", schoolPath);
-                        editor.putString("schoolid", schoolid);
-                        editor.putBoolean("isAutoLogin", true);
-                        editor.commit();
-                    } else {
-                        SharedPreferences sharedPreferences = getSharedPreferences("loginMessage", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean("isAutoLogin", false);
-                    }
-                    userId = loginlogic.getUserID(user, schoolPath);
-                    thread = new Thread(runnable);
-                    thread.start();
-
-                    Intent i = new Intent();
-                    i.putExtra("schoolid", schoolid);
-                    i.putExtra("schoolpath", schoolPath);
-                    i.setClass(MainActivity.this, ChooseTestProject.class);
-                    startActivity(i);
-                } else {
-                    Toast toast = Toast.makeText(getApplicationContext(), "用户名密码错误", Toast.LENGTH_SHORT);
-                    toast.show();
-                    user = null;
-                    password = null;
-                }
+                loginThread=new Thread(loginRunnable);
+                loginThread.start();
             }
         }
     }
@@ -159,11 +133,17 @@ public class MainActivity extends Activity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 // 如果成功，则显示从网络获取到的图片
-                case 1:
+                case 1: {
                     Toast.makeText(getApplication(),
                             "下载成功",
                             Toast.LENGTH_LONG).show();
+                    Intent i = new Intent();
+                    i.putExtra("schoolid", schoolid);
+                    i.putExtra("schoolpath", schoolPath);
+                    i.setClass(MainActivity.this, ChooseTestProject.class);
+                    startActivity(i);
                     break;
+                }
                 // 否则提示失败
                 case 0:
                     Toast.makeText(getApplication(),
@@ -190,6 +170,70 @@ public class MainActivity extends Activity {
                 }
             }
         };
+
+
+    private Handler loginHandler = new Handler() {
+        // 重写handleMessage()方法，此方法在UI线程运行
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                // 如果成功，则显示从网络获取到的图片
+                case 1: {
+                    Login loginlogic = new Login();
+                    if (autoLogin.isChecked()) {
+                        SharedPreferences sharedPreferences = getSharedPreferences("loginMessage", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();//获取编辑器
+                        editor.putString("user", user);
+                        editor.putString("password", password);
+                        editor.putString("schoolPath", schoolPath);
+                        editor.putString("schoolid", schoolid);
+                        editor.putBoolean("isAutoLogin", true);
+                        editor.commit();
+                    } else {
+                        SharedPreferences sharedPreferences = getSharedPreferences("loginMessage", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("isAutoLogin", false);
+                    }
+                    thread = new Thread(runnable);
+                    thread.start();
+                    break;
+                }
+                // 否则提示失败
+                case 2: {
+                    Toast toast = Toast.makeText(getApplicationContext(), "用户名密码错误", Toast.LENGTH_SHORT);
+                    toast.show();
+                    user = null;
+                    password = null;
+                    break;
+                }
+                case 0:{
+                    Toast toast = Toast.makeText(getApplicationContext(), "网络错误", Toast.LENGTH_SHORT);
+                    toast.show();
+                    break;
+                }
+            }
+        }
+    };
+    Runnable loginRunnable = new Runnable() {
+        // 重写run()方法，此方法在新的线程中运行
+        @Override
+        public void run() {
+            try{
+                Login loginlogic = new Login();
+                LoginBean loginBean = loginlogic.login(user, password, schoolPath);
+                userId = loginlogic.getUserID(user, schoolPath);
+                boolean infoIsTrue = loginBean.isStatus();
+                if (infoIsTrue&&userId!=null) {
+                    loginHandler.obtainMessage(1).sendToTarget();
+
+                } else {
+                    loginHandler.obtainMessage(2).sendToTarget();
+                }
+            } catch (Exception e) {
+                loginHandler.obtainMessage(0).sendToTarget();
+            }
+        }
+    };
 
     /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
