@@ -1,5 +1,8 @@
 package com.nju.sphm.Model.DataHelper;
 
+import android.app.Activity;
+import android.net.ConnectivityManager;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -96,5 +99,17 @@ public class NetWorkHelper {
             e.printStackTrace();
         }
         return  result;
+    }
+
+    public boolean hasWifi(Activity activity){
+        ConnectivityManager con=(ConnectivityManager)activity.getSystemService(Activity.CONNECTIVITY_SERVICE);
+        boolean wifi=con.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
+        return wifi;
+    }
+
+    public boolean hasInternet(Activity activity){
+        ConnectivityManager con=(ConnectivityManager)activity.getSystemService(Activity.CONNECTIVITY_SERVICE);
+        boolean internet=con.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
+        return internet;
     }
 }
