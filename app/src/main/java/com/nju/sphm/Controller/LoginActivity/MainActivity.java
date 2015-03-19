@@ -1,7 +1,10 @@
 package com.nju.sphm.Controller.LoginActivity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -107,24 +110,44 @@ public class MainActivity extends Activity {
 
     @OnClick(R.id.login)
     public void login(View v){
-
-        if(userText.getText()==null||passwordText.getText()==null){
-            Toast toast=Toast.makeText(getApplicationContext(), "请输入用户名密码", Toast.LENGTH_SHORT);
-            toast.show();
-        }
-        else {
-            if (user == null || password == null) {
-                user = userText.getText().toString();
-                password = passwordText.getText().toString();
-            }
             if (schoolid == null) {
                 Toast toast = Toast.makeText(getApplicationContext(), "请选择学校", Toast.LENGTH_SHORT);
                 toast.show();
             } else {
-                loginThread=new Thread(loginRunnable);
-                loginThread.start();
+                if(userText.getText().toString().equals("")||passwordText.getText().toString().equals("")){
+                    Toast toast=Toast.makeText(getApplicationContext(), "请输入用户名密码", Toast.LENGTH_SHORT);
+                    toast.show();
+                }else {
+                    user = userText.getText().toString();
+                    password = passwordText.getText().toString();
+                    NetWorkHelper netWorkHelper = NetWorkHelper.getInstance();
+                    if (!netWorkHelper.hasWifi(this)) {
+                        final AlertDialog.Builder builder = new Builder(MainActivity.this);
+                        builder.setTitle("您未处于WiFi环境下");
+                        builder.setMessage("下载数据会产生大量流量，是否继续？");
+                        //builder.setIcon(R.drawable.ic_launcher);
+                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO Auto-generated method stub
+                                loginThread = new Thread(loginRunnable);
+                                loginThread.start();
+                            }
+                        });
+                        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO Auto-generated method stub
+
+                            }
+                        });
+                        builder.create().show();
+                    } else {
+                        loginThread = new Thread(loginRunnable);
+                        loginThread.start();
+                    }
+                }
             }
-        }
     }
 
     private Handler mHandler = new Handler() {

@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
@@ -23,18 +23,21 @@ import java.util.ArrayList;
 
 public class ChooseSchoolActivity extends Activity {
 
-    ArrayList<TreeNode> topNodes;
-    ArrayList<TreeNode> allNodes;
+    ArrayList<TreeNode> topNodes=null;
+    ArrayList<TreeNode> allNodes=null;
     private Thread thread;
     LayoutInflater inflater;
     @ViewInject(R.id.schoollist)
     ListView treeview;
+    @ViewInject(R.id.networkWrong)
+    TextView networkWrong;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_school);
         ViewUtils.inject(this);
+        networkWrong.setVisibility(View.GONE);
         //StrictMode.ThreadPolicy policy=new StrictMode.ThreadPolicy.Builder().permitAll().build();
         //StrictMode.setThreadPolicy(policy);
         inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -88,7 +91,6 @@ public class ChooseSchoolActivity extends Activity {
                 treeViewAdapter.notifyDataSetChanged();
             } else {
                 treeNode.setExpanded(true);
-
                 int i = 1;
                 for (TreeNode e : allNodes) {
                     if (e.getParendId().equals(treeNode.getId())) {
@@ -119,11 +121,10 @@ public class ChooseSchoolActivity extends Activity {
                     break;
                 }
                 // 否则提示失败
-                case 0:
-                    Toast.makeText(getApplication(),
-                            "网络出错，请检查网络环境",
-                            Toast.LENGTH_LONG).show();
+                case 0: {
+                    networkWrong.setVisibility(View.VISIBLE);
                     break;
+                }
             }
         }
     };
@@ -135,7 +136,8 @@ public class ChooseSchoolActivity extends Activity {
                 GetOrganization getOrganization=new GetOrganization();
                 topNodes = new ArrayList<TreeNode>();
                 allNodes = getOrganization.setTreeBean();
-                if(allNodes!=null){
+                if(allNodes.size()>0){
+                    //System.out.println("isnotnull");
                     mHandler.obtainMessage(1).sendToTarget();
                 }else{
                     mHandler.obtainMessage(0).sendToTarget();

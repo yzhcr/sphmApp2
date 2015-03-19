@@ -14,5 +14,13 @@
         android:dividerHeight="1px">
 
         </ListView>
+    <TextView
+        android:id="@+id/networkWrong"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textSize="25dp"
+        android:text="网络出错，请检查网络环境"/>
 
 </RelativeLayout>
