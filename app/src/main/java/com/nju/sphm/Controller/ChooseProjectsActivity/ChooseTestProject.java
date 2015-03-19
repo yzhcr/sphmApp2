@@ -22,9 +22,8 @@ import com.nju.sphm.Bean.TestFileRowBean;
 import com.nju.sphm.Controller.CountDownTimerActivity.CountDownTimerActivity;
 import com.nju.sphm.Controller.TableActivity.TableActivity;
 import com.nju.sphm.Controller.TimerActivity.TimerActivity;
-import com.nju.sphm.Model.ChooseTestProject.ChooseTestFiles;
+import com.nju.sphm.Model.UIHelper.ChooseTestFiles;
 import com.nju.sphm.Model.DataHelper.DBManager;
-import com.nju.sphm.Model.FinishTheApp.SaveMainActivity;
 import com.nju.sphm.R;
 
 import java.util.ArrayList;
@@ -253,7 +252,7 @@ public class ChooseTestProject extends Activity {
                 Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
             } else {
-                    SaveMainActivity.getInstance().getMainActivity().finish();
+                    //SaveMainActivity.getInstance().getMainActivity().finish();
                     this.finish();
             }
             return true;

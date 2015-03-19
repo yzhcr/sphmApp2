@@ -6,7 +6,7 @@ import android.widget.NumberPicker;
 import android.widget.NumberPicker.OnValueChangeListener;
 
 import com.nju.sphm.Bean.TestFileBean;
-import com.nju.sphm.Model.ChooseTestProject.ChooseTestFiles;
+import com.nju.sphm.Model.UIHelper.ChooseTestFiles;
 import com.nju.sphm.R;
 
 import java.util.ArrayList;

@@ -36,7 +36,7 @@ import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Controller.TableActivity.ClassPickerDialog;
 import com.nju.sphm.Model.DataHelper.DBManager;
-import com.nju.sphm.Model.School.GetClass;
+import com.nju.sphm.Model.UIHelper.GetClass;
 import com.nju.sphm.R;
 
 import java.util.ArrayList;
@@ -570,7 +570,7 @@ public class CountDownTimerActivity extends Activity {
         TableLayout.LayoutParams tableParam=new TableLayout.LayoutParams(
                 TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
         tableParam.setMargins(0,1,0,1);
-        tableTitle.addView(tablerow,tableParam);
+        tableTitle.addView(tablerow, tableParam);
     }
 
     private void setTable(){

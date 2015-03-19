@@ -26,7 +26,6 @@ import com.nju.sphm.Bean.LoginBean;
 import com.nju.sphm.Controller.ChooseProjectsActivity.ChooseTestProject;
 import com.nju.sphm.Model.DataHelper.NetWorkHelper;
 import com.nju.sphm.Model.Download.DownloadWorker;
-import com.nju.sphm.Model.FinishTheApp.SaveMainActivity;
 import com.nju.sphm.Model.Login.Login;
 import com.nju.sphm.R;
 
@@ -69,7 +68,7 @@ public class MainActivity extends Activity {
         NetWorkHelper networkHelper = NetWorkHelper.getInstance();
         networkHelper.setIp(ip);
         //存下mainactivity，方便和chooseTestProject一起退出
-        SaveMainActivity.getInstance().setMainActivity(this);
+        //SaveMainActivity.getInstance().setMainActivity(this);
 
         ViewUtils.inject(this);
 
@@ -86,6 +85,7 @@ public class MainActivity extends Activity {
             i.putExtra("schoolpath", schoolPath);
             i.setClass(MainActivity.this, ChooseTestProject.class);
             startActivity(i);
+            finish();
         }
         else {
             Intent intent = getIntent();
@@ -106,6 +106,7 @@ public class MainActivity extends Activity {
     public void chooseSchool(View v){
         Intent i=new Intent(MainActivity.this,ChooseSchoolActivity.class);
         startActivity(i);
+        finish();
     }
 
     @OnClick(R.id.login)
@@ -165,6 +166,7 @@ public class MainActivity extends Activity {
                     i.putExtra("schoolpath", schoolPath);
                     i.setClass(MainActivity.this, ChooseTestProject.class);
                     startActivity(i);
+                    finish();
                     break;
                 }
                 // 否则提示失败

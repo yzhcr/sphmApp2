@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
 import com.nju.sphm.Controller.TableActivity.ClassPicker.OnClassChangedListener;
-import com.nju.sphm.Model.School.GetClass;
+import com.nju.sphm.Model.UIHelper.GetClass;
 
 public class ClassPickerDialog extends AlertDialog implements OnClickListener
 {

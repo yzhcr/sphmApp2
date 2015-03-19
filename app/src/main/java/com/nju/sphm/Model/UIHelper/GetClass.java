@@ -1,4 +1,4 @@
-package com.nju.sphm.Model.School;
+package com.nju.sphm.Model.UIHelper;
 
 import com.nju.sphm.Bean.OrganizationBean;
 

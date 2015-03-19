@@ -25,7 +25,7 @@ import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Controller.TableActivity.ClassPickerDialog;
 import com.nju.sphm.Model.DataHelper.DBManager;
-import com.nju.sphm.Model.School.GetClass;
+import com.nju.sphm.Model.UIHelper.GetClass;
 import com.nju.sphm.R;
 
 import java.util.ArrayList;

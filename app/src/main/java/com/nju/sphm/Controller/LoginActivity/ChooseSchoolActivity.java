@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
-import com.nju.sphm.Model.FinishTheApp.SaveMainActivity;
 import com.nju.sphm.Model.Login.GetOrganization;
 import com.nju.sphm.R;
 
@@ -68,7 +67,7 @@ public class ChooseSchoolActivity extends Activity {
 
 
             if (!treeNode.isHasChildren()) {
-                SaveMainActivity.getInstance().getMainActivity().finish();
+                //SaveMainActivity.getInstance().getMainActivity().finish();
                 Intent intent = new Intent();
                 intent.putExtra("schoolname",treeNode.getContentText());
                 intent.putExtra("schoolid",treeNode.getId());

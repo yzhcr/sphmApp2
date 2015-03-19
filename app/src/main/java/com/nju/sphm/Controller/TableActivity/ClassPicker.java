@@ -5,7 +5,7 @@ import android.widget.FrameLayout;
 import android.widget.NumberPicker;
 import android.widget.NumberPicker.OnValueChangeListener;
 
-import com.nju.sphm.Model.School.GetClass;
+import com.nju.sphm.Model.UIHelper.GetClass;
 import com.nju.sphm.R;
 
 public class ClassPicker extends FrameLayout
