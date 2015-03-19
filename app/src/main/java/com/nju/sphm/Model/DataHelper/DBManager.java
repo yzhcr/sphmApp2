@@ -53,10 +53,7 @@ public class DBManager {
             bean.setInfoJSON(c.getString(c.getColumnIndex("info")));
             bean.setOrganization(c.getString(c.getColumnIndex("organizationID")));
             bean.setStudentCode(c.getString(c.getColumnIndex("studentCode")));
-            TestFileRowBean tfrb = getTestFileRow(bean.getStudentCode(), testFileID);
-            if(tfrb != null){
-                bean.setTestFileRow(tfrb);
-            }
+            bean.setTestFileRow(getTestFileRow(bean.getStudentCode(), testFileID));
             list.add(bean);
         }
         c.close();
@@ -117,11 +114,10 @@ public class DBManager {
     }
 
     public TestFileRowBean getTestFileRow(String studentCode, String testFileID){
-        TestFileRowBean bean = null;
+        TestFileRowBean bean = new TestFileRowBean();
         String[] params = {studentCode, testFileID};
         Cursor c = db.rawQuery("SELECT * FROM testfilerows WHERE studentCode=? AND testfileID=?", params);
         while (c.moveToNext()) {
-            bean = new TestFileRowBean();
             bean.set_id(c.getString(c.getColumnIndex("_id")));
             bean.set_v(c.getInt(c.getColumnIndex("_v")));
             bean.setInfoJSON(c.getString(c.getColumnIndex("info")));

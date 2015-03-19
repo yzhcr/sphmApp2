@@ -10,12 +10,12 @@ import java.util.HashMap;
  * Created by HuangQiushuo on 2015/1/15.
  */
 public class StudentBean {
-    String _id;
-    String organization;
-    String studentCode;
+    String _id = "";
+    String organization = "";
+    String studentCode = "";
     int _v;
     HashMap<String, Object> info = new HashMap<String, Object>();
-    String infoJSON;
+    String infoJSON = "";
     private TestFileRowBean testFileRow = new TestFileRowBean();
 
     public TestFileRowBean getTestFileRow() {

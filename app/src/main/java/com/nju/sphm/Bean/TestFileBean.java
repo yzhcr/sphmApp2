@@ -4,11 +4,11 @@ package com.nju.sphm.Bean;
  * Created by HuangQiushuo on 2015/1/21.
  */
 public class TestFileBean {
-    private String _id;
+    private String _id = "";
     private int _v;
-    private String fileName;
-    private String user;
-    private String organization;
+    private String fileName = "";
+    private String user = "";
+    private String organization = "";
 
     public String get_id() {
         return _id;

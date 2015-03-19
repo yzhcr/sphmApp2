@@ -6,13 +6,13 @@ import java.util.ArrayList;
  * Created by HuangQiushuo on 2015/1/21.
  */
 public class OrganizationBean {
-    private String _id;
+    private String _id = "";
     private int _v;
-    private String createDate;
-    private String fullPath;
-    private String label;
-    private String name;
-    private String type;
+    private String createDate = "";
+    private String fullPath = "";
+    private String label = "";
+    private String name = "";
+    private String type = "";
 
     public String get_id() {
         return _id;

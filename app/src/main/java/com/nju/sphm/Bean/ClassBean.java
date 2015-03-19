@@ -6,12 +6,12 @@ import java.util.ArrayList;
  * Created by HuangQiushuo on 2015/1/20.
  */
 public class ClassBean {
-    private String _id;
+    private String _id = "";
     private int _v;
-    private String createdDate;
-    private String name;
-    private String path;
-    private String type;
+    private String createdDate = "";
+    private String name = "";
+    private String path = "";
+    private String type = "";
     private int schoolYear;
     private ArrayList<StudentBean> students = new ArrayList<StudentBean>();
 

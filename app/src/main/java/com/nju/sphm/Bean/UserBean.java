@@ -4,12 +4,12 @@ package com.nju.sphm.Bean;
  * Created by HuangQiushuo on 2015/2/4.
  */
 public class UserBean  {
-    private String _id;
-    private String username;
-    private String password;
-    private String displayName;
-    private String organization;//id
-    private String createDate;
+    private String _id = "";
+    private String username = "";
+    private String password = "";
+    private String displayName = "";
+    private String organization = "";//id
+    private String createDate = "";
     private int _v;
 
     public int get_v() {

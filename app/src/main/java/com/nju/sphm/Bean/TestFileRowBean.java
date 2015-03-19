@@ -11,11 +11,11 @@ import java.util.HashMap;
  */
 public class TestFileRowBean {
     private int _v;
-    private String _id;
-    private String studentCode;
-    private String testfile;//oid
+    private String _id = "";
+    private String studentCode = "";
+    private String testfile = "";//oid
     HashMap<String, Object> info = new HashMap<String, Object>();
-    String infoJSON;
+    String infoJSON = "";
 
     public String getInfoJSON() {
         enCode();

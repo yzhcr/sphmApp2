@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public class UserListBean {
     private ArrayList<UserBean> data = new ArrayList<UserBean>();
-    private boolean status;
+    private boolean status = true;
 
     public boolean getStatus() {
         return status;

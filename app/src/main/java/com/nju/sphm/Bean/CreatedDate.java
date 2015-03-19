@@ -12,5 +12,5 @@ public class CreatedDate {
         this.$date = $date;
     }
 
-    private String $date;
+    private String $date = "";
 }

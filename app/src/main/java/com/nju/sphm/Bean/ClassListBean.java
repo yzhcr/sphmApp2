@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Created by HuangQiushuo on 2015/1/20.
  */
 public class ClassListBean {
-    private boolean status;
+    private boolean status = true;
     private ArrayList<ClassBean> data = new ArrayList<ClassBean>();
 
     public boolean getStatus() {

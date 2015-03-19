@@ -5,7 +5,9 @@ import java.util.ArrayList;
 /**
  * Created by HuangQiushuo on 2015/1/21.
  */
-public class TestFileListBean {private boolean status;
+public class TestFileListBean {
+    private boolean status = true;
+
     private ArrayList<TestFileBean> data = new ArrayList<TestFileBean>();
 
     public boolean getStatus() {

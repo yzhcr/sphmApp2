@@ -8,16 +8,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -26,7 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.lidroid.xutils.ViewUtils;
@@ -37,6 +33,7 @@ import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Controller.TableActivity.ClassPickerDialog;
 import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.Model.UIHelper.GetClass;
+import com.nju.sphm.Model.UIHelper.TableHelper;
 import com.nju.sphm.R;
 
 import java.util.ArrayList;
@@ -105,7 +102,7 @@ public class CountDownTimerActivity extends Activity {
     @ViewInject(R.id.tablelayout2)
     private TableLayout table;
     private String testFileID;
-
+    private TableHelper tableHelper = new TableHelper();
     /**
      * Called when the activity is first created.
      */
@@ -517,13 +514,13 @@ public class CountDownTimerActivity extends Activity {
 
     private void initTable(){
         getStudentInfo();
-        setTableTitle();
-        setTable();
+        tableHelper.setTableTitle(tableTitle, tableTitleString, this);
+        tableHelper.setTable(table, tableTitleString, studentList,testProject,null,this);
     }
 
     private void refreshTable(){
         getStudentInfo();
-        setTable();
+        tableHelper.setTable(table, tableTitleString, studentList,testProject,null,this);
     }
 
     private void getStudentInfo(){
@@ -544,102 +541,6 @@ public class CountDownTimerActivity extends Activity {
             }
             System.out.println("******************");
         }*/
-    }
-
-    private void setTableTitle(){
-        tableTitle.setStretchAllColumns(true);
-        String[] titles=tableTitleString.split(":");
-
-        TableRow tablerow = new TableRow(this);
-        //tablerow.setBackgroundColor(Color.WHITE);
-        int width = this.getWindowManager().getDefaultDisplay().getWidth() / titles.length;
-        TableRow.LayoutParams layoutParams=new TableRow.LayoutParams(width, TableRow.LayoutParams.FILL_PARENT);
-        layoutParams.setMargins(0,0,1,0);
-        for(int i=0;i<titles.length;i++){
-            TextView textView=new TextView(this);
-            textView.setLines(1);
-            textView.setGravity(Gravity.CENTER);
-            textView.setBackgroundColor(Color.TRANSPARENT);//背景黑色
-            textView.setText(titles[i]);
-            textView.setTextColor(Color.BLACK);
-            textView.setTextSize(15);
-            textView.getPaint().setFakeBoldText(true);
-            //textView.setPadding(0,10,0,10);
-            tablerow.addView(textView,layoutParams);
-        }
-        TableLayout.LayoutParams tableParam=new TableLayout.LayoutParams(
-                TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
-        tableParam.setMargins(0,1,0,1);
-        tableTitle.addView(tablerow, tableParam);
-    }
-
-    private void setTable(){
-        table.setStretchAllColumns(true);
-        String[] titles=tableTitleString.split(":");
-        for (StudentBean student:studentList) {
-            TableRow tablerow = new TableRow(this);
-            //tablerow.setBackgroundColor(Color.WHITE);
-            for (int i = 0; i < titles.length; i++) {
-                int width = this.getWindowManager().getDefaultDisplay().getWidth() / titles.length;
-                TableRow.LayoutParams layoutParams=new TableRow.LayoutParams(width, TableRow.LayoutParams.FILL_PARENT);
-                layoutParams.setMargins(0,0,1,0);
-
-                TextView textView=new TextView(this);
-                textView.setLines(1);
-                textView.setGravity(Gravity.CENTER);
-                textView.setBackgroundColor(Color.TRANSPARENT);//背景黑色
-                //textView.setText(student.getStudentNumberLastSixNum());
-                textView.setTextColor(Color.BLACK);
-                textView.setTextSize(15);
-                textView.setPadding(0,10,0,10);
-
-                EditText editText = new EditText(this);
-                //testview.setBackgroundResource(R.drawable.shape);
-                // testview.setText("选择");
-                editText.setLines(1);
-                editText.setGravity(Gravity.CENTER);
-                editText.setBackgroundColor(Color.TRANSPARENT);//背景黑色
-                //editText.setText(String.valueOf(tableCell.value));
-                editText.setTextColor(Color.BLACK);
-                editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-                editText.setTextSize(15);
-                editText.setPadding(0,10,0,10);
-
-                switch (i) {
-                    case 0:{
-                        textView.setText(student.getStudentNumberLastSixNum());
-                        tablerow.addView(textView,layoutParams);
-                        break;
-                    }
-                    case 1:{
-                        textView.setText(student.getName());
-                        tablerow.addView(textView,layoutParams);
-                        break;
-                    }
-                    case 2:{
-                        textView.setText(student.getSex());
-                        tablerow.addView(textView,layoutParams);
-                        break;
-                    }
-                    case 3:{
-
-                        System.out.println(student.getScore(testProject));
-
-                        editText.setText(student.getScore(testProject));
-                        tablerow.addView(editText,layoutParams);
-                        break;
-                    }
-                    case 4:{
-                        tablerow.addView(editText,layoutParams);
-                        break;
-                    }
-                }
-            }
-            TableLayout.LayoutParams tableParam=new TableLayout.LayoutParams(
-                    TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
-            tableParam.setMargins(0,1,0,1);
-            table.addView(tablerow,tableParam);
-        }
     }
 
 }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public class TestFileRowListBean {
     private ArrayList<TestFileRowBean> data = new ArrayList<TestFileRowBean>();
-    private boolean status;
+    private boolean status = true;
 
     public boolean getStatus() {
         return status;
