@@ -11,17 +11,27 @@
         android:id="@+id/recordTableReturn"
         android:text="返回"
         />
-    <HorizontalScrollView android:id="@+id/HorizontalScrollView02"
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:layout_marginTop="0dp"
-        android:layout_marginLeft="0dp">
-        <ListView
-            android:id="@+id/studentListView"
+        <TableLayout
+            android:id="@+id/tabletitle2"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:layout_marginLeft="10dp"
+            android:stretchColumns="*"
             >
-        </ListView>
-    </HorizontalScrollView>
+
+        </TableLayout>
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            >
+            <TableLayout
+                android:id="@+id/tablelayout2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:stretchColumns="*"
+                android:focusable="true"
+                android:focusableInTouchMode="true" >
+            </TableLayout>
+
+        </ScrollView>
 </LinearLayout>

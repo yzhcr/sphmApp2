@@ -51,6 +51,7 @@ public class TimeRecordActivity extends Activity {
     private SimpleAdapter studentAdapter;
     private String classId;
     private DBManager dbManager;
+    private String testFileID;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,7 @@ public class TimeRecordActivity extends Activity {
         Intent intent = this.getIntent();
         timeList = intent.getStringArrayListExtra("timelist");
         classId = intent.getStringExtra("classId");
+        testFileID = intent.getStringExtra("testFileId");
         dbManager = new DBManager(this);
         inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         recordMap = new HashMap<String, String>();
@@ -122,7 +124,7 @@ public class TimeRecordActivity extends Activity {
 
     private void initStudentList(String classpath) {
         System.out.println(classId);
-        studentList = dbManager.getStudents(classId);
+        studentList = dbManager.getStudents(classId, testFileID);
     }
 
     private void initTimeList() {

@@ -77,6 +77,7 @@ public class TimerActivity extends Activity {
     private String classId;
     private int choseGrade;
     private int choseClass;
+    private String testFileID;
 
 
     /**
@@ -94,6 +95,7 @@ public class TimerActivity extends Activity {
         schoolid=intent.getStringExtra("schoolid");
         schoolPath=intent.getStringExtra("schoolpath");
         testProject=intent.getStringExtra("testProject");
+        testFileID=intent.getStringExtra("testFileId");
         title.setText(testProject);
         addClassInfo();
         choseGrade=getClass.getChoseGrade();
@@ -250,6 +252,7 @@ public class TimerActivity extends Activity {
             classId = getClass.findClassId(choseGrade,choseClass);
             intent.putExtra("timelist", timeList);
             intent.putExtra("classId", classId);
+            intent.putExtra("testFileId", testFileID);
             startActivity(intent);
         } else {
             if (null == timer) {

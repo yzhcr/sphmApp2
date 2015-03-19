@@ -99,16 +99,16 @@ public class ChooseTestProject extends Activity {
         zuowei.put("ItemText", "坐位体前屈");
         HashMap<String, Object> fiftyM = new HashMap<String, Object>();
         fiftyM.put("ItemImage", R.drawable.fifty_m);
-        fiftyM.put("ItemText", "50米");
+        fiftyM.put("ItemText", "50米跑");
         HashMap<String, Object> fiftyMeight = new HashMap<String, Object>();
         fiftyMeight.put("ItemImage", R.drawable.fifty_m_eight);
-        fiftyMeight.put("ItemText", "50*8米");
+        fiftyMeight.put("ItemText", "50米×8往返跑");
         HashMap<String, Object> yangwo = new HashMap<String, Object>();
         yangwo.put("ItemImage", R.drawable.yangwo);
-        yangwo.put("ItemText", "1分钟仰卧起坐");
+        yangwo.put("ItemText", "一分钟仰卧起坐");
         HashMap<String, Object> tiaosheng = new HashMap<String, Object>();
         tiaosheng.put("ItemImage", R.drawable.tiaosheng);
-        tiaosheng.put("ItemText", "1分钟跳绳");
+        tiaosheng.put("ItemText", "一分钟跳绳");
         lstImageItem.add(bmi);
         lstImageItem.add(fei);
         lstImageItem.add(zuowei);
@@ -177,44 +177,46 @@ public class ChooseTestProject extends Activity {
                     startActivity(i);
                     break;
                 }
-                case "50米": {
+                case "50米跑": {
                     Intent i = new Intent();
                     i.putExtra("schoolid", schoolid);
                     i.putExtra("schoolpath", schoolPath);
-                    i.putExtra("testProject","50米");
+                    i.putExtra("testProject","50米跑");
                     i.putExtra("testFileId",testFileId);
                     i.setClass(ChooseTestProject.this, TimerActivity.class);
                     startActivity(i);
                     break;
                 }
-                case "50*8米": {
+                case "50米×8往返跑": {
                     Intent i = new Intent();
                     i.putExtra("schoolid", schoolid);
                     i.putExtra("schoolpath", schoolPath);
-                    i.putExtra("testProject","50*8米");
+                    i.putExtra("testProject","50米×8往返跑");
                     i.putExtra("testFileId",testFileId);
                     i.setClass(ChooseTestProject.this, TimerActivity.class);
                     startActivity(i);
                     break;
                 }
-                case "1分钟仰卧起坐": {
+                case "一分钟仰卧起坐": {
                     Intent i = new Intent();
                     i.putExtra("schoolid", schoolid);
                     i.putExtra("schoolpath", schoolPath);
-                    i.putExtra("testProject","1分钟仰卧起坐");
+                    i.putExtra("testProject","一分钟仰卧起坐");
                     i.putExtra("starttime","01:00");
                     i.putExtra("testFileId",testFileId);
+                    i.putExtra("tableTitle","学号:姓名:性别:个数");
                     i.setClass(ChooseTestProject.this, CountDownTimerActivity.class);
                     startActivity(i);
                     break;
                 }
-                case "1分钟跳绳": {
+                case "一分钟跳绳": {
                     Intent i = new Intent();
                     i.putExtra("schoolid", schoolid);
                     i.putExtra("schoolpath", schoolPath);
                     i.putExtra("starttime","01:00");
-                    i.putExtra("testProject","1分钟跳绳");
+                    i.putExtra("testProject","一分钟跳绳");
                     i.putExtra("testFileId",testFileId);
+                    i.putExtra("tableTitle","学号:姓名:性别:个数");
                     i.setClass(ChooseTestProject.this, CountDownTimerActivity.class);
                     startActivity(i);
                     break;

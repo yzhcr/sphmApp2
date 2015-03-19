@@ -16,6 +16,24 @@ public class StudentBean {
     int _v;
     HashMap<String, Object> info = new HashMap<String, Object>();
     String infoJSON;
+    private TestFileRowBean testFileRow = new TestFileRowBean();
+
+    public TestFileRowBean getTestFileRow() {
+        return testFileRow;
+    }
+
+    public void setTestFileRow(TestFileRowBean testFileRow) {
+        this.testFileRow = testFileRow;
+    }
+
+    public String getScore(String testName){
+        HashMap<String, Object> map = testFileRow.getInfo();
+        return (String)map.get(testName);
+    }
+
+    public void setScore(String testName, String score){
+        testFileRow.getInfo().put(testName, score);
+    }
 
     public String getStudentCodeLastSixNum() {
         return studentCode.substring(studentCode.length() - 6, studentCode.length());

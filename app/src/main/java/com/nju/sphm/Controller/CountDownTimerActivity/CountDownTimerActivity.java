@@ -8,13 +8,16 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +25,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.lidroid.xutils.ViewUtils;
@@ -30,7 +35,6 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Controller.TableActivity.ClassPickerDialog;
-import com.nju.sphm.Controller.TableActivity.TableAdapter;
 import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.Model.School.GetClass;
 import com.nju.sphm.R;
@@ -73,9 +77,6 @@ public class CountDownTimerActivity extends Activity {
     private Button btn_choose;
     @ViewInject(R.id.choseclass)
     private TextView choseclass;
-    @ViewInject(R.id.studentListView)
-    //
-    private ListView lv;
     @ViewInject(R.id.title)
     private TextView title;
     private DBManager dbManager=null;
@@ -98,7 +99,12 @@ public class CountDownTimerActivity extends Activity {
     private String classId;
     private int choseGrade;
     private int choseClass;
-
+    private String tableTitleString;
+    @ViewInject(R.id.tabletitle2)
+    private TableLayout tableTitle;
+    @ViewInject(R.id.tablelayout2)
+    private TableLayout table;
+    private String testFileID;
 
     /**
      * Called when the activity is first created.
@@ -115,6 +121,7 @@ public class CountDownTimerActivity extends Activity {
         schoolPath=intent.getStringExtra("schoolpath");
         testProject=intent.getStringExtra("testProject");
         startTime=intent.getStringExtra("starttime");
+        testFileID=intent.getStringExtra("testFileId");
         tvTime.setText(startTime);
         initTime(startTime);
         tvTime.setClickable(false);
@@ -125,6 +132,7 @@ public class CountDownTimerActivity extends Activity {
         choseclass.setText(choseGrade+"年"+choseClass+"班");
         chooseSexLayout.setVisibility(View.GONE);
         recordTimeListView.setVisibility(View.GONE);
+        tableTitleString=intent.getStringExtra("tableTitle");
         initTable();
 
     }
@@ -240,7 +248,7 @@ public class CountDownTimerActivity extends Activity {
                 GetClass getClass=GetClass.getInstance();
                 getClass.setChoseGrade(choseGrade);
                 getClass.setChoseClass(choseClass);
-                initTable();
+                refreshTable();
             }
         });
         dialog.show();
@@ -487,13 +495,14 @@ public class CountDownTimerActivity extends Activity {
 
     @OnClick(R.id.btnListen)
     public void listen(View v) {
-        if (isRinging) {
-            ringOff();
-            btnListen.setText("响铃试听");
-        } else {
-            ringOn();
-            btnListen.setText("停止");
-        }
+//        if (isRinging) {
+//            ringOff();
+//            btnListen.setText("响铃试听");
+//        } else {
+//            ringOn();
+//            btnListen.setText("停止");
+//        }
+        showRecordTableView();
     }
 
     public void ringOn() {
@@ -507,37 +516,130 @@ public class CountDownTimerActivity extends Activity {
     }
 
     private void initTable(){
+        getStudentInfo();
+        setTableTitle();
+        setTable();
+    }
 
-        studentList = dbManager.getStudents(getClass.findClassId(choseGrade,choseClass));
-        ArrayList<TableAdapter.TableRow> table = new ArrayList<TableAdapter.TableRow>();
-        TableAdapter.TableCell[] titles = new TableAdapter.TableCell[4];
+    private void refreshTable(){
+        getStudentInfo();
+        setTable();
+    }
+
+    private void getStudentInfo(){
+        int chosenGrade=getClass.getChoseGrade();
+        int chosenClass=getClass.getChoseClass();
+        String classID=getClass.findClassId(chosenGrade,chosenClass);
+        studentList=dbManager.getStudents(classID, testFileID);
+        /*for(StudentBean s:studentList){
+            HashMap<String, Object> info=s.getInfo();
+            Iterator iterator = info.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry entry = (Map.Entry) iterator.next();
+                Object key = entry.getKey();
+                Object val = entry.getValue();
+                System.out.println(key);
+                System.out.println(val);
+                System.out.println("-----------------");
+            }
+            System.out.println("******************");
+        }*/
+    }
+
+    private void setTableTitle(){
+        tableTitle.setStretchAllColumns(true);
+        String[] titles=tableTitleString.split(":");
+
+        TableRow tablerow = new TableRow(this);
+        //tablerow.setBackgroundColor(Color.WHITE);
         int width = this.getWindowManager().getDefaultDisplay().getWidth() / titles.length;
-        titles[0] = new TableAdapter.TableCell("学号", width, LinearLayout.LayoutParams.FILL_PARENT, TableAdapter.TableCell.STRING);
-        titles[1] = new TableAdapter.TableCell("姓名", width, LinearLayout.LayoutParams.FILL_PARENT, TableAdapter.TableCell.STRING);
-        titles[2] = new TableAdapter.TableCell("性别", width, LinearLayout.LayoutParams.FILL_PARENT, TableAdapter.TableCell.STRING);
-        titles[3] = new TableAdapter.TableCell("成绩", width, LinearLayout.LayoutParams.FILL_PARENT, TableAdapter.TableCell.STRING);
-
-        table.add(new TableAdapter.TableRow(titles));
-
-        for(StudentBean student:studentList){
-
-            TableAdapter.TableCell[] cells = new TableAdapter.TableCell[4];
-            cells[0] = new TableAdapter.TableCell(student.getStudentNumberLastSixNum(),
-                    titles[0].width, LinearLayout.LayoutParams.FILL_PARENT,
-                    TableAdapter.TableCell.STRING);
-            cells[1] = new TableAdapter.TableCell(student.getName(),
-                    titles[1].width, LinearLayout.LayoutParams.FILL_PARENT,
-                    TableAdapter.TableCell.STRING);
-            cells[2] = new TableAdapter.TableCell(student.getSex(),
-                    titles[2].width, LinearLayout.LayoutParams.FILL_PARENT,
-                    TableAdapter.TableCell.STRING);
-            cells[3] = new TableAdapter.TableCell("",
-                    titles[3].width, LinearLayout.LayoutParams.FILL_PARENT,
-                    TableAdapter.TableCell.INPUT);
-            table.add(new TableAdapter.TableRow(cells));
+        TableRow.LayoutParams layoutParams=new TableRow.LayoutParams(width, TableRow.LayoutParams.FILL_PARENT);
+        layoutParams.setMargins(0,0,1,0);
+        for(int i=0;i<titles.length;i++){
+            TextView textView=new TextView(this);
+            textView.setLines(1);
+            textView.setGravity(Gravity.CENTER);
+            textView.setBackgroundColor(Color.TRANSPARENT);//背景黑色
+            textView.setText(titles[i]);
+            textView.setTextColor(Color.BLACK);
+            textView.setTextSize(15);
+            textView.getPaint().setFakeBoldText(true);
+            //textView.setPadding(0,10,0,10);
+            tablerow.addView(textView,layoutParams);
         }
-        TableAdapter tableAdapter = new TableAdapter(this, table);
-        lv.setAdapter(tableAdapter);
+        TableLayout.LayoutParams tableParam=new TableLayout.LayoutParams(
+                TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+        tableParam.setMargins(0,1,0,1);
+        tableTitle.addView(tablerow,tableParam);
+    }
+
+    private void setTable(){
+        table.setStretchAllColumns(true);
+        String[] titles=tableTitleString.split(":");
+        for (StudentBean student:studentList) {
+            TableRow tablerow = new TableRow(this);
+            //tablerow.setBackgroundColor(Color.WHITE);
+            for (int i = 0; i < titles.length; i++) {
+                int width = this.getWindowManager().getDefaultDisplay().getWidth() / titles.length;
+                TableRow.LayoutParams layoutParams=new TableRow.LayoutParams(width, TableRow.LayoutParams.FILL_PARENT);
+                layoutParams.setMargins(0,0,1,0);
+
+                TextView textView=new TextView(this);
+                textView.setLines(1);
+                textView.setGravity(Gravity.CENTER);
+                textView.setBackgroundColor(Color.TRANSPARENT);//背景黑色
+                //textView.setText(student.getStudentNumberLastSixNum());
+                textView.setTextColor(Color.BLACK);
+                textView.setTextSize(15);
+                textView.setPadding(0,10,0,10);
+
+                EditText editText = new EditText(this);
+                //testview.setBackgroundResource(R.drawable.shape);
+                // testview.setText("选择");
+                editText.setLines(1);
+                editText.setGravity(Gravity.CENTER);
+                editText.setBackgroundColor(Color.TRANSPARENT);//背景黑色
+                //editText.setText(String.valueOf(tableCell.value));
+                editText.setTextColor(Color.BLACK);
+                editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                editText.setTextSize(15);
+                editText.setPadding(0,10,0,10);
+
+                switch (i) {
+                    case 0:{
+                        textView.setText(student.getStudentNumberLastSixNum());
+                        tablerow.addView(textView,layoutParams);
+                        break;
+                    }
+                    case 1:{
+                        textView.setText(student.getName());
+                        tablerow.addView(textView,layoutParams);
+                        break;
+                    }
+                    case 2:{
+                        textView.setText(student.getSex());
+                        tablerow.addView(textView,layoutParams);
+                        break;
+                    }
+                    case 3:{
+
+                        System.out.println(student.getScore(testProject));
+
+                        editText.setText(student.getScore(testProject));
+                        tablerow.addView(editText,layoutParams);
+                        break;
+                    }
+                    case 4:{
+                        tablerow.addView(editText,layoutParams);
+                        break;
+                    }
+                }
+            }
+            TableLayout.LayoutParams tableParam=new TableLayout.LayoutParams(
+                    TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+            tableParam.setMargins(0,1,0,1);
+            table.addView(tablerow,tableParam);
+        }
     }
 
 }

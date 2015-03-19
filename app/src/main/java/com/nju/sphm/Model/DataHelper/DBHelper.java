@@ -33,7 +33,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "(_id VARCHAR PRIMARY KEY, _v INTEGER, fileName NVARCHAR, userID VARCHAR, " +
                 "organizationID VARCHAR, type NVARCHAR, schoolYear INTEGER)");
         db.execSQL("CREATE TABLE IF NOT EXISTS testfilerows" +
-                "(_id VARCHAR PRIMARY KEY, _v INTEGER, testfileID VARCHAR, studentCode VARCHAR, info NTEXT)");
+                "(_id VARCHAR, _v INTEGER, testfileID VARCHAR, studentCode VARCHAR, info NTEXT, " +
+                "PRIMARY KEY(testfileID, studentCode))");
 
     }
 

@@ -99,7 +99,7 @@ public class TableActivity extends Activity {
         int chosenGrade=getClass.getChoseGrade();
         int chosenClass=getClass.getChoseClass();
         String classID=getClass.findClassId(chosenGrade,chosenClass);
-        studentList=dbManager.getStudents(classID);
+        studentList=dbManager.getStudents(classID, testProject);
         /*for(StudentBean s:studentList){
             HashMap<String, Object> info=s.getInfo();
             Iterator iterator = info.entrySet().iterator();

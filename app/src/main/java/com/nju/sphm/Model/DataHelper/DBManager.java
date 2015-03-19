@@ -42,7 +42,7 @@ public class DBManager {
         }
     }
 
-    public ArrayList<StudentBean> getStudents(String organizationID){
+    public ArrayList<StudentBean> getStudents(String organizationID, String testFileID){
         ArrayList<StudentBean> list = new ArrayList<StudentBean>();
         String[] params = {organizationID};
         Cursor c = db.rawQuery("SELECT * FROM students WHERE organizationID=?", params);
@@ -53,11 +53,17 @@ public class DBManager {
             bean.setInfoJSON(c.getString(c.getColumnIndex("info")));
             bean.setOrganization(c.getString(c.getColumnIndex("organizationID")));
             bean.setStudentCode(c.getString(c.getColumnIndex("studentCode")));
+            TestFileRowBean tfrb = getTestFileRow(bean.getStudentCode(), testFileID);
+            if(tfrb != null){
+                bean.setTestFileRow(tfrb);
+            }
             list.add(bean);
         }
         c.close();
         return list;
     }
+
+
 
     public void addTestFiles(List<TestFileBean> list){
         db.beginTransaction();  //开始事务
@@ -101,6 +107,36 @@ public class DBManager {
                 db.execSQL("REPLACE INTO testfilerows VALUES(?, ?, ?, ?, ?)", new Object[]{bean.get_id(), bean.get_v(),
                         bean.getTestfile(), bean.getStudentCode(), bean.getInfoJSON()});
             }
+            db.setTransactionSuccessful();  //设置事务成功完成
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally
+        {
+            db.endTransaction();    //结束事务
+        }
+    }
+
+    public TestFileRowBean getTestFileRow(String studentCode, String testFileID){
+        TestFileRowBean bean = null;
+        String[] params = {studentCode, testFileID};
+        Cursor c = db.rawQuery("SELECT * FROM testfilerows WHERE studentCode=? AND testfileID=?", params);
+        while (c.moveToNext()) {
+            bean = new TestFileRowBean();
+            bean.set_id(c.getString(c.getColumnIndex("_id")));
+            bean.set_v(c.getInt(c.getColumnIndex("_v")));
+            bean.setInfoJSON(c.getString(c.getColumnIndex("info")));
+            bean.setTestfile(c.getString(c.getColumnIndex("testfileID")));
+            bean.setStudentCode(c.getString(c.getColumnIndex("studentCode")));
+        }
+        c.close();
+        return bean;
+    }
+
+    public void addTestFileRow(TestFileRowBean bean){
+        db.beginTransaction();  //开始事务
+        try {
+            db.execSQL("REPLACE INTO testfilerows VALUES(?, ?, ?, ?, ?)", new Object[]{bean.get_id(), bean.get_v(),
+                    bean.getTestfile(), bean.getStudentCode(), bean.getInfoJSON()});
             db.setTransactionSuccessful();  //设置事务成功完成
         }catch (Exception e) {
             e.printStackTrace();
