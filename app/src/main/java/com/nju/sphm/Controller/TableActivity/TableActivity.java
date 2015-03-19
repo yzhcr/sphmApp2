@@ -14,7 +14,6 @@ import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.StudentBean;
-import com.nju.sphm.Bean.TestFileRowBean;
 import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.Model.UIHelper.GetClass;
 import com.nju.sphm.Model.UIHelper.TableHelper;
@@ -41,11 +40,12 @@ public class TableActivity extends Activity {
     private ArrayList<OrganizationBean> gradeList=null;
     private GetClass getClass=GetClass.getInstance();
     private ArrayList<StudentBean> studentList=null;
-    private ArrayList<TestFileRowBean> testFileRowList=null;
+    //private ArrayList<TestFileRowBean> testFileRowList=null;
     private String tableTitleString;
     @ViewInject(R.id.tabletitle)
     private TableLayout tableTitle;
     TableHelper tableHelper;
+    String testFileId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,13 +55,13 @@ public class TableActivity extends Activity {
         schoolid=intent.getStringExtra("schoolid");
         schoolPath=intent.getStringExtra("schoolpath");
         testProject=intent.getStringExtra("testProject");
-        String testFileId=intent.getStringExtra("testFileId");
+        testFileId=intent.getStringExtra("testFileId");
         tableTitleString=intent.getStringExtra("tableTitle");
 
         ViewUtils.inject(this);
        // lv=(ListView)findViewById(R.id.ListView01);
         dbManager=new DBManager(this);
-        testFileRowList=dbManager.getTestFileRows(testFileId);
+        //testFileRowList=dbManager.getTestFileRows(testFileId);
         title.setText(testProject);
         addClassInfo();
         int choseGrade=getClass.getChoseGrade();
@@ -72,6 +72,7 @@ public class TableActivity extends Activity {
         //setTableTitle();
         //setTable();
         tableHelper=new TableHelper();
+        tableHelper.setDbManager(dbManager);
         tableHelper.setTableTitle(tableTitle, tableTitleString, TableActivity.this);
         if(testProject.equals("BMI"))
             tableHelper.setTable(table, tableTitleString, studentList,"身高","体重",TableActivity.this);
@@ -103,7 +104,7 @@ public class TableActivity extends Activity {
         int chosenGrade=getClass.getChoseGrade();
         int chosenClass=getClass.getChoseClass();
         String classID=getClass.findClassId(chosenGrade,chosenClass);
-        studentList=dbManager.getStudents(classID, testProject);
+        studentList=dbManager.getStudents(classID, testFileId);
 
     }
     //将班级信息添加到GetCLass中，方便使用

@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.text.InputType;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.nju.sphm.Bean.StudentBean;
+import com.nju.sphm.Model.DataHelper.DBManager;
 
 import java.util.ArrayList;
 
@@ -17,11 +19,26 @@ import java.util.ArrayList;
  * Created by hcr1 on 2015/3/19.
  */
 public class TableHelper {
-    public void setTable(TableLayout table,String tableTitleString,ArrayList<StudentBean> studentList,String testName1,String testName2,Activity activity){
+    private DBManager dbManager;
+
+    public DBManager getDbManager() {
+        return dbManager;
+    }
+
+    public void setDbManager(DBManager dbManager) {
+        this.dbManager = dbManager;
+    }
+
+    private void saveData(StudentBean studentBean,String score,String testName){
+        //dbManager.
+        studentBean.setScore(testName,score);
+        dbManager.addTestFileRow(studentBean.getTestFileRow());
+    }
+    public void setTable(TableLayout table,String tableTitleString,ArrayList<StudentBean> studentList, final String testName1, final String testName2,Activity activity){
         table.removeAllViews();
         table.setStretchAllColumns(true);
         String[] titles=tableTitleString.split(":");
-        for (StudentBean student:studentList) {
+        for (final StudentBean student:studentList) {
             TableRow tablerow = new TableRow(activity);
             tablerow.setBackgroundColor(Color.WHITE);
             for (int i = 0; i < titles.length; i++) {
@@ -38,7 +55,7 @@ public class TableHelper {
                 textView.setTextSize(15);
                 textView.setPadding(0,10,0,10);
 
-                EditText editText = new EditText(activity);
+                final EditText editText = new EditText(activity);
                 //testview.setBackgroundResource(R.drawable.shape);
                 // testview.setText("选择");
                 editText.setLines(1);
@@ -49,6 +66,8 @@ public class TableHelper {
                 editText.setInputType(InputType.TYPE_CLASS_NUMBER);
                 editText.setTextSize(15);
                 editText.setPadding(0,10,0,10);
+//                editText.setTag(1,student.get_id());
+
 
                 switch (i) {
                     case 0:{
@@ -67,14 +86,38 @@ public class TableHelper {
                         break;
                     }
                     case 3:{
-                        System.out.println(testName1);
-                        System.out.println(student.getScore(testName1));
+                        //System.out.println(testName1);
+                        //System.out.println(student.getScore(testName1));
                         editText.setText(student.getScore(testName1));
+                        editText.setOnFocusChangeListener(new android.view.View.OnFocusChangeListener() {
+                            @Override
+                            public void onFocusChange(View v, boolean hasFocus) {
+                                if(hasFocus) {
+                                } else {
+                                    // System.out.println(editText.getTag(1));
+                                    if(!student.getScore(testName1).equals(editText.getText().toString())){
+                                        saveData(student, editText.getText().toString(), testName1);
+                                    }
+                                }
+                            }
+                        });
                         tablerow.addView(editText,layoutParams);
                         break;
                     }
                     case 4:{
                         editText.setText(student.getScore(testName2));
+                        editText.setOnFocusChangeListener(new android.view.View.OnFocusChangeListener() {
+                            @Override
+                            public void onFocusChange(View v, boolean hasFocus) {
+                                if(hasFocus) {
+                                } else {
+                                    // System.out.println(editText.getTag(1));
+                                    if(!student.getScore(testName2).equals(editText.getText().toString())) {
+                                        saveData(student, editText.getText().toString(), testName2);
+                                    }
+                                }
+                            }
+                        });
                         tablerow.addView(editText,layoutParams);
                         break;
                     }
