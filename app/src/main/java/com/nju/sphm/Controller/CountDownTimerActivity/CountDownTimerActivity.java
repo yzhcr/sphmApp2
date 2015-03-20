@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -82,6 +84,9 @@ public class CountDownTimerActivity extends Activity {
     private String testProject=null;
     private ArrayList<OrganizationBean> gradeList=null;
     private ArrayList<StudentBean> studentList=null;
+    private ArrayList<StudentBean> maleStudentList=new ArrayList<StudentBean>();
+    private ArrayList<StudentBean> femaleStudentList=new ArrayList<StudentBean>();
+    private int whichIsChosen=0;
     private GetClass getClass=GetClass.getInstance();
     @ViewInject(R.id.chooseSexLayout)
     private RelativeLayout chooseSexLayout;
@@ -103,6 +108,14 @@ public class CountDownTimerActivity extends Activity {
     private TableLayout table;
     private String testFileID;
     private TableHelper tableHelper = new TableHelper();
+    @ViewInject(R.id.showAll)
+    private TextView showAll;
+    @ViewInject(R.id.showMale)
+    private TextView showMale;
+    @ViewInject(R.id.showFemale)
+    private TextView showFemale;
+    @ViewInject(R.id.tablescroll)
+    private ScrollView scrollView;
     /**
      * Called when the activity is first created.
      */
@@ -127,7 +140,7 @@ public class CountDownTimerActivity extends Activity {
         choseGrade=getClass.getChoseGrade();
         choseClass=getClass.getChoseClass();
         choseclass.setText(choseGrade+"年"+choseClass+"班");
-        chooseSexLayout.setVisibility(View.GONE);
+        //chooseSexLayout.setVisibility(View.GONE);
         recordTimeListView.setVisibility(View.GONE);
         tableTitleString=intent.getStringExtra("tableTitle");
         initTable();
@@ -520,7 +533,18 @@ public class CountDownTimerActivity extends Activity {
 
     private void refreshTable(){
         getStudentInfo();
-        tableHelper.setTable(table, tableTitleString, studentList,testProject,null,this);
+        switch (whichIsChosen){
+            case 0:
+                tableHelper.setTable(table, tableTitleString, studentList,testProject,null,this);
+                break;
+            case 1:
+                tableHelper.setTable(table, tableTitleString, maleStudentList,testProject,null,this);
+                break;
+            case 2:
+                tableHelper.setTable(table, tableTitleString, femaleStudentList,testProject,null,this);
+                break;
+        }
+        scrollToTop();
     }
 
     private void getStudentInfo(){
@@ -528,19 +552,63 @@ public class CountDownTimerActivity extends Activity {
         int chosenClass=getClass.getChoseClass();
         String classID=getClass.findClassId(chosenGrade,chosenClass);
         studentList=dbManager.getStudents(classID, testFileID);
-        /*for(StudentBean s:studentList){
-            HashMap<String, Object> info=s.getInfo();
-            Iterator iterator = info.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry entry = (Map.Entry) iterator.next();
-                Object key = entry.getKey();
-                Object val = entry.getValue();
-                System.out.println(key);
-                System.out.println(val);
-                System.out.println("-----------------");
+        maleStudentList.clear();
+        femaleStudentList.clear();
+        for(StudentBean student:studentList){
+            if(student.getSex().equals("男生"))
+                maleStudentList.add(student);
+            else
+                femaleStudentList.add(student);
+        }
+    }
+
+    @OnClick(R.id.showAll)
+    public void showAll(View v){
+        whichIsChosen=0;
+        showAll.setTextColor(Color.WHITE);
+        showAll.setBackgroundResource(R.drawable.showall_click);
+        showMale.setTextColor(Color.BLACK);
+        showMale.setBackgroundResource(R.drawable.showmale);
+        showFemale.setTextColor(Color.BLACK);
+        showFemale.setBackgroundResource(R.drawable.showfemale);
+        tableHelper.setTable(table, tableTitleString, studentList,testProject,null,this);
+        scrollToTop();
+    }
+
+    @OnClick(R.id.showMale)
+    public void showMale(View v){
+        whichIsChosen=1;
+        showAll.setTextColor(Color.BLACK);
+        showAll.setBackgroundResource(R.drawable.showall);
+        showMale.setTextColor(Color.WHITE);
+        showMale.setBackgroundResource(R.drawable.showmale_click);
+        showFemale.setTextColor(Color.BLACK);
+        showFemale.setBackgroundResource(R.drawable.showfemale);
+        tableHelper.setTable(table, tableTitleString, maleStudentList,testProject,null,this);
+        scrollToTop();
+    }
+
+    @OnClick(R.id.showFemale)
+    public void showFemale(View v){
+        whichIsChosen=2;
+        showAll.setTextColor(Color.BLACK);
+        showAll.setBackgroundResource(R.drawable.showall);
+        showMale.setTextColor(Color.BLACK);
+        showMale.setBackgroundResource(R.drawable.showmale);
+        showFemale.setTextColor(Color.WHITE);
+        showFemale.setBackgroundResource(R.drawable.showfemale_click);
+        tableHelper.setTable(table, tableTitleString, femaleStudentList,testProject,null,this);
+        scrollToTop();
+    }
+
+    private void scrollToTop(){
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                scrollView.fullScroll(ScrollView.FOCUS_UP);
             }
-            System.out.println("******************");
-        }*/
+        });
     }
 
 }
