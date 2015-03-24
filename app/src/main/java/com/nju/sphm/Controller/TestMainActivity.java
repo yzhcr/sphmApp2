@@ -134,10 +134,10 @@ public class TestMainActivity extends ActionBarActivity {
     @OnClick(R.id.btn5)
     public void download(View v){
         DownloadWorker dw = new DownloadWorker(this.getApplicationContext());
-        boolean success = dw.download("/运营服务中心/江苏省/南京市/江宁区/南京市江宁区铜山中心小学/", "544d9bcc802097dd4e2d0a08", 2014 );
-        if(success){
-
-        }
+//        boolean success = dw.download("/运营服务中心/江苏省/南京市/江宁区/南京市江宁区铜山中心小学/", "544d9bcc802097dd4e2d0a08", 2014 );
+//        if(success){
+//
+//        }
     }
 
     @Override
@@ -163,9 +163,7 @@ public class TestMainActivity extends ActionBarActivity {
     }
 
     private class NetWorkHandler implements Runnable {
-
-
-        @Override
+     @Override
         public void run() {
             try {
 

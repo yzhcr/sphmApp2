@@ -12,10 +12,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +57,10 @@ public class MainActivity extends Activity {
     private Thread thread;
     private Thread loginThread;
     private String userId;
+    private AlertDialog downloadWindow;
+    private ProgressBar downloadProgressBar;
+    private TextView downloadTextView;
+    private DownloadHandler handler = new DownloadHandler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +77,7 @@ public class MainActivity extends Activity {
         //SaveMainActivity.getInstance().setMainActivity(this);
 
         ViewUtils.inject(this);
-
+        initDialog();
         SharedPreferences sharedPreferences =getSharedPreferences("loginMessage", Context.MODE_PRIVATE);
         isautoLogin=sharedPreferences.getBoolean("isAutoLogin",false);
         if(isautoLogin){
@@ -182,16 +188,22 @@ public class MainActivity extends Activity {
         // 重写run()方法，此方法在新的线程中运行
                 @Override
         public void run() {
-            try{
+                    System.out.println("kaishi");
+                    try{
+
+
+
                 DownloadWorker downloadWorker = new DownloadWorker(getApplication());
-                boolean ok = downloadWorker.download(schoolPath, userId, 2014);
+                boolean ok = downloadWorker.download(schoolPath, userId, 2014, handler);
                 if(ok){
                     mHandler.obtainMessage(1).sendToTarget();
                 }else{
                     mHandler.obtainMessage(0).sendToTarget();
                 }
                 } catch (Exception e) {
-                mHandler.obtainMessage(0).sendToTarget();
+                    e.printStackTrace();
+
+                //mHandler.obtainMessage(0).sendToTarget();
                 }
             }
         };
@@ -219,7 +231,9 @@ public class MainActivity extends Activity {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putBoolean("isAutoLogin", false);
                     }
+
                     thread = new Thread(runnable);
+                    downloadWindow.show();
                     thread.start();
                     break;
                 }
@@ -291,5 +305,50 @@ public class MainActivity extends Activity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    public void initDialog() {
+        LayoutInflater factory = LayoutInflater.from(this);
+        View view = factory.inflate(R.layout.download_window, null);
+        downloadProgressBar = (ProgressBar)view.findViewById(R.id.downloadProgressBar);
+        downloadTextView = (TextView)view.findViewById(R.id.downloadTextView);
+        downloadWindow = new AlertDialog.Builder(this)
+                .setTitle("正在下载数据")
+                .setView(view)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).create();
+    }
+
+    class DownloadHandler extends Handler{
+
+        @Override
+        public void handleMessage(Message msg) {
+            int index;
+            String fileName;
+            if (msg.what == 1) {
+                index = msg.getData().getInt("index");
+                if (index == -1) {
+                    String rs = "下载完成";
+                    Toast.makeText(MainActivity.this, rs, Toast.LENGTH_SHORT).show();
+                }else{
+                    fileName = msg.getData().getString("fileName");
+                    downloadProgressBar.setProgress(index);
+                    downloadTextView.setText(fileName);
+                }
+            }
+
+            super.handleMessage(msg);
+        }
+
     }
 }

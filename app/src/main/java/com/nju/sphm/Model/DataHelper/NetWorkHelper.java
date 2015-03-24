@@ -2,10 +2,11 @@ package com.nju.sphm.Model.DataHelper;
 
 import android.app.Activity;
 import android.net.ConnectivityManager;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.BufferedReader;
@@ -13,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.CookieHandler;
+import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -22,13 +25,21 @@ import java.net.URL;
 public class NetWorkHelper {
     private NetWorkHelper(){}
     private static NetWorkHelper instance=null;
-    private static String sessionid = null;
+    private static CookieManager cookieManager;
     public static NetWorkHelper getInstance(){
         if(instance==null){
             instance=new NetWorkHelper();
+            initCookie();
         }
         return instance;
     }
+
+    public static void initCookie()
+    {
+        cookieManager = new CookieManager();
+        CookieHandler.setDefault(cookieManager);
+    }
+
 
     private HttpClient client = new DefaultHttpClient();
     private String ip;
@@ -40,28 +51,74 @@ public class NetWorkHelper {
         this.ip = ip;
     }
 
-    public String requestDataByGet(String url){
-        BufferedReader in = null;
-        String result = null;
-        try {
+//    public String requestDataByGet(String url){
+//        BufferedReader in = null;
+//        String result = null;
+//        try {
+//
+//            HttpGet request = new HttpGet(url);
+//            if(sessionid != null) {
+//                System.out.println(sessionid);
+//                request.addHeader("Cookie", sessionid);
+//            }
+//            HttpResponse response = client.execute(request);
+//            in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+//            StringBuffer sb = new StringBuffer("");
+//            String line = "";
+//            while ((line = in.readLine()) != null) {
+//                sb.append(line);
+//            }
+//            in.close();
+//            result = sb.toString();
+//            System.out.println(result);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return result;
+//    }
 
-            HttpGet request = new HttpGet(url);
-            if(sessionid != null) {
-                System.out.println(sessionid);
-                request.addHeader("Cookie", sessionid);
+    public String requestDataByGet(String url){
+        return requestDataByGet(url,null,null);
+    }
+
+    public String requestDataByGet(String urlStr, Handler handler, String fileName){
+        String result = null;
+        byte buffer[] = new byte[0];
+        int size=1;
+        int len=0;
+        int hasRead=0;
+        int index=0;
+        StringBuffer sb = new StringBuffer("");
+        Message message;
+        try {
+            URL url = new URL(urlStr);
+            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            size = connection.getContentLength();
+            InputStream inputStream = connection.getInputStream();
+            while((len=inputStream.read(buffer))!=-1){
+                hasRead+=len;
+                String str = new String(buffer);
+                sb.append(str);
+                //System.out.println(str);
+                if(handler!=null) {
+                    index = (int) (hasRead * 100) / size;
+                    message = new Message();
+                    message.what = 1;
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("index", index);
+                    bundle.putString("fileName", fileName);
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                }
+                buffer = new byte[inputStream.available()];
             }
-            HttpResponse response = client.execute(request);
-            in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-            StringBuffer sb = new StringBuffer("");
-            String line = "";
-            while ((line = in.readLine()) != null) {
-                sb.append(line);
-            }
-            in.close();
             result = sb.toString();
-        }catch (Exception e){
+            inputStream.close();
+        } catch (Exception e) {
+
             e.printStackTrace();
         }
+
         return result;
     }
 
@@ -98,11 +155,6 @@ public class NetWorkHelper {
             }
             in.close();
             result = sb.toString();
-
-            String cookieval = urlConnection.getHeaderField("set-cookie");
-            if(cookieval != null) {
-                sessionid = cookieval.substring(0, cookieval.indexOf(";"));
-            }
 
         }catch(IOException e){
             e.printStackTrace();

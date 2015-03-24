@@ -17,7 +17,7 @@ public class GetOrganization {
     OrganizationHelper oHelper=new OrganizationHelper();
     ArrayList<TreeNode> treeList=new ArrayList<TreeNode>();
     public ArrayList<TreeNode> setTreeBean(){
-        organList=oHelper.getOrganizationList("/",2014);
+        organList=oHelper.getOrganizationList("/",2014, null);
         /*for(Organization o:organList){
             System.out.println(o.getType());
             System.out.println(o.getName());
@@ -28,21 +28,21 @@ public class GetOrganization {
                 //organList.remove(o);
         }
 
-        organList=oHelper.getOrganizationList("/运营服务中心/",2014);
+        organList=oHelper.getOrganizationList("/运营服务中心/",2014,null);
 
         for(OrganizationBean o:organList) {
 
                 TreeNode node = new TreeNode(o.getName(), TreeNode.TOP_LEVEL + 1, o.get_id(), treeList.get(0).getId(), true, false,o.getFullPath());
                 treeList.add(node);
-            cityOrganList=oHelper.getOrganizationList("/运营服务中心/"+o.getName()+"/",2014);
+            cityOrganList=oHelper.getOrganizationList("/运营服务中心/"+o.getName()+"/",2014,null);
             for(OrganizationBean cityO:cityOrganList){
                 TreeNode cityNode = new TreeNode(cityO.getName(), TreeNode.TOP_LEVEL + 2, cityO.get_id(), o.get_id(), true, false,cityO.getFullPath());
                 treeList.add(cityNode);
-                areaOrganList=oHelper.getOrganizationList("/运营服务中心/"+o.getName()+"/"+cityO.getName()+"/",2014);
+                areaOrganList=oHelper.getOrganizationList("/运营服务中心/"+o.getName()+"/"+cityO.getName()+"/",2014,null);
                 for(OrganizationBean areaO:areaOrganList){
                     TreeNode areaNode = new TreeNode(areaO.getName(), TreeNode.TOP_LEVEL + 3, areaO.get_id(), cityO.get_id(), true, false,areaO.getFullPath());
                     treeList.add(areaNode);
-                    schoolOrganList=oHelper.getOrganizationList("/运营服务中心/"+o.getName()+"/"+cityO.getName()+"/"+areaO.getName()+"/",2014);
+                    schoolOrganList=oHelper.getOrganizationList("/运营服务中心/"+o.getName()+"/"+cityO.getName()+"/"+areaO.getName()+"/",2014,null);
                     for(OrganizationBean schoolO:schoolOrganList){
                         TreeNode schoolNode = new TreeNode(schoolO.getName(), TreeNode.TOP_LEVEL + 4, schoolO.get_id(), areaO.get_id(), false, false,schoolO.getFullPath());
                         treeList.add(schoolNode);

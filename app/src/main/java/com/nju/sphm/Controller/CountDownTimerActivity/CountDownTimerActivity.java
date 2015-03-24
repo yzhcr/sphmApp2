@@ -61,7 +61,6 @@ public class CountDownTimerActivity extends Activity {
     private Message msg = null;
     private boolean bIsRunningFlg = false;
     private boolean isTimeOver = false;
-    private boolean isStop = false;
     private boolean isReady = false;
     private boolean isRinging = false;
     private int min = 0;
@@ -527,6 +526,7 @@ public class CountDownTimerActivity extends Activity {
 
     private void initTable(){
         getStudentInfo();
+        tableHelper.setDbManager(dbManager);
         tableHelper.setTableTitle(tableTitle, tableTitleString, this);
         tableHelper.setTable(table, tableTitleString, studentList,testProject,null,this);
     }

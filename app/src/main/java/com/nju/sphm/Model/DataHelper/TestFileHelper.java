@@ -1,5 +1,7 @@
 package com.nju.sphm.Model.DataHelper;
 
+import android.os.Handler;
+
 import com.google.gson.Gson;
 import com.nju.sphm.Bean.TestFileBean;
 import com.nju.sphm.Bean.TestFileListBean;
@@ -13,15 +15,13 @@ import java.util.ArrayList;
  */
 public class TestFileHelper {
     private NetWorkHelper networkHelper = NetWorkHelper.getInstance();
-    private String testFileHead = networkHelper.getIp()+"/api/testfile/testfilelist/?";
-    //private String testFileHead = networkHelper.getIp()+"/api/testfile/user/?";
+    private String testFileHead = networkHelper.getIp()+"/api/testfile/user/?";
     private String yearHead = "schoolYear=";
-    private String userHead = "user=";
     private String testFileRowHead = networkHelper.getIp()+"/api/testfile/";
 
-    public ArrayList<TestFileRowBean> getTestFileRowList(String testFileId){
+    public ArrayList<TestFileRowBean> getTestFileRowList(String testFileId, Handler handler){
         ArrayList<TestFileRowBean> testFileRowBeanList = new ArrayList<TestFileRowBean>();
-        String returnString = networkHelper.requestDataByGet(testFileRowHead + testFileId);
+        String returnString = networkHelper.requestDataByGet(testFileRowHead + testFileId, handler, "学生体测数据");
         Gson gson = new Gson();
         if(returnString != null) {
             TestFileRowListBean testFileRowListBean = gson.fromJson(returnString, TestFileRowListBean.class);
@@ -31,11 +31,9 @@ public class TestFileHelper {
         return testFileRowBeanList;
     }
 
-    public ArrayList<TestFileBean> getTestFileList(String userId, int schoolYear) {
+    public ArrayList<TestFileBean> getTestFileList(String userId, int schoolYear, Handler handler) {
         ArrayList<TestFileBean> testFileBeanList = new ArrayList<TestFileBean>();
-        String returnString = networkHelper.requestDataByGet(testFileHead + yearHead + schoolYear + "&" + userHead + userId);
-        //String returnString = networkHelper.requestDataByGet(testFileHead + yearHead + schoolYear);
-        System.out.println(returnString);
+        String returnString = networkHelper.requestDataByGet(testFileHead + yearHead + schoolYear, handler, "体测数据目录");
         if(returnString != null){
             Gson gson = new Gson();
             TestFileListBean testFileListBean = gson.fromJson(returnString, TestFileListBean.class);
