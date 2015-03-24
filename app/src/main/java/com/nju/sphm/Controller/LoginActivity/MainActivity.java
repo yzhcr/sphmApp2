@@ -278,7 +278,6 @@ public class MainActivity extends Activity {
         }
         return line;
     }
-
     private long exitTime = 0;
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

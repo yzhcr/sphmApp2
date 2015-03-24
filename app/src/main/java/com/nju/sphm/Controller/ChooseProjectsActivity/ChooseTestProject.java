@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -14,16 +18,18 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.nju.sphm.Bean.ScoreBean;
 import com.nju.sphm.Bean.TestFileBean;
 import com.nju.sphm.Bean.TestFileRowBean;
 import com.nju.sphm.Controller.CountDownTimerActivity.CountDownTimerActivity;
 import com.nju.sphm.Controller.TableActivity.TableActivity;
 import com.nju.sphm.Controller.TimerActivity.TimerActivity;
-import com.nju.sphm.Model.UIHelper.ChooseTestFiles;
 import com.nju.sphm.Model.DataHelper.DBManager;
+import com.nju.sphm.Model.UIHelper.ChooseTestFiles;
 import com.nju.sphm.R;
 
 import java.util.ArrayList;
@@ -41,6 +47,8 @@ public class ChooseTestProject extends Activity {
     private ArrayList<TestFileRowBean> testFileRowList;
     private String schoolid=null;
     private String schoolPath=null;
+    @ViewInject(R.id.webView)
+    private WebView webView;
 
     //TestFileBean chosenTestFile=null;
     private ChooseTestFiles chooseTestFiles=ChooseTestFiles.getInstance();
@@ -61,31 +69,37 @@ public class ChooseTestProject extends Activity {
 
         int chosenTestFile=chooseTestFiles.getChosenTestFile();
         choseTestData.setText(testFileList.get(chosenTestFile).getFileName());
-        /*testFileList = new ArrayList<TestFileBean>();
-        TestFileBean bean = new TestFileBean();
-        bean.setSchoolYear(2014);
-        bean.setFileName("2014-2015学年国标上报数据");
-        testFileList.add(bean);*/
+
         chooseTestFiles.setTestFileList(testFileList);
         testFileId=chooseTestFiles.getChosenTestFileId();
-        //chooseTestFiles.setChosenTestFile(0);
-        //chosenTestFile=testFileList.get(0);
 
-        /*testFileRowList=dbManager.getTestFileRows(chosenTestFile.get_id());
-        TestFileRowBean t=testFileRowList.get(1);
-        HashMap<String, Object> info=t.getInfo();
-        Iterator iterator = info.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry entry = (Map.Entry) iterator.next();
-            Object key = entry.getKey();
-            Object val = entry.getValue();
-            System.out.println(key);
-            System.out.println(val);
-            System.out.println("-----------------");
-        }*/
-        //System.out.println("*************");
-        //System.out.println(t.getInfoJSON());
+        loadGrid();
+        webView.loadUrl("file:///android_asset/gb2014.html");
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webView.addJavascriptInterface(this, "wst");
+        //webView.loadUrl("javascript:getGB2014Score(\"100\", \"坐位体前屈\", \"五年级\", \"男生\")");
+        WebViewClient wvc = new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                System.out.println(11111);
+                webView.loadUrl("javascript:getGB2014Score(\"100\",\"坐位体前屈\",\"五年级\",\"男生\")");
+                super.onPageFinished(view, url);
+            }
+        };
+        webView.setWebViewClient(wvc);
 
+    }
+    @JavascriptInterface
+    public void startFunction(String data) {
+        System.out.println(data);
+        Gson gson = new Gson();
+        ScoreBean scoreBean = gson.fromJson(data, ScoreBean.class);
+        System.out.println(scoreBean.getPoints().get("value"));
+        // data即js的返回值
+    }
+
+    private void loadGrid(){
         ArrayList<HashMap<String, Object>> lstImageItem = new ArrayList<HashMap<String, Object>>();
         HashMap<String, Object> bmi = new HashMap<String, Object>();
         bmi.put("ItemImage", R.drawable.bmi);
