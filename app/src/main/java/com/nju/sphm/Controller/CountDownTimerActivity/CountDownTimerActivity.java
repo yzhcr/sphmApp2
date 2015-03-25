@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -93,8 +94,6 @@ public class CountDownTimerActivity extends Activity {
     private LinearLayout timeListView;
     @ViewInject(R.id.recordTableView)
     private LinearLayout recordTableView;
-    @ViewInject(R.id.recordTableReturn)
-    private Button returnBtn;
     @ViewInject(R.id.listTimeList)
     private ListView recordTimeListView;
     private String classId;
@@ -403,8 +402,7 @@ public class CountDownTimerActivity extends Activity {
         timeListView.setVisibility(View.GONE);
     }
 
-    @OnClick(R.id.recordTableReturn)
-    private void hideRecordTableView(View v){
+    private void hideRecordTableView(){
         recordTableView.setVisibility(View.GONE);
         timeListView.setVisibility(View.VISIBLE);
     }
@@ -611,4 +609,14 @@ public class CountDownTimerActivity extends Activity {
         });
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
+            if(recordTableView.getVisibility()==View.VISIBLE){
+                hideRecordTableView();
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }

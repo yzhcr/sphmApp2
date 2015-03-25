@@ -28,7 +28,11 @@ public class StudentBean {
 
     public String getScore(String testName){
         HashMap<String, Object> map = testFileRow.getInfo();
-        return (String)map.get(testName);
+        String result = (String)map.get(testName);
+        if(result == null){
+            result = "";
+        }
+        return result;
     }
 
     public void setScore(String testName, String score){

@@ -339,7 +339,7 @@ public class MainActivity extends Activity {
                 index = msg.getData().getInt("index");
                 if (index == -1) {
                     String rs = "下载完成";
-                    Toast.makeText(MainActivity.this, rs, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainActivity.this, rs, Toast.LENGTH_SHORT).show();
                 }else{
                     fileName = msg.getData().getString("fileName");
                     downloadProgressBar.setProgress(index);

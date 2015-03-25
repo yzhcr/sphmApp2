@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -37,7 +36,7 @@ import java.util.TimerTask;
 
 public class TimerActivity extends Activity {
     private long mlCount = 0;
-    private long mlTimerUnit = 10;
+    private long mlTimerUnit = 100;
     @ViewInject(R.id.tvTimer)
     private TextView tvTime;
     @ViewInject(R.id.btnStart)
@@ -88,7 +87,7 @@ public class TimerActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.timer);
         ViewUtils.inject(this);
-        tvTime.setText("00:00.00");
+        tvTime.setText(R.string.init_time_100millisecond);
         initHandler();
         initListView();
         Intent intent=getIntent();
@@ -222,17 +221,20 @@ public class TimerActivity extends Activity {
                         mlCount++;
                         int totalSec = 0;
                         msec = 0;
-                        totalSec = (int) (mlCount / 100);
-                        msec = (int) (mlCount % 100);
+                        totalSec = (int) (mlCount / 10);
+                        msec = (int) (mlCount % 10);
                         // Set time display
                         min = (totalSec / 60);
                         sec = (totalSec % 60);
                         try {
-                            tvTime.setText(String.format("%1$02d:%2$02d.%3$02d", min, sec, msec));
+                            if(min>0){
+                                tvTime.setText(String.format("%1$02d:%2$02d", min, sec));
+                            }else {
+                                tvTime.setText(String.format("%1$02d:%2$02d.%3$d", min, sec, msec));
+                            }
                         } catch (Exception e) {
-                            tvTime.setText("" + min + ":" + sec + "." + msec);
+                            tvTime.setText(String.format("%1$02d:%2$02d.%3$d", min, sec, msec));
                             e.printStackTrace();
-                            Log.e("MyTimer onCreate", "Format string error.");
                         }
                         break;
                     default:
@@ -327,7 +329,7 @@ public class TimerActivity extends Activity {
     }
 
     public void recordTime() {
-        String time = String.format("%1$02d:%2$02d.%3$02d", min, sec, msec);
+        String time = formatTimeString(min, sec, msec);
         timeList.add(time);
         int count = timeList.size();
         Map<String, Object> timeItemMap = new HashMap<String, Object>();
@@ -338,4 +340,11 @@ public class TimerActivity extends Activity {
         adapter.notifyDataSetChanged();
     }
 
+    public String formatTimeString(int min, int s, int ms){
+        if(min == 0){
+            return s + "." +ms;
+        }else{
+            return min + "'" + s;
+        }
+    }
 }
