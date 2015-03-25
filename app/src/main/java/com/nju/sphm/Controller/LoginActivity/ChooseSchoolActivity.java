@@ -72,6 +72,7 @@ public class ChooseSchoolActivity extends Activity {
                 intent.putExtra("schoolname",treeNode.getContentText());
                 intent.putExtra("schoolid",treeNode.getId());
                 intent.putExtra("schoolpath",treeNode.getPath());
+                System.out.println(treeNode.getPath());
                 intent.setClass(ChooseSchoolActivity.this, MainActivity.class);
                 startActivity(intent);
                 ChooseSchoolActivity.this.finish();
@@ -112,6 +113,9 @@ public class ChooseSchoolActivity extends Activity {
                 // 如果成功，则显示从网络获取到的图片
                 case 1: {
                     topNodes.add(allNodes.get(0));
+                    /*for(TreeNode treeNode:allNodes){
+                        System.out.println(treeNode.getPath());
+                    }*/
                     //ListView treeview = (ListView) findViewById(R.id.schoollist);
                     TreeViewAdapter treeViewAdapter = new TreeViewAdapter(topNodes, allNodes, inflater);
                     TreeViewItemClickListener treeViewItemClickListener = new TreeViewItemClickListener(treeViewAdapter);
@@ -150,6 +154,9 @@ public class ChooseSchoolActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         this.finish();
+        Intent intent=new Intent();
+        intent.setClass(ChooseSchoolActivity.this, MainActivity.class);
+        startActivity(intent);
         return super.onKeyDown(keyCode, event);
     }
 
