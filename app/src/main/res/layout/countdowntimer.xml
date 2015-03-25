@@ -9,7 +9,5 @@
     <include
         layout="@layout/clock"/>
     <include
-        layout="@layout/record_time_listviews" />
-    <include
-        layout="@layout/record_time" />
+        layout="@layout/record_table" />
 </LinearLayout>

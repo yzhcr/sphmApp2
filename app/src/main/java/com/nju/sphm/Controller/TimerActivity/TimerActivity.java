@@ -6,12 +6,21 @@ package com.nju.sphm.Controller.TimerActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
@@ -44,7 +53,9 @@ public class TimerActivity extends Activity {
     @ViewInject(R.id.btnStop)
     private Button btnStop;
     @ViewInject(R.id.listTimeList)
-    private ListView timeListView;
+    private ListView listTimeListView;
+    @ViewInject(R.id.clockLayout)
+    private LinearLayout clockLayout;
     private Timer timer = null;
     private TimerTask task = null;
     private Handler handler = null;
@@ -62,21 +73,46 @@ public class TimerActivity extends Activity {
     private Button btn_choose;
     @ViewInject(R.id.choseclass)
     private TextView choseclass;
-    @ViewInject(R.id.chooseSexLayout)
-    RelativeLayout chooseSexLayout;
     @ViewInject(R.id.title)
-    TextView title;
-    DBManager dbManager=null;
-    String schoolid=null;
-    String schoolPath=null;
-    String testProject=null;
-    ArrayList<OrganizationBean> gradeList=null;
-    ArrayList<StudentBean> studentList=null;
-    GetClass getClass=GetClass.getInstance();
+    private TextView title;
+    private DBManager dbManager=null;
+    private String schoolid=null;
+    private String schoolPath=null;
+    private String testProject=null;
+    private ArrayList<OrganizationBean> gradeList=null;
+    private ArrayList<StudentBean> studentList=new ArrayList<StudentBean>();
+    private ArrayList<StudentBean> maleStudentList=new ArrayList<StudentBean>();
+    private ArrayList<StudentBean> femaleStudentList=new ArrayList<StudentBean>();
+    private ArrayList<StudentBean> allStudentList=new ArrayList<StudentBean>();
+    private GetClass getClass=GetClass.getInstance();
     private String classId;
     private int choseGrade;
     private int choseClass;
     private String testFileID;
+    @ViewInject(R.id.showAll)
+    private TextView showAll;
+    @ViewInject(R.id.showMale)
+    private TextView showMale;
+    @ViewInject(R.id.showFemale)
+    private TextView showFemale;
+    private int whichIsChosen=0;
+
+    @ViewInject(R.id.listRecordTimeList)
+    private ListView recordTimeListView;
+    @ViewInject(R.id.listStudentSearchListView)
+    private ListView studentListView;
+    @ViewInject(R.id.recordTimeMainView)
+    private RelativeLayout recordTimeMainView;
+    @ViewInject(R.id.recordTimeSearchView)
+    private LinearLayout recordTimeSearchView;
+    @ViewInject(R.id.recordTimeSearchTextView)
+    private EditText tvSearch;
+    private Map<String, Object> clickedTimeItem;
+    private InputMethodManager inputmanger;
+    Map<String, String> recordMap = new HashMap<String, String>();
+    private SimpleAdapter timeAdapter;
+    private LinkedList<Map<String, Object>> studentItemList;
+    private SimpleAdapter studentAdapter;
 
 
     /**
@@ -100,7 +136,8 @@ public class TimerActivity extends Activity {
         choseGrade=getClass.getChoseGrade();
         choseClass=getClass.getChoseClass();
         choseclass.setText(choseGrade+"年"+choseClass+"班");
-        chooseSexLayout.setVisibility(View.GONE);
+        inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        getStudentInfo();
     }
 
     //将班级信息添加到GetCLass中，方便使用
@@ -196,6 +233,7 @@ public class TimerActivity extends Activity {
                 GetClass getClass=GetClass.getInstance();
                 getClass.setChoseGrade(choseGrade);
                 getClass.setChoseClass(choseClass);
+                getStudentInfo();
             }
         });
         dialog.show();
@@ -206,7 +244,7 @@ public class TimerActivity extends Activity {
         adapter = new SimpleAdapter(this, timeItemList, R.layout.record_time_listview_time_item,
                 new String[]{"num", "recordTime"},
                 new int[]{R.id.tvNum, R.id.tvRecordTime});
-        timeListView.setAdapter(adapter);
+        listTimeListView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
 
@@ -249,13 +287,7 @@ public class TimerActivity extends Activity {
     @OnClick(R.id.btnStart)
     private void startAndClick(View v) {
         if (isStop) {
-            //跳转到登记界面，待实现
-            Intent intent = new Intent(this, TimeRecordActivity.class);
-            classId = getClass.findClassId(choseGrade,choseClass);
-            intent.putExtra("timelist", timeList);
-            intent.putExtra("classId", classId);
-            intent.putExtra("testFileId", testFileID);
-            startActivity(intent);
+            showRecordTimeView();
         } else {
             if (null == timer) {
                 if (null == task) {
@@ -346,5 +378,216 @@ public class TimerActivity extends Activity {
         }else{
             return min + "'" + s;
         }
+    }
+
+    private void initTimeRecordListView() {
+        timeItemList = new LinkedList<Map<String, Object>>();
+        timeAdapter = new SimpleAdapter(this, timeItemList, R.layout.record_time_listview_time_item,
+                new String[]{"num", "recordTime", "studentName", "studentNumber", "studentSex", "fullStudentNumber"},
+                new int[]{R.id.tvNum, R.id.tvRecordTime, R.id.tvStudentName,
+                        R.id.tvStudentNumber, R.id.tvStudentSex, R.id.tvFullStudentNumber});
+        recordTimeListView.setAdapter(timeAdapter);
+        timeAdapter.notifyDataSetChanged();
+        recordTimeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                clickedTimeItem = (Map<String, Object>) timeAdapter.getItem(position);
+                studentItemList.clear();
+                studentAdapter.notifyDataSetChanged();
+                recordTimeMainView.setVisibility(View.GONE);
+                recordTimeSearchView.setVisibility(View.VISIBLE);
+                tvSearch.setText("");
+                tvSearch.requestFocus();
+                toggleKeyBoard();
+            }
+        });
+
+        studentItemList = new LinkedList<Map<String, Object>>();
+        studentAdapter = new SimpleAdapter(this, studentItemList, R.layout.record_time_listview_student_item,
+                new String[]{"studentName", "studentNumber", "studentSex", "fullStudentNumber"},
+                new int[]{R.id.tvStudentName,
+                        R.id.tvStudentNumber, R.id.tvStudentSex, R.id.tvFullStudentNumber});
+        studentListView.setAdapter(studentAdapter);
+        studentAdapter.notifyDataSetChanged();
+        studentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Map<String, Object> studentItem = (Map<String, Object>) studentAdapter.getItem(position);
+                toggleKeyBoard();
+                recordTimeMainView.setVisibility(View.VISIBLE);
+                recordTimeSearchView.setVisibility(View.GONE);
+                clickedTimeItem.put("studentName", studentItem.get("studentName"));
+                clickedTimeItem.put("studentSex", studentItem.get("studentSex"));
+                clickedTimeItem.put("studentNumber", studentItem.get("studentNumber"));
+                clickedTimeItem.put("fullStudentNumber", studentItem.get("fullStudentNumber"));
+                String fullStudentNumber = (String) studentItem.get("fullStudentNumber");
+                String recordTime = (String) clickedTimeItem.get("recordTime");
+                for(StudentBean bean : studentList){
+                    if(bean.getStudentCode().equals(fullStudentNumber)){
+                        bean.setScore(testProject, recordTime);
+                        dbManager.addTestFileRow(bean.getTestFileRow());
+                        break;
+                    }
+                }
+                timeAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void getStudentInfo(){
+        int chosenGrade=getClass.getChoseGrade();
+        int chosenClass=getClass.getChoseClass();
+        String classID=getClass.findClassId(chosenGrade,chosenClass);
+        allStudentList=dbManager.getStudents(classID, testFileID);
+        maleStudentList.clear();
+        femaleStudentList.clear();
+        for(StudentBean student:allStudentList){
+            if(student.getSex().equals("男生"))
+                maleStudentList.add(student);
+            else
+                femaleStudentList.add(student);
+        }
+        switch (whichIsChosen){
+            case 0:
+                studentList = allStudentList;
+                break;
+            case 1:
+                studentList = maleStudentList;
+                break;
+            case 2:
+                studentList = femaleStudentList;
+                break;
+        }
+    }
+
+    private void initTimeList() {
+        int count = 0;
+        for (String time : timeList) {
+            count++;
+            Map<String, Object> timeItemMap = new HashMap<String, Object>();
+            //"num","recordTime"
+            timeItemMap.put("num", count);
+            timeItemMap.put("recordTime", time);
+            timeItemList.add(timeItemMap);
+        }
+
+        timeAdapter.notifyDataSetChanged();
+    }
+
+    private void initSearchText() {
+        tvSearch.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        String num = s.toString();
+                        studentItemList.clear();
+                        if (!num.equals("")){
+                            for (StudentBean student : studentList) {
+                                if (student.getStudentNumberLastSixNum().contains(num)) {
+                                    addSearchItem(student);
+                                }
+                            }
+                        }
+                        studentAdapter.notifyDataSetChanged();
+                    }
+                }
+        );
+    }
+
+
+    private void addSearchItem(StudentBean student) {
+        Map<String, Object> item = new HashMap<String, Object>();
+        item.put("studentName", student.getName());
+        item.put("studentSex", student.getSex());
+        item.put("studentNumber", student.getStudentNumberLastSixNum());
+        item.put("fullStudentNumber", student.getStudentCode());
+        studentItemList.push(item);
+    }
+
+    public void attachStudentAndTime(String fullStudentNumber, String time) {
+        recordMap.put(fullStudentNumber, time);
+    }
+
+    public void toggleKeyBoard() {
+        inputmanger.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    public void showRecordTimeView(){
+        initTimeRecordListView();
+        initTimeList();
+        initSearchText();
+        listTimeListView.setVisibility(View.GONE);
+        recordTimeMainView.setVisibility(View.VISIBLE);
+        recordTimeSearchView.setVisibility(View.GONE);
+        clockLayout.setVisibility(View.GONE);
+
+    }
+
+    public void hideRecordTimeView(){
+        recordTimeMainView.setVisibility(View.GONE);
+        recordTimeSearchView.setVisibility(View.GONE);
+        clockLayout.setVisibility(View.VISIBLE);
+        listTimeListView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
+            if(recordTimeMainView.getVisibility()==View.VISIBLE){
+                hideRecordTimeView();
+                return true;
+            }else if(recordTimeSearchView.getVisibility()==View.VISIBLE){
+                recordTimeMainView.setVisibility(View.VISIBLE);
+                recordTimeSearchView.setVisibility(View.GONE);
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @OnClick(R.id.showAll)
+    public void showAll(View v){
+        showAll.setTextColor(Color.WHITE);
+        showAll.setBackgroundResource(R.drawable.showall_click);
+        showMale.setTextColor(Color.BLACK);
+        showMale.setBackgroundResource(R.drawable.showmale);
+        showFemale.setTextColor(Color.BLACK);
+        showFemale.setBackgroundResource(R.drawable.showfemale);
+        studentList = allStudentList;
+    }
+
+    @OnClick(R.id.showMale)
+    public void showMale(View v){
+        whichIsChosen=1;
+        showAll.setTextColor(Color.BLACK);
+        showAll.setBackgroundResource(R.drawable.showall);
+        showMale.setTextColor(Color.WHITE);
+        showMale.setBackgroundResource(R.drawable.showmale_click);
+        showFemale.setTextColor(Color.BLACK);
+        showFemale.setBackgroundResource(R.drawable.showfemale);
+        studentList = maleStudentList;
+    }
+
+    @OnClick(R.id.showFemale)
+    public void showFemale(View v){
+        whichIsChosen=2;
+        showAll.setTextColor(Color.BLACK);
+        showAll.setBackgroundResource(R.drawable.showall);
+        showMale.setTextColor(Color.BLACK);
+        showMale.setBackgroundResource(R.drawable.showmale);
+        showFemale.setTextColor(Color.WHITE);
+        showFemale.setBackgroundResource(R.drawable.showfemale_click);
+        studentList = femaleStudentList;
+
     }
 }
