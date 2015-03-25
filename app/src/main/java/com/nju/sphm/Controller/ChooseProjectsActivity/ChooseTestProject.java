@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
@@ -93,9 +94,11 @@ public class ChooseTestProject extends Activity {
     @JavascriptInterface
     public void startFunction(String data) {
         System.out.println(data);
+        data="{\"info\":"+data+"}";
         Gson gson = new Gson();
         ScoreBean scoreBean = gson.fromJson(data, ScoreBean.class);
-        System.out.println(scoreBean.getPoints().get("value"));
+        LinkedTreeMap<String, Object> info=(LinkedTreeMap)scoreBean.getInfo().get("得分");
+        System.out.println(info.get("value"));
         // data即js的返回值
     }
 
