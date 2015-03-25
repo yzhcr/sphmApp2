@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 public class TableHelper {
     private DBManager dbManager;
-
+    private EditText lastEditText;
     public DBManager getDbManager() {
         return dbManager;
     }
@@ -92,10 +92,11 @@ public class TableHelper {
                         editText.setOnFocusChangeListener(new android.view.View.OnFocusChangeListener() {
                             @Override
                             public void onFocusChange(View v, boolean hasFocus) {
-                                if(hasFocus) {
+                                if (hasFocus) {
+                                    lastEditText=editText;
                                 } else {
                                     // System.out.println(editText.getTag(1));
-                                    if(!student.getScore(testName1).equals(editText.getText().toString())){
+                                    if (!student.getScore(testName1).equals(editText.getText().toString())) {
                                         saveData(student, editText.getText().toString(), testName1);
                                     }
                                 }
@@ -110,6 +111,7 @@ public class TableHelper {
                             @Override
                             public void onFocusChange(View v, boolean hasFocus) {
                                 if(hasFocus) {
+                                    lastEditText=editText;
                                 } else {
                                     // System.out.println(editText.getTag(1));
                                     if(!student.getScore(testName2).equals(editText.getText().toString())) {
@@ -154,5 +156,10 @@ public class TableHelper {
                 TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
         tableParam.setMargins(0,1,0,1);
         tableTitle.addView(tablerow,tableParam);
+    }
+
+    public void lastEditTextLostFocus(){
+        if(lastEditText!=null)
+            lastEditText.clearFocus();
     }
 }

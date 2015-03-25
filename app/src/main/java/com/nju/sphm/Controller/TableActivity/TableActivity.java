@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
@@ -72,7 +73,7 @@ public class TableActivity extends Activity {
 
         dbManager=new DBManager(this);
         title.setText(testProject);
-        addClassInfo();
+
         int choseGrade=getClass.getChoseGrade();
         int choseClass=getClass.getChoseClass();
         choseclass.setText(choseGrade+"年"+choseClass+"班");
@@ -184,69 +185,10 @@ public class TableActivity extends Activity {
                 femaleStudentList.add(student);
         }
     }
-    //将班级信息添加到GetCLass中，方便使用
-    private void addClassInfo(){
-
-        gradeList=dbManager.getOrganizations(schoolid);
-        ArrayList<OrganizationBean> sortGradeList=new ArrayList<OrganizationBean>();
-        int gradeNum=gradeList.size();
-        if(gradeNum==3){
-            getClass.setGradeNumMax(3);
-            getClass.setGradeNumMin(1);
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("一年级")){
-                    sortGradeList.add(o);
-                }
-            }
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("二年级")){
-                    sortGradeList.add(o);
-                }
-            }
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("三年级")){
-                    sortGradeList.add(o);
-                }
-            }
-        }
-        if(gradeNum==6){
-            getClass.setGradeNumMax(6);
-            getClass.setGradeNumMin(1);
-           // getClass.setChoseGrade(1);
-            //getClass.setChoseClass(1);
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("一年级")){
-                    sortGradeList.add(o);
-                }
-            }
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("二年级")){
-                    sortGradeList.add(o);
-                }
-            }
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("三年级")){
-                    sortGradeList.add(o);
-                }
-            }
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("四年级")){
-                    sortGradeList.add(o);
-                }
-            }
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("五年级")){
-                    sortGradeList.add(o);
-                }
-            }
-            for(OrganizationBean o:gradeList){
-                if(o.getName().equals("六年级")){
-                    sortGradeList.add(o);
-                }
-            }
-        }
-
-        getClass.setGradeList(sortGradeList);
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        this.finish();
+        tableHelper.lastEditTextLostFocus();
+        return super.onKeyDown(keyCode, event);
     }
-
 }

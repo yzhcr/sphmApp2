@@ -23,6 +23,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.ScoreBean;
 import com.nju.sphm.Bean.TestFileBean;
 import com.nju.sphm.Bean.TestFileRowBean;
@@ -31,6 +32,7 @@ import com.nju.sphm.Controller.TableActivity.TableActivity;
 import com.nju.sphm.Controller.TimerActivity.TimerActivity;
 import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.Model.UIHelper.ChooseTestFiles;
+import com.nju.sphm.Model.UIHelper.GetClass;
 import com.nju.sphm.R;
 
 import java.util.ArrayList;
@@ -159,6 +161,9 @@ public class ChooseTestProject extends Activity {
             /*Toast.makeText(getApplicationContext(), (String) item.get("ItemText"),
                     Toast.LENGTH_SHORT).show();*/
             String choseProject=(String) item.get("ItemText");
+            ArrayList<OrganizationBean> gradeList=dbManager.getOrganizations(schoolid);
+            GetClass getClass=GetClass.getInstance();
+            getClass.addClassInfo(gradeList,choseProject);
             switch (choseProject){
                 case "BMI": {
                     Intent i = new Intent();

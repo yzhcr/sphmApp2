@@ -315,18 +315,7 @@ public class MainActivity extends Activity {
         downloadWindow = new AlertDialog.Builder(this)
                 .setTitle("正在下载数据")
                 .setView(view)
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                }).create();
+                .create();
     }
 
     class DownloadHandler extends Handler{

@@ -65,6 +65,32 @@
         android:layout_marginTop="30dp">
 
         </GridView>
+    <LinearLayout
+        android:gravity="bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+        <Button
+            android:id="@+id/download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="下载"
+            android:textSize="23sp"
+            android:textColor="#FFFFFF"
+            android:background="#33CC66"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="上传"
+            android:textSize="23sp"
+            android:textColor="#FFFFFF"
+            android:background="#ffff261a"
+            android:layout_weight="1"/>
+    </LinearLayout>
     <WebView
         android:layout_below="@id/gridview"
         android:id="@+id/webView"
