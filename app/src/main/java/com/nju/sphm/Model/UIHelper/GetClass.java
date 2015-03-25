@@ -75,6 +75,105 @@ public class GetClass {
         }
     }
 
+    public void addClassInfo(ArrayList<OrganizationBean> gradeList,String testName){
+        ArrayList<OrganizationBean> sortGradeList=new ArrayList<OrganizationBean>();
+        int gradeNum=gradeList.size();
+        if(gradeNum==3){
+            this.setGradeNumMax(3);
+            this.setGradeNumMin(1);
+            for(OrganizationBean o:gradeList){
+                if(o.getName().equals("一年级")){
+                    sortGradeList.add(o);
+                }
+            }
+            for(OrganizationBean o:gradeList){
+                if(o.getName().equals("二年级")){
+                    sortGradeList.add(o);
+                }
+            }
+            for(OrganizationBean o:gradeList){
+                if(o.getName().equals("三年级")){
+                    sortGradeList.add(o);
+                }
+            }
+        }
+        if(gradeNum==6){
+            System.out.println(testName);
+            if(testName.equals("BMI")||testName.equals("肺活量")||testName.equals("坐位体前屈")||testName.equals("50米跑")||testName.equals("一分钟跳绳")) {
+                this.setGradeNumMax(6);
+                this.setGradeNumMin(1);
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("一年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("二年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("三年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("四年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("五年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("六年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+            }else if(testName.equals("一分钟仰卧起坐")){
+                this.setGradeNumMax(6);
+                this.setGradeNumMin(3);
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("三年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("四年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("五年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("六年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+            }
+            else if(testName.equals("50米×8往返跑")){
+                this.setGradeNumMax(6);
+                this.setGradeNumMin(5);
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("五年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+                for (OrganizationBean o : gradeList) {
+                    if (o.getName().equals("六年级")) {
+                        sortGradeList.add(o);
+                    }
+                }
+            }
+        }
+        this.setGradeList(sortGradeList);
+    }
+
     //传入年级与班级，传回班级的id
     public String findClassId(int gradeNum,int classNum){
         ArrayList<OrganizationBean> classList=gradeList.get(gradeNum-GradeNumMin).getChildren();
