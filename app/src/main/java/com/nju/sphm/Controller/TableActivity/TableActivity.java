@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
@@ -184,5 +185,10 @@ public class TableActivity extends Activity {
                 femaleStudentList.add(student);
         }
     }
-
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        this.finish();
+        tableHelper.lastEditTextLostFocus();
+        return super.onKeyDown(keyCode, event);
+    }
 }
