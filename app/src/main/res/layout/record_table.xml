@@ -4,13 +4,6 @@
     android:id="@+id/recordTableView"
     android:visibility="gone"
     >
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:id="@+id/recordTableReturn"
-        android:text="返回"
-        />
         <TableLayout
             android:id="@+id/tabletitle2"
             android:layout_width="wrap_content"
