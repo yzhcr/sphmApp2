@@ -21,6 +21,7 @@ import java.util.ArrayList;
 public class TableHelper {
     private DBManager dbManager;
     private EditText lastEditText;
+    private ArrayList<EditText> editTextList=new ArrayList<EditText>();
     public DBManager getDbManager() {
         return dbManager;
     }
@@ -56,8 +57,6 @@ public class TableHelper {
                 textView.setPadding(0,10,0,10);
 
                 final EditText editText = new EditText(activity);
-                //testview.setBackgroundResource(R.drawable.shape);
-                // testview.setText("选择");
                 editText.setLines(1);
                 editText.setGravity(Gravity.CENTER);
                 editText.setBackgroundColor(Color.TRANSPARENT);//背景黑色
@@ -88,6 +87,7 @@ public class TableHelper {
                     case 3:{
                         //System.out.println(testName1);
                         //System.out.println(student.getScore(testName1));
+                        editTextList.add(editText);
                         editText.setText(student.getScore(testName1));
                         editText.setOnFocusChangeListener(new android.view.View.OnFocusChangeListener() {
                             @Override
@@ -106,6 +106,7 @@ public class TableHelper {
                         break;
                     }
                     case 4:{
+                        editTextList.add(editText);
                         editText.setText(student.getScore(testName2));
                         editText.setOnFocusChangeListener(new android.view.View.OnFocusChangeListener() {
                             @Override
@@ -161,5 +162,12 @@ public class TableHelper {
     public void lastEditTextLostFocus(){
         if(lastEditText!=null)
             lastEditText.clearFocus();
+    }
+
+    public void setAllEditTextUnEdited(){
+        for(EditText e:editTextList){
+            e.setFocusable(false);
+            e.setFocusableInTouchMode(false);
+        }
     }
 }
