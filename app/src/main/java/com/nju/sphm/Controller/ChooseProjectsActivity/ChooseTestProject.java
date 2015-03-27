@@ -2,8 +2,10 @@ package com.nju.sphm.Controller.ChooseProjectsActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,6 +30,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.nju.sphm.Bean.LoginBean;
 import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.ScoreBean;
 import com.nju.sphm.Bean.TestFileBean;
@@ -38,6 +41,7 @@ import com.nju.sphm.Controller.TimerActivity.TimerActivity;
 import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.Model.DataHelper.NetWorkHelper;
 import com.nju.sphm.Model.Download.DownloadWorker;
+import com.nju.sphm.Model.Login.Login;
 import com.nju.sphm.Model.UIHelper.ChooseTestFiles;
 import com.nju.sphm.Model.UIHelper.GetClass;
 import com.nju.sphm.R;
@@ -75,6 +79,8 @@ public class ChooseTestProject extends Activity {
 
         setContentView(R.layout.activity_choose_test_project);
         ViewUtils.inject(this);
+
+        initDialog();
 
         Intent intent=getIntent();
         schoolid=intent.getStringExtra("schoolid");
@@ -299,6 +305,8 @@ public class ChooseTestProject extends Activity {
 
     @OnClick(R.id.downloadButton)
     public void downloadButton(View v){
+
+
         NetWorkHelper netWorkHelper = NetWorkHelper.getInstance();
 
         if (!netWorkHelper.hasWifi(this)) {
@@ -310,8 +318,9 @@ public class ChooseTestProject extends Activity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     // TODO Auto-generated method stub
-                    Thread thread = new Thread(downloadRunnable);
-                    thread.start();
+                    Thread loginThread = new Thread(loginRunnable);
+                    loginThread.start();
+
                 }
             });
             builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -321,13 +330,57 @@ public class ChooseTestProject extends Activity {
 
                 }
             });
+            builder.setCancelable(false);
             builder.create().show();
         } else {
-            Thread thread = new Thread(downloadRunnable);
-            thread.start();
+            Thread loginThread = new Thread(loginRunnable);
+            loginThread.start();
         }
 
     }
+    private Handler loginHandler = new Handler() {
+        // 重写handleMessage()方法，此方法在UI线程运行
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                // 如果成功，则显示从网络获取到的图片
+                case 1: {
+                    Thread thread = new Thread(downloadRunnable);
+                    downloadWindow.show();
+                    thread.start();
+                    break;
+                }
+                case 0:{
+                    Toast toast = Toast.makeText(getApplicationContext(), "网络错误", Toast.LENGTH_SHORT);
+                    toast.show();
+                    break;
+                }
+            }
+        }
+    };
+    Runnable loginRunnable = new Runnable() {
+        // 重写run()方法，此方法在新的线程中运行
+        @Override
+        public void run() {
+            try{
+                SharedPreferences sharedPreferences =getSharedPreferences("loginMessage", Context.MODE_PRIVATE);
+                schoolPath=sharedPreferences.getString("schoolPath",null);
+                String user=sharedPreferences.getString("user",null);
+                String password=sharedPreferences.getString("password",null);
+                Login loginlogic = new Login();
+                LoginBean loginBean = loginlogic.login(user, password, schoolPath);
+                boolean infoIsTrue = loginBean.isStatus();
+                if (infoIsTrue) {
+                    loginHandler.obtainMessage(1).sendToTarget();
+
+                } else {
+                    loginHandler.obtainMessage(0).sendToTarget();
+                }
+            } catch (Exception e) {
+                loginHandler.obtainMessage(0).sendToTarget();
+            }
+        }
+    };
 
     Runnable downloadRunnable = new Runnable() {
         // 重写run()方法，此方法在新的线程中运行
@@ -359,6 +412,7 @@ public class ChooseTestProject extends Activity {
                 .setTitle("正在下载数据")
                 .setView(view)
                 .create();
+        downloadWindow.setCancelable(false);
     }
 
     class DownloadHandler extends Handler {
@@ -382,6 +436,7 @@ public class ChooseTestProject extends Activity {
             if(msg.what == -1){
                 String rs = "下载完成";
                 Toast.makeText(ChooseTestProject.this, rs, Toast.LENGTH_SHORT).show();
+                downloadWindow.hide();
             }
 
             if(msg.what == -2){

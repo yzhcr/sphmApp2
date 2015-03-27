@@ -56,7 +56,6 @@ public class MainActivity extends Activity {
     boolean isautoLogin=false;
     private Thread thread;
     private Thread loginThread;
-    private String userId;
     private AlertDialog downloadWindow;
     private ProgressBar downloadProgressBar;
     private TextView downloadTextView;
@@ -213,7 +212,6 @@ public class MainActivity extends Activity {
             switch (msg.what) {
                 // 如果成功，则显示从网络获取到的图片
                 case 1: {
-                    Login loginlogic = new Login();
                     if (autoLogin.isChecked()) {
                         SharedPreferences sharedPreferences = getSharedPreferences("loginMessage", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();//获取编辑器
@@ -257,9 +255,8 @@ public class MainActivity extends Activity {
             try{
                 Login loginlogic = new Login();
                 LoginBean loginBean = loginlogic.login(user, password, schoolPath);
-                userId = loginlogic.getUserID(user, schoolPath);
                 boolean infoIsTrue = loginBean.isStatus();
-                if (infoIsTrue&&userId!=null) {
+                if (infoIsTrue) {
                     loginHandler.obtainMessage(1).sendToTarget();
 
                 } else {
@@ -313,6 +310,7 @@ public class MainActivity extends Activity {
                 .setTitle("正在下载数据")
                 .setView(view)
                 .create();
+        downloadWindow.setCancelable(false);
     }
 
     class DownloadHandler extends Handler{
