@@ -97,7 +97,7 @@ public class NetWorkHelper {
             InputStream inputStream = connection.getInputStream();
             while((len=inputStream.read(buffer))!=-1){
                 hasRead+=len;
-                String str = new String(buffer);
+                String str = new String(buffer,"utf-8");
                 sb.append(str);
                 //System.out.println(str);
                 if(handler!=null) {

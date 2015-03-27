@@ -109,16 +109,23 @@ public class StudentBean {
     }
 
     public String getName(){
-        return (String)info.get("姓名");
+        String name = (String)info.get("姓名");
+        if(name == null){
+            return "";
+        }
+        return name;
     }
 
     public String getSex() {
-        Double sex = (Double)info.get("性别");
-        if(sex == 1.0){
-            return "男生";
-        }else{
-            return "女生";
+        Double sex = (Double) info.get("性别");
+        if (sex == null){
+            return "";
         }
+            if (sex == 1.0) {
+                return "男生";
+            } else {
+                return "女生";
+            }
     }
 
 

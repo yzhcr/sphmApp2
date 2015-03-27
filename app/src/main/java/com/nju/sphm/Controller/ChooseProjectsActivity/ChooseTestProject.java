@@ -2,9 +2,13 @@ package com.nju.sphm.Controller.ChooseProjectsActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
@@ -14,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +36,8 @@ import com.nju.sphm.Controller.CountDownTimerActivity.CountDownTimerActivity;
 import com.nju.sphm.Controller.TableActivity.TableActivity;
 import com.nju.sphm.Controller.TimerActivity.TimerActivity;
 import com.nju.sphm.Model.DataHelper.DBManager;
+import com.nju.sphm.Model.DataHelper.NetWorkHelper;
+import com.nju.sphm.Model.Download.DownloadWorker;
 import com.nju.sphm.Model.UIHelper.ChooseTestFiles;
 import com.nju.sphm.Model.UIHelper.GetClass;
 import com.nju.sphm.R;
@@ -52,6 +59,12 @@ public class ChooseTestProject extends Activity {
     private String schoolPath=null;
     @ViewInject(R.id.webView)
     private WebView webView;
+    @ViewInject(R.id.downloadButton)
+    private Button downloadButton;
+    private AlertDialog downloadWindow;
+    private ProgressBar downloadProgressBar;
+    private TextView downloadTextView;
+    private DownloadHandler handler = new DownloadHandler();
 
     //TestFileBean chosenTestFile=null;
     private ChooseTestFiles chooseTestFiles=ChooseTestFiles.getInstance();
@@ -204,6 +217,7 @@ public class ChooseTestProject extends Activity {
                     i.putExtra("schoolpath", schoolPath);
                     i.putExtra("testProject","50米跑");
                     i.putExtra("testFileId",testFileId);
+                    i.putExtra("tableTitle","学号:姓名:性别:时间");
                     i.setClass(ChooseTestProject.this, TimerActivity.class);
                     startActivity(i);
                     break;
@@ -214,6 +228,7 @@ public class ChooseTestProject extends Activity {
                     i.putExtra("schoolpath", schoolPath);
                     i.putExtra("testProject","50米×8往返跑");
                     i.putExtra("testFileId",testFileId);
+                    i.putExtra("tableTitle","学号:姓名:性别:时间");
                     i.setClass(ChooseTestProject.this, TimerActivity.class);
                     startActivity(i);
                     break;
@@ -280,6 +295,103 @@ public class ChooseTestProject extends Activity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @OnClick(R.id.downloadButton)
+    public void downloadButton(View v){
+        NetWorkHelper netWorkHelper = NetWorkHelper.getInstance();
+
+        if (!netWorkHelper.hasWifi(this)) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(ChooseTestProject.this);
+            builder.setTitle("您未处于WiFi环境下");
+            builder.setMessage("下载数据会产生大量流量，是否继续？");
+            //builder.setIcon(R.drawable.ic_launcher);
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+                    Thread thread = new Thread(downloadRunnable);
+                    thread.start();
+                }
+            });
+            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+
+                }
+            });
+            builder.create().show();
+        } else {
+            Thread thread = new Thread(downloadRunnable);
+            thread.start();
+        }
+
+    }
+
+    Runnable downloadRunnable = new Runnable() {
+        // 重写run()方法，此方法在新的线程中运行
+        @Override
+        public void run() {
+
+            try{
+                DownloadWorker downloadWorker = new DownloadWorker(getApplication());
+                boolean ok = downloadWorker.download(schoolPath, 2014, handler);
+                if(ok){
+                    handler.obtainMessage(-1).sendToTarget();
+                }else{
+                    handler.obtainMessage(-2).sendToTarget();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                //mHandler.obtainMessage(0).sendToTarget();
+            }
+        }
+    };
+
+    public void initDialog() {
+        LayoutInflater factory = LayoutInflater.from(this);
+        View view = factory.inflate(R.layout.download_window, null);
+        downloadProgressBar = (ProgressBar)view.findViewById(R.id.downloadProgressBar);
+        downloadTextView = (TextView)view.findViewById(R.id.downloadTextView);
+        downloadWindow = new AlertDialog.Builder(this)
+                .setTitle("正在下载数据")
+                .setView(view)
+                .create();
+    }
+
+    class DownloadHandler extends Handler {
+
+        @Override
+        public void handleMessage(Message msg) {
+            int index;
+            String fileName;
+            if (msg.what == 1) {
+                index = msg.getData().getInt("index");
+                if (index == -1) {
+                    String rs = "下载完成";
+                    Toast.makeText(ChooseTestProject.this, rs, Toast.LENGTH_SHORT).show();
+                }else{
+                    fileName = msg.getData().getString("fileName");
+                    downloadProgressBar.setProgress(index);
+                    downloadTextView.setText(fileName);
+                }
+            }
+
+            if(msg.what == -1){
+                String rs = "下载完成";
+                Toast.makeText(ChooseTestProject.this, rs, Toast.LENGTH_SHORT).show();
+            }
+
+            if(msg.what == -2){
+                String rs = "下载失败，请检查网络";
+                Toast.makeText(ChooseTestProject.this, rs, Toast.LENGTH_SHORT).show();
+            }
+
+            super.handleMessage(msg);
+        }
+
     }
 
 }
