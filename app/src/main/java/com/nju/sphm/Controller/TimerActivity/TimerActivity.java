@@ -35,6 +35,7 @@ import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Controller.TableActivity.ClassPickerDialog;
 import com.nju.sphm.Model.DataHelper.DBManager;
+import com.nju.sphm.Model.UIHelper.GB2Helper;
 import com.nju.sphm.Model.UIHelper.GetClass;
 import com.nju.sphm.Model.UIHelper.TableHelper;
 import com.nju.sphm.R;
@@ -156,6 +157,7 @@ public class TimerActivity extends Activity {
         getStudentInfo();
         tableTitleString=intent.getStringExtra("tableTitle");
         initTable();
+        tableHelper.setAllEditTextUnEdited();
     }
 
     @OnClick(R.id.btnListen)
@@ -537,6 +539,7 @@ public class TimerActivity extends Activity {
     }
 
     private void initSearchText() {
+
         tvSearch.addTextChangedListener(
                 new TextWatcher() {
                     @Override
@@ -551,11 +554,17 @@ public class TimerActivity extends Activity {
 
                     @Override
                     public void afterTextChanged(Editable s) {
+                        GB2Helper gb2Helper = GB2Helper.getInstance();
                         String num = s.toString();
                         studentItemList.clear();
                         if (!num.equals("")){
                             for (StudentBean student : studentList) {
-                                if (student.getStudentNumberLastSixNum().contains(num)) {
+//                                if (student.getStudentNumberLastSixNum().contains(num)) {
+//                                    addSearchItem(student);
+//                                }
+                                String str = gb2Helper.String2Alpha(student.getName());
+                                //System.out.println(str);
+                                if(str.contains(num)){
                                     addSearchItem(student);
                                 }
                             }
