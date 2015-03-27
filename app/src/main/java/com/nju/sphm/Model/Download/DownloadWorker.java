@@ -1,9 +1,7 @@
 package com.nju.sphm.Model.Download;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 
 import com.nju.sphm.Bean.ClassBean;
 import com.nju.sphm.Bean.OrganizationBean;
@@ -34,7 +32,7 @@ public class DownloadWorker {
     }
 
     //path是学校的路径，userid是该学校账号的oid
-    public boolean download(String path, String userId, int year, Handler handler){
+    public boolean download(String path, int year, Handler handler){
         try {
             String fatherPath = "";
             String[] l = path.split("/");
@@ -55,7 +53,7 @@ public class DownloadWorker {
             o.setChildren(organizationHelper.getOrganizationList(path, year, handler));
             ArrayList<StudentBean> studentList = new ArrayList<StudentBean>();
             ArrayList<ClassBean> classList = studentHelper.getClassList(path, year, handler);
-            ArrayList<TestFileBean> testFileList = testFileHelper.getTestFileList(userId, year, handler);
+            ArrayList<TestFileBean> testFileList = testFileHelper.getTestFileList( year, handler);
             dbm.addTestFiles(testFileList);
             dbm.addOrganizations(organizationList);
             dbm.addOrganization(o);
@@ -66,12 +64,6 @@ public class DownloadWorker {
                 ArrayList<TestFileRowBean> testFileRowBeanList = testFileHelper.getTestFileRowList(tfb.get_id(), handler);
                 dbm.addTestFileRows(testFileRowBeanList);
             }
-            Message message = new Message();
-            message.what = 1;
-            Bundle bundle = new Bundle();
-            bundle.putInt("index", -1);
-            message.setData(bundle);
-            handler.sendMessage(message);
         } catch (Exception e){
             e.printStackTrace();
             return false;

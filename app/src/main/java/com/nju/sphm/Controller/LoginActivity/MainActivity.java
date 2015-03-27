@@ -188,13 +188,10 @@ public class MainActivity extends Activity {
         // 重写run()方法，此方法在新的线程中运行
                 @Override
         public void run() {
-                    System.out.println("kaishi");
-                    try{
 
-
-
+        try{
                 DownloadWorker downloadWorker = new DownloadWorker(getApplication());
-                boolean ok = downloadWorker.download(schoolPath, userId, 2014, handler);
+                boolean ok = downloadWorker.download(schoolPath, 2014, handler);
                 if(ok){
                     mHandler.obtainMessage(1).sendToTarget();
                 }else{

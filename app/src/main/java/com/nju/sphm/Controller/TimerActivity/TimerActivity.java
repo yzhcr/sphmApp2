@@ -23,7 +23,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.lidroid.xutils.ViewUtils;
@@ -34,6 +36,7 @@ import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Controller.TableActivity.ClassPickerDialog;
 import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.Model.UIHelper.GetClass;
+import com.nju.sphm.Model.UIHelper.TableHelper;
 import com.nju.sphm.R;
 
 import java.util.ArrayList;
@@ -88,7 +91,6 @@ public class TimerActivity extends Activity {
     private String classId;
     private int choseGrade;
     private int choseClass;
-    private String testFileID;
     @ViewInject(R.id.showAll)
     private TextView showAll;
     @ViewInject(R.id.showMale)
@@ -96,6 +98,17 @@ public class TimerActivity extends Activity {
     @ViewInject(R.id.showFemale)
     private TextView showFemale;
     private int whichIsChosen=0;
+    private String tableTitleString;
+    @ViewInject(R.id.tabletitle2)
+    private TableLayout tableTitle;
+    @ViewInject(R.id.tablelayout2)
+    private TableLayout table;
+    private String testFileID;
+    private TableHelper tableHelper = new TableHelper();
+    @ViewInject(R.id.tablescroll)
+    private ScrollView scrollView;
+    @ViewInject(R.id.recordTableView)
+    private LinearLayout recordTableView;
 
     @ViewInject(R.id.listRecordTimeList)
     private ListView recordTimeListView;
@@ -113,6 +126,8 @@ public class TimerActivity extends Activity {
     private SimpleAdapter timeAdapter;
     private LinkedList<Map<String, Object>> studentItemList;
     private SimpleAdapter studentAdapter;
+    @ViewInject(R.id.btnListen)
+    private Button showScoreButton;
 
 
     /**
@@ -123,6 +138,7 @@ public class TimerActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.timer);
         ViewUtils.inject(this);
+        showScoreButton.setText("成绩查看");
         tvTime.setText(R.string.init_time_100millisecond);
         initHandler();
         initListView();
@@ -138,6 +154,50 @@ public class TimerActivity extends Activity {
         choseclass.setText(choseGrade+"年"+choseClass+"班");
         inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         getStudentInfo();
+        tableTitleString=intent.getStringExtra("tableTitle");
+        initTable();
+    }
+
+    @OnClick(R.id.btnListen)
+    public void showTable(View v){
+        recordTableView.setVisibility(View.VISIBLE);
+        listTimeListView.setVisibility(View.GONE);
+        recordTimeMainView.setVisibility(View.GONE);
+        recordTimeSearchView.setVisibility(View.GONE);
+        clockLayout.setVisibility(View.GONE);
+    }
+
+    private void initTable(){
+        getStudentInfo();
+        tableHelper.setDbManager(dbManager);
+        tableHelper.setTableTitle(tableTitle, tableTitleString, this);
+        tableHelper.setTable(table, tableTitleString, studentList,testProject,null,this);
+    }
+
+    private void refreshTable(){
+        getStudentInfo();
+        switch (whichIsChosen){
+            case 0:
+                tableHelper.setTable(table, tableTitleString, studentList,testProject,null,this);
+                break;
+            case 1:
+                tableHelper.setTable(table, tableTitleString, maleStudentList,testProject,null,this);
+                break;
+            case 2:
+                tableHelper.setTable(table, tableTitleString, femaleStudentList,testProject,null,this);
+                break;
+        }
+        scrollToTop();
+    }
+
+    private void scrollToTop(){
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                scrollView.fullScroll(ScrollView.FOCUS_UP);
+            }
+        });
     }
 
     //将班级信息添加到GetCLass中，方便使用
@@ -166,7 +226,7 @@ public class TimerActivity extends Activity {
             }
         }
         if(gradeNum==6){
-            if(testProject.equals("50*8米")) {
+            if(testProject.equals("50米×8往返跑")) {
                 getClass.setGradeNumMax(6);
                 getClass.setGradeNumMin(5);
                 //getClass.setChoseGrade(5);
@@ -233,7 +293,7 @@ public class TimerActivity extends Activity {
                 GetClass getClass=GetClass.getInstance();
                 getClass.setChoseGrade(choseGrade);
                 getClass.setChoseClass(choseClass);
-                getStudentInfo();
+                refreshTable();
             }
         });
         dialog.show();
@@ -426,6 +486,8 @@ public class TimerActivity extends Activity {
                     if(bean.getStudentCode().equals(fullStudentNumber)){
                         bean.setScore(testProject, recordTime);
                         dbManager.addTestFileRow(bean.getTestFileRow());
+                        System.out.println(testProject+":"+recordTime);
+                        refreshTable();
                         break;
                     }
                 }
@@ -550,6 +612,10 @@ public class TimerActivity extends Activity {
                 recordTimeMainView.setVisibility(View.VISIBLE);
                 recordTimeSearchView.setVisibility(View.GONE);
                 return true;
+            }else if(recordTableView.getVisibility()==View.VISIBLE){
+                hideRecordTimeView();
+                recordTableView.setVisibility(View.GONE);
+                return true;
             }
         }
         return super.onKeyDown(keyCode, event);
@@ -564,6 +630,8 @@ public class TimerActivity extends Activity {
         showFemale.setTextColor(Color.BLACK);
         showFemale.setBackgroundResource(R.drawable.showfemale);
         studentList = allStudentList;
+        tableHelper.setTable(table, tableTitleString, studentList,testProject,null,this);
+        scrollToTop();
     }
 
     @OnClick(R.id.showMale)
@@ -576,6 +644,8 @@ public class TimerActivity extends Activity {
         showFemale.setTextColor(Color.BLACK);
         showFemale.setBackgroundResource(R.drawable.showfemale);
         studentList = maleStudentList;
+        tableHelper.setTable(table, tableTitleString, studentList,testProject,null,this);
+        scrollToTop();
     }
 
     @OnClick(R.id.showFemale)
@@ -588,6 +658,7 @@ public class TimerActivity extends Activity {
         showFemale.setTextColor(Color.WHITE);
         showFemale.setBackgroundResource(R.drawable.showfemale_click);
         studentList = femaleStudentList;
-
+        tableHelper.setTable(table, tableTitleString, studentList,testProject,null,this);
+        scrollToTop();
     }
 }

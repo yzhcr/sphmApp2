@@ -31,7 +31,7 @@ public class TestFileHelper {
         return testFileRowBeanList;
     }
 
-    public ArrayList<TestFileBean> getTestFileList(String userId, int schoolYear, Handler handler) {
+    public ArrayList<TestFileBean> getTestFileList(int schoolYear, Handler handler) {
         ArrayList<TestFileBean> testFileBeanList = new ArrayList<TestFileBean>();
         String returnString = networkHelper.requestDataByGet(testFileHead + yearHead + schoolYear, handler, "体测数据目录");
         if(returnString != null){

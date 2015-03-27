@@ -46,7 +46,6 @@
             android:textSize="20sp"
             android:id="@+id/btnListen"
             android:text="响铃试听"
-            android:visibility="gone"
             />
 
     </LinearLayout>
