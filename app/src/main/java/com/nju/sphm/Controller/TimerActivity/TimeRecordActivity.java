@@ -33,7 +33,7 @@ public class TimeRecordActivity extends Activity {
     private ArrayList<String> timeList;
     private ArrayList<StudentBean> studentList;
     @ViewInject(R.id.listRecordTimeList)
-    private ListView timeListView;
+    private ListView recordTimeListView;
     @ViewInject(R.id.listStudentSearchListView)
     private ListView studentListView;
     @ViewInject(R.id.recordTimeMainView)
@@ -65,7 +65,7 @@ public class TimeRecordActivity extends Activity {
         dbManager = new DBManager(this);
         inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         recordMap = new HashMap<String, String>();
-        initListView();
+        initTimeRecordListView();
         initTimeList();
         initStudentList("");
         initSearchText();
@@ -74,15 +74,15 @@ public class TimeRecordActivity extends Activity {
 
     }
 
-    private void initListView() {
+    private void initTimeRecordListView() {
         timeItemList = new LinkedList<Map<String, Object>>();
         timeAdapter = new SimpleAdapter(this, timeItemList, R.layout.record_time_listview_time_item,
                 new String[]{"num", "recordTime", "studentName", "studentNumber", "studentSex", "fullStudentNumber"},
                 new int[]{R.id.tvNum, R.id.tvRecordTime, R.id.tvStudentName,
                         R.id.tvStudentNumber, R.id.tvStudentSex, R.id.tvFullStudentNumber});
-        timeListView.setAdapter(timeAdapter);
+        recordTimeListView.setAdapter(timeAdapter);
         timeAdapter.notifyDataSetChanged();
-        timeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        recordTimeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 clickedTimeItem = (Map<String, Object>) timeAdapter.getItem(position);

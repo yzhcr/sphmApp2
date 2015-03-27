@@ -90,7 +90,7 @@ public class CountDownTimerActivity extends Activity {
     private GetClass getClass=GetClass.getInstance();
     @ViewInject(R.id.chooseSexLayout)
     private RelativeLayout chooseSexLayout;
-    @ViewInject(R.id.timeListView)
+    @ViewInject(R.id.clockLayout)
     private LinearLayout timeListView;
     @ViewInject(R.id.recordTableView)
     private LinearLayout recordTableView;
@@ -120,7 +120,7 @@ public class CountDownTimerActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.timer);
+        setContentView(R.layout.countdowntimer);
         ViewUtils.inject(this);
         initDialog();
         initRing();
@@ -139,7 +139,6 @@ public class CountDownTimerActivity extends Activity {
         choseClass=getClass.getChoseClass();
         choseclass.setText(choseGrade+"年"+choseClass+"班");
         //chooseSexLayout.setVisibility(View.GONE);
-        recordTimeListView.setVisibility(View.GONE);
         tableTitleString=intent.getStringExtra("tableTitle");
         initTable();
 
