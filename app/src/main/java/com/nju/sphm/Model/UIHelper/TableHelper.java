@@ -170,4 +170,11 @@ public class TableHelper {
             e.setFocusableInTouchMode(false);
         }
     }
+
+    public void setAllEditTextEdited(){
+        for(EditText e:editTextList){
+            e.setFocusable(true);
+            e.setFocusableInTouchMode(true);
+        }
+    }
 }
