@@ -4,13 +4,19 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.google.gson.Gson;
 import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Bean.TestFileBean;
 import com.nju.sphm.Bean.TestFileRowBean;
+import com.nju.sphm.Bean.UploadDataBean;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by HuangQiushuo on 2015/1/22.
@@ -214,13 +220,6 @@ public class DBManager {
         }
     }
 
-    public void test(){
-        Cursor c = db.rawQuery("SELECT * FROM organizations",null);
-        while (c.moveToNext()) {
-            System.out.println(c.getString(c.getColumnIndex("fullPath")));
-        }
-    }
-
     /**
      * 参数为父节点的id，结果为子节点的集合
      * @param id 父节点的id
@@ -257,6 +256,58 @@ public class DBManager {
         }
         c.close();
         return list;
+    }
+
+    public boolean addUploadData(UploadDataBean bean){
+        db.beginTransaction();  //开始事务
+        try {
+            for(Map.Entry entry : bean.getItems().entrySet()){
+                Map<String, Object> map = (Map<String, Object>)entry.getValue();
+                JSONObject json = new JSONObject(map);
+                String jsonString = json.toString();
+                db.execSQL("REPLACE INTO uploaddatas VALUES(?, ?, ?, ?, ?, ?)", new Object[]{entry.getKey(), jsonString,
+                        bean.getFileName(),bean.getOrganizationID(), bean.getType(), bean.getSchoolYear()});
+            }
+
+            db.setTransactionSuccessful();  //设置事务成功完成
+            return true;
+        }catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }finally
+        {
+            db.endTransaction();    //结束事务
+        }
+    }
+
+    public ArrayList<UploadDataBean> getUploadDatas(String organizationID){
+        ArrayList<UploadDataBean> result = new ArrayList<UploadDataBean>();
+        Cursor c = db.rawQuery("SELECT distinct fileName FROM uploaddatas", null);
+        Gson gson = new Gson();
+        ArrayList<String> fileNameList = new ArrayList<String>();
+        while (c.moveToNext()) {
+            fileNameList.add(c.getString(c.getColumnIndex("fileName")));
+        }
+        for(String fileName : fileNameList) {
+            Map<String, Object> map;
+            UploadDataBean bean = new UploadDataBean();
+            String[] params = {organizationID, fileName};
+            c = db.rawQuery("SELECT * FROM uploaddatas where organizationID=? and fileName=?", params);
+            c.moveToNext();
+            bean.setFileName(fileName);
+            bean.setOrganizationID(organizationID);
+            bean.setSchoolYear(c.getInt(c.getColumnIndex("schoolYear")));
+            bean.setType(c.getString(c.getColumnIndex("type")));
+            map = gson.fromJson(c.getString(c.getColumnIndex("items")), HashMap.class);
+            bean.addItem(c.getString(c.getColumnIndex("studentCode")), map);
+            while(c.moveToNext()){
+                map = gson.fromJson(c.getString(c.getColumnIndex("items")), HashMap.class);
+                bean.addItem(c.getString(c.getColumnIndex("studentCode")), map);
+            }
+            result.add(bean);
+        }
+        c.close();
+        return result;
     }
 
 }

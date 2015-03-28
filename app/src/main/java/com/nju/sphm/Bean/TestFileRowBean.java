@@ -14,8 +14,8 @@ public class TestFileRowBean {
     private String _id = "";
     private String studentCode = "";
     private String testfile = "";//oid
-    HashMap<String, Object> info = new HashMap<String, Object>();
-    String infoJSON = "";
+    private HashMap<String, Object> info = new HashMap<String, Object>();
+    private String infoJSON = "";
 
     public String getInfoJSON() {
         enCode();
