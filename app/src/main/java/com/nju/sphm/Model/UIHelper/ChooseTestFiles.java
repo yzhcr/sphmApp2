@@ -42,4 +42,20 @@ public class ChooseTestFiles {
         return testFileList.get(chosenTestFile).get_id();
     }
 
+    public String getChosenTestFileName(){
+        return testFileList.get(chosenTestFile).getFileName();
+    }
+
+    public int getSchoolYear(){
+        return testFileList.get(chosenTestFile).getSchoolYear();
+    }
+
+    public String getType(){
+        return testFileList.get(chosenTestFile).getType();
+    }
+
+    public String getSchoolId(){
+        return testFileList.get(chosenTestFile).getOrganization();
+    }
+
 }

@@ -16,7 +16,7 @@ public class LoginHelper {
     private NetWorkHelper networkHelper = NetWorkHelper.getInstance();
 
 
-    public LoginBean login(String username,String password,String path){
+    public boolean login(String username,String password,String path){
 
         String json="{\"username\":\""+username+"\",\"password\":\""+password+"\"}";
         //System.out.println(json);
@@ -30,7 +30,7 @@ public class LoginHelper {
                 newPath=newPath+URLEncoder.encode(pathsplit[i],"UTF-8")+"/";
             }
             String loginURL=networkHelper.getIp()+"/api/user/login"+newPath;
-            String result=networkHelper.postDataByGet(loginURL,json);
+            String result=networkHelper.requestDataByPost(loginURL, json);
             if(result != null){
                 Gson gson = new Gson();
                 loginBean = gson.fromJson(result, LoginBean.class);
@@ -38,7 +38,7 @@ public class LoginHelper {
         }catch(IOException e){
             e.printStackTrace();
         }
-        return loginBean;
+        return loginBean.isStatus();
     }
 
     public ArrayList<UserBean> getUserId(String path){

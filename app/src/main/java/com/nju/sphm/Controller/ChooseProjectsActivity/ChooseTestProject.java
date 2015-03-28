@@ -21,18 +21,20 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
-import com.nju.sphm.Bean.LoginBean;
 import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.TestFileBean;
 import com.nju.sphm.Bean.TestFileRowBean;
+import com.nju.sphm.Bean.UploadDataBean;
 import com.nju.sphm.Controller.CountDownTimerActivity.CountDownTimerActivity;
 import com.nju.sphm.Controller.TableActivity.TableActivity;
 import com.nju.sphm.Controller.TimerActivity.TimerActivity;
 import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.Model.DataHelper.NetWorkHelper;
+import com.nju.sphm.Model.DataHelper.UploadHelper;
 import com.nju.sphm.Model.Download.DownloadWorker;
 import com.nju.sphm.Model.Login.Login;
 import com.nju.sphm.Model.UIHelper.ChooseTestFiles;
@@ -56,6 +58,8 @@ public class ChooseTestProject extends Activity {
     private String schoolPath=null;
     @ViewInject(R.id.downloadButton)
     private Button downloadButton;
+    @ViewInject(R.id.uploadButton)
+    private Button uploadButton;
     private AlertDialog downloadWindow;
     private ProgressBar downloadProgressBar;
     private TextView downloadTextView;
@@ -270,10 +274,46 @@ public class ChooseTestProject extends Activity {
         return super.onKeyDown(keyCode, event);
     }
 
+    private int downloadORupload=0;
+    @OnClick(R.id.uploadButton)
+    public void uploadButton(View v){
+        downloadORupload=2;
+        NetWorkHelper netWorkHelper = NetWorkHelper.getInstance();
+
+        if (!netWorkHelper.hasWifi(this)) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(ChooseTestProject.this);
+            builder.setTitle("您未处于WiFi环境下");
+            builder.setMessage("下载数据会产生大量流量，是否继续？");
+            //builder.setIcon(R.drawable.ic_launcher);
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+                    Thread loginThread = new Thread(loginRunnable);
+                    loginThread.start();
+
+                }
+            });
+            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+
+                }
+            });
+            builder.setCancelable(false);
+            builder.create().show();
+        } else {
+            Thread loginThread = new Thread(loginRunnable);
+            loginThread.start();
+        }
+
+    }
+
     @OnClick(R.id.downloadButton)
     public void downloadButton(View v){
 
-
+        downloadORupload=1;
         NetWorkHelper netWorkHelper = NetWorkHelper.getInstance();
 
         if (!netWorkHelper.hasWifi(this)) {
@@ -312,9 +352,16 @@ public class ChooseTestProject extends Activity {
             switch (msg.what) {
                 // 如果成功，则显示从网络获取到的图片
                 case 1: {
-                    Thread thread = new Thread(downloadRunnable);
-                    downloadWindow.show();
-                    thread.start();
+                    if(downloadORupload==1) {
+                        Thread thread = new Thread(downloadRunnable);
+                        downloadWindow.show();
+                        thread.start();
+                    }
+                    if(downloadORupload==2){
+                        Thread thread=new Thread(uploadRunnable);
+                        thread.start();
+
+                    }
                     break;
                 }
                 case 0:{
@@ -335,8 +382,7 @@ public class ChooseTestProject extends Activity {
                 String user=sharedPreferences.getString("user",null);
                 String password=sharedPreferences.getString("password",null);
                 Login loginlogic = new Login();
-                LoginBean loginBean = loginlogic.login(user, password, schoolPath);
-                boolean infoIsTrue = loginBean.isStatus();
+                boolean infoIsTrue = loginlogic.login(user, password, schoolPath);
                 if (infoIsTrue) {
                     loginHandler.obtainMessage(1).sendToTarget();
 
@@ -366,6 +412,52 @@ public class ChooseTestProject extends Activity {
                 e.printStackTrace();
 
                 //mHandler.obtainMessage(0).sendToTarget();
+            }
+        }
+    };
+
+    Runnable uploadRunnable = new Runnable() {
+        // 重写run()方法，此方法在新的线程中运行
+        @Override
+        public void run() {
+            boolean issuccess=false;
+            try{
+                UploadHelper uploadHelper=new UploadHelper();
+                ArrayList<UploadDataBean> uploadDataBeanArrayList=dbManager.getUploadDatas(schoolid);
+                for(UploadDataBean uploadDataBean:uploadDataBeanArrayList){
+                    Gson gson=new Gson();
+                    String json=gson.toJson(uploadDataBean);
+                    issuccess=uploadHelper.upload(json);
+                    //System.out.println(issuccess);
+                }
+                if(issuccess){
+                    uploadHandler.obtainMessage(1).sendToTarget();
+                }else{
+                    uploadHandler.obtainMessage(0).sendToTarget();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                //mHandler.obtainMessage(0).sendToTarget();
+            }
+        }
+    };
+    private Handler uploadHandler = new Handler() {
+        // 重写handleMessage()方法，此方法在UI线程运行
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                // 如果成功，则显示从网络获取到的图片
+                case 1: {
+                    Toast toast = Toast.makeText(getApplicationContext(), "上传成功", Toast.LENGTH_SHORT);
+                    toast.show();
+                    break;
+                }
+                case 0:{
+                    Toast toast = Toast.makeText(getApplicationContext(), "网络错误", Toast.LENGTH_SHORT);
+                    toast.show();
+                    break;
+                }
             }
         }
     };

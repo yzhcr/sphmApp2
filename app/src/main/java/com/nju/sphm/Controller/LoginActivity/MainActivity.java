@@ -24,7 +24,6 @@ import android.widget.Toast;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
-import com.nju.sphm.Bean.LoginBean;
 import com.nju.sphm.Controller.ChooseProjectsActivity.ChooseTestProject;
 import com.nju.sphm.Model.DataHelper.NetWorkHelper;
 import com.nju.sphm.Model.Download.DownloadWorker;
@@ -254,8 +253,7 @@ public class MainActivity extends Activity {
         public void run() {
             try{
                 Login loginlogic = new Login();
-                LoginBean loginBean = loginlogic.login(user, password, schoolPath);
-                boolean infoIsTrue = loginBean.isStatus();
+                boolean infoIsTrue = loginlogic.login(user, password, schoolPath);
                 if (infoIsTrue) {
                     loginHandler.obtainMessage(1).sendToTarget();
 

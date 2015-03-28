@@ -4,7 +4,7 @@ package com.nju.sphm.Bean;
  * Created by hcr1 on 2015/2/6.
  */
 public class LoginBean {
-    private boolean status = true;
+    private boolean status = false;
     private String data = "";
 
     public boolean isStatus() {

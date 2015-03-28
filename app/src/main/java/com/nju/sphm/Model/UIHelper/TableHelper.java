@@ -38,9 +38,9 @@ public class TableHelper {
         dbManager.addTestFileRow(studentBean.getTestFileRow());
     }
 
-    private void saveScore(Activity activity,String score,String testName,String grade,String sex){
+    private void saveScore(Activity activity,String score,String testName,String grade,StudentBean studentBean){
         WebViewHelper webViewHelper=new WebViewHelper(activity);
-        webViewHelper.countScore(score,testName,grade,sex);
+        webViewHelper.countScore(score,testName,grade,studentBean);
     }
 
     public void setTable(TableLayout table,String tableTitleString,ArrayList<StudentBean> studentList, final String testName1, final String testName2, final Activity activity){
@@ -107,14 +107,14 @@ public class TableHelper {
                                     if (!student.getScore(testName1).equals(editText.getText().toString())) {
                                         saveData(student, editText.getText().toString(), testName1);
                                         if(titles.length==4&&!editText.getText().toString().equals(""))
-                                            saveScore(activity,editText.getText().toString(),testName1,getGrade(),student.getSex());
+                                            saveScore(activity,editText.getText().toString(),testName1,getGrade(),student);
                                         else {
                                             int index=editTextList.indexOf(editText);
                                             String tall=editText.getText().toString();
                                             String weight=editTextList.get(index+1).getText().toString();
                                             if(!tall.equals("")&&!weight.equals("")){
                                                 String bmi=countBMI(tall,weight);
-                                                saveScore(activity,bmi,"BMI",getGrade(),student.getSex());
+                                                saveScore(activity,bmi,"BMI",getGrade(),student);
                                             }
                                         }
                                     }
@@ -141,7 +141,7 @@ public class TableHelper {
                                         String tall=editTextList.get(index-1).getText().toString();
                                         if(!tall.equals("")&&!weight.equals("")){
                                             String bmi=countBMI(tall,weight);
-                                            saveScore(activity,bmi,"BMI",getGrade(),student.getSex());
+                                            saveScore(activity,bmi,"BMI",getGrade(),student);
                                         }
                                     }
                                 }

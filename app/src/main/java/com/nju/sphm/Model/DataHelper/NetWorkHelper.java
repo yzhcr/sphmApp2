@@ -122,7 +122,7 @@ public class NetWorkHelper {
         return result;
     }
 
-    public String postDataByGet(String accessURL,String json){
+    public String requestDataByPost(String accessURL, String json){
         String result=null;
         try{
             // Configure and open a connection to the site you will send the request
