@@ -12,10 +12,6 @@ import android.os.Message;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.webkit.JavascriptInterface;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -25,14 +21,11 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.internal.LinkedTreeMap;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.nju.sphm.Bean.LoginBean;
 import com.nju.sphm.Bean.OrganizationBean;
-import com.nju.sphm.Bean.ScoreBean;
 import com.nju.sphm.Bean.TestFileBean;
 import com.nju.sphm.Bean.TestFileRowBean;
 import com.nju.sphm.Controller.CountDownTimerActivity.CountDownTimerActivity;
@@ -61,8 +54,6 @@ public class ChooseTestProject extends Activity {
     private ArrayList<TestFileRowBean> testFileRowList;
     private String schoolid=null;
     private String schoolPath=null;
-    @ViewInject(R.id.webView)
-    private WebView webView;
     @ViewInject(R.id.downloadButton)
     private Button downloadButton;
     private AlertDialog downloadWindow;
@@ -96,32 +87,8 @@ public class ChooseTestProject extends Activity {
         testFileId=chooseTestFiles.getChosenTestFileId();
 
         loadGrid();
-        webView.loadUrl("file:///android_asset/gb2014.html");
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        webView.addJavascriptInterface(this, "wst");
-        //webView.loadUrl("javascript:getGB2014Score(\"100\", \"坐位体前屈\", \"五年级\", \"男生\")");
-        WebViewClient wvc = new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                System.out.println(11111);
-                webView.loadUrl("javascript:getGB2014Score(\"100\",\"坐位体前屈\",\"五年级\",\"男生\")");
-                super.onPageFinished(view, url);
-            }
-        };
-        webView.setWebViewClient(wvc);
+    }
 
-    }
-    @JavascriptInterface
-    public void startFunction(String data) {
-        System.out.println(data);
-        data="{\"info\":"+data+"}";
-        Gson gson = new Gson();
-        ScoreBean scoreBean = gson.fromJson(data, ScoreBean.class);
-        LinkedTreeMap<String, Object> info=(LinkedTreeMap)scoreBean.getInfo().get("得分");
-        System.out.println(info.get("value"));
-        // data即js的返回值
-    }
 
     private void loadGrid(){
         ArrayList<HashMap<String, Object>> lstImageItem = new ArrayList<HashMap<String, Object>>();

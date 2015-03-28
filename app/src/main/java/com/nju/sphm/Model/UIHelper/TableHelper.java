@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Model.DataHelper.DBManager;
+import com.nju.sphm.Model.DataHelper.WebViewHelper;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -35,10 +37,16 @@ public class TableHelper {
         studentBean.setScore(testName,score);
         dbManager.addTestFileRow(studentBean.getTestFileRow());
     }
-    public void setTable(TableLayout table,String tableTitleString,ArrayList<StudentBean> studentList, final String testName1, final String testName2,Activity activity){
+
+    private void saveScore(Activity activity,String score,String testName,String grade,String sex){
+        WebViewHelper webViewHelper=new WebViewHelper(activity);
+        webViewHelper.countScore(score,testName,grade,sex);
+    }
+
+    public void setTable(TableLayout table,String tableTitleString,ArrayList<StudentBean> studentList, final String testName1, final String testName2, final Activity activity){
         table.removeAllViews();
         table.setStretchAllColumns(true);
-        String[] titles=tableTitleString.split(":");
+        final String[] titles=tableTitleString.split(":");
         for (final StudentBean student:studentList) {
             TableRow tablerow = new TableRow(activity);
             tablerow.setBackgroundColor(Color.WHITE);
@@ -98,6 +106,17 @@ public class TableHelper {
                                     // System.out.println(editText.getTag(1));
                                     if (!student.getScore(testName1).equals(editText.getText().toString())) {
                                         saveData(student, editText.getText().toString(), testName1);
+                                        if(titles.length==4&&!editText.getText().toString().equals(""))
+                                            saveScore(activity,editText.getText().toString(),testName1,getGrade(),student.getSex());
+                                        else {
+                                            int index=editTextList.indexOf(editText);
+                                            String tall=editText.getText().toString();
+                                            String weight=editTextList.get(index+1).getText().toString();
+                                            if(!tall.equals("")&&!weight.equals("")){
+                                                String bmi=countBMI(tall,weight);
+                                                saveScore(activity,bmi,"BMI",getGrade(),student.getSex());
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -117,6 +136,13 @@ public class TableHelper {
                                     // System.out.println(editText.getTag(1));
                                     if(!student.getScore(testName2).equals(editText.getText().toString())) {
                                         saveData(student, editText.getText().toString(), testName2);
+                                        int index=editTextList.indexOf(editText);
+                                        String weight=editText.getText().toString();
+                                        String tall=editTextList.get(index-1).getText().toString();
+                                        if(!tall.equals("")&&!weight.equals("")){
+                                            String bmi=countBMI(tall,weight);
+                                            saveScore(activity,bmi,"BMI",getGrade(),student.getSex());
+                                        }
                                     }
                                 }
                             }
@@ -176,5 +202,42 @@ public class TableHelper {
             e.setFocusable(true);
             e.setFocusableInTouchMode(true);
         }
+    }
+
+    private String getGrade(){
+        GetClass getClass=GetClass.getInstance();
+        int grade=getClass.getChoseGrade();
+        String gradeString="";
+        switch (grade){
+            case 1: {
+                return "一年级";
+            }
+            case 2: {
+                return "二年级";
+            }
+            case 3: {
+                return "三年级";
+            }
+            case 4: {
+                return "四年级";
+            }
+            case 5: {
+                return "五年级";
+            }
+            case 6: {
+                return "六年级";
+            }
+        }
+        return null;
+    }
+
+    private String countBMI(String tall,String weight){
+        double tallInt=Double.parseDouble(tall)/100;
+        double weightInt=Double.parseDouble(weight);
+        double bmi=weightInt/(tallInt*tallInt);
+        DecimalFormat df2  = new DecimalFormat("##.#");
+        String returnString=String.valueOf(df2.format(bmi));
+        System.out.println(returnString);
+        return returnString;
     }
 }
