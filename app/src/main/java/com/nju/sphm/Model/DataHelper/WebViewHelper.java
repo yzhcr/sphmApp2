@@ -58,8 +58,10 @@ public class WebViewHelper {
         //scoreMap=info;
         // data即js的返回值
         LinkedTreeMap<String, Object> info=(LinkedTreeMap)scoreBean.getInfo().get("上等级");
-        if(info!=null)
+        if(info!=null) {
+            System.out.println("上等级不为null");
             saveUpload();
+        }
     }
 
     private void saveUpload(){
