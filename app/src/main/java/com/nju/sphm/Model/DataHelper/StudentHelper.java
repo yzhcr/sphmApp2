@@ -17,9 +17,11 @@ public class StudentHelper {
     private String yearHead = "?schoolYear=";
 
     public ArrayList<ClassBean> getClassList(String path, int schoolYear, Handler handler) {
+        System.out.println(schoolYear);
         ArrayList<ClassBean> classBeanList = new ArrayList<ClassBean>();
         String returnString = networkHelper.requestDataByGet(urlHead + path + yearHead + schoolYear, handler, "学生信息");
         if(returnString != null){
+            System.out.println(returnString);
             Gson gson = new Gson();
             ClassListBean classListBean = gson.fromJson(returnString, ClassListBean.class);
             if(classListBean.getStatus())

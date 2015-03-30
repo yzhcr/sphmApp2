@@ -24,6 +24,7 @@ public class TableHelper {
     private DBManager dbManager;
     private EditText lastEditText;
     private ArrayList<EditText> editTextList=new ArrayList<EditText>();
+    private ArrayList<TableRow> tableRows=new ArrayList<TableRow>();
     public DBManager getDbManager() {
         return dbManager;
     }
@@ -38,9 +39,9 @@ public class TableHelper {
         dbManager.addTestFileRow(studentBean.getTestFileRow());
     }
 
-    private void saveScore(Activity activity,String score,String testName,String grade,StudentBean studentBean){
+    private void saveScore(Activity activity,String score,String testName,StudentBean studentBean){
         WebViewHelper webViewHelper=new WebViewHelper(activity);
-        webViewHelper.countScore(score,testName,grade,studentBean);
+        webViewHelper.countScore(score,testName,studentBean);
     }
 
     public void setTable(TableLayout table,String tableTitleString,ArrayList<StudentBean> studentList, final String testName1, final String testName2, final Activity activity){
@@ -107,14 +108,14 @@ public class TableHelper {
                                     if (!student.getScore(testName1).equals(editText.getText().toString())) {
                                         saveData(student, editText.getText().toString(), testName1);
                                         if(titles.length==4&&!editText.getText().toString().equals(""))
-                                            saveScore(activity,editText.getText().toString(),testName1,getGrade(),student);
+                                            saveScore(activity,editText.getText().toString(),testName1,student);
                                         else {
                                             int index=editTextList.indexOf(editText);
                                             String tall=editText.getText().toString();
                                             String weight=editTextList.get(index+1).getText().toString();
                                             if(!tall.equals("")&&!weight.equals("")){
                                                 String bmi=countBMI(tall,weight);
-                                                saveScore(activity,bmi,"BMI",getGrade(),student);
+                                                saveScore(activity,bmi,"BMI",student);
                                             }
                                         }
                                     }
@@ -141,7 +142,7 @@ public class TableHelper {
                                         String tall=editTextList.get(index-1).getText().toString();
                                         if(!tall.equals("")&&!weight.equals("")){
                                             String bmi=countBMI(tall,weight);
-                                            saveScore(activity,bmi,"BMI",getGrade(),student);
+                                            saveScore(activity,bmi,"BMI",student);
                                         }
                                     }
                                 }
@@ -156,6 +157,7 @@ public class TableHelper {
                     TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
             tableParam.setMargins(0,1,0,1);
             table.addView(tablerow,tableParam);
+            tableRows.add(tablerow);
         }
     }
 
@@ -202,33 +204,6 @@ public class TableHelper {
             e.setFocusable(true);
             e.setFocusableInTouchMode(true);
         }
-    }
-
-    private String getGrade(){
-        GetClass getClass=GetClass.getInstance();
-        int grade=getClass.getChoseGrade();
-        String gradeString="";
-        switch (grade){
-            case 1: {
-                return "一年级";
-            }
-            case 2: {
-                return "二年级";
-            }
-            case 3: {
-                return "三年级";
-            }
-            case 4: {
-                return "四年级";
-            }
-            case 5: {
-                return "五年级";
-            }
-            case 6: {
-                return "六年级";
-            }
-        }
-        return null;
     }
 
     private String countBMI(String tall,String weight){

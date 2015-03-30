@@ -174,11 +174,17 @@ public class MainActivity extends Activity {
                     break;
                 }
                 // 否则提示失败
-                case 0:
+                case 0: {
                     Toast.makeText(getApplication(),
                             "下载失败",
                             Toast.LENGTH_LONG).show();
+                    SharedPreferences sharedPreferences = getSharedPreferences("loginMessage", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();//获取编辑器
+                    editor.putBoolean("isAutoLogin", false);
+                    editor.commit();
+                    downloadWindow.setCancelable(true);
                     break;
+                }
                 }
             }
         };
@@ -189,7 +195,7 @@ public class MainActivity extends Activity {
 
         try{
                 DownloadWorker downloadWorker = new DownloadWorker(getApplication());
-                boolean ok = downloadWorker.download(schoolPath, 2014, handler);
+                boolean ok = downloadWorker.download(schoolPath,2014, handler);
                 if(ok){
                     mHandler.obtainMessage(1).sendToTarget();
                 }else{
@@ -287,6 +293,7 @@ public class MainActivity extends Activity {
     private long exitTime = 0;
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        downloadWindow.cancel();
         if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
             if((System.currentTimeMillis()-exitTime) > 2000){
                 Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();

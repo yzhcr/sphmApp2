@@ -11,6 +11,7 @@ import com.nju.sphm.Bean.ScoreBean;
 import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Bean.UploadDataBean;
 import com.nju.sphm.Model.UIHelper.ChooseTestFiles;
+import com.nju.sphm.Model.UIHelper.GetClass;
 
 import java.util.HashMap;
 
@@ -29,7 +30,7 @@ public class WebViewHelper {
         dbManager=new DBManager(activity);
     }
 
-    public void countScore(final String score,final String testName,final String grade,final StudentBean studentBean){
+    public void countScore(final String score,final String testName,final StudentBean studentBean){
         this.studentBean=studentBean;
         this.testName=testName;
         this.score=score;
@@ -41,7 +42,7 @@ public class WebViewHelper {
         WebViewClient wvc = new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
-                webView.loadUrl("javascript:getGB2014Score(\""+score+"\", \""+testName+"\", \""+grade+"\", \""+studentBean.getSex()+"\")");
+                webView.loadUrl("javascript:getGB2014Score(\""+score+"\", \""+testName+"\", \""+getGrade()+"\", \""+studentBean.getSex()+"\")");
                 super.onPageFinished(view, url);
             }
         };
@@ -86,5 +87,32 @@ public class WebViewHelper {
         //info.put(testName+"_上等级",scoreBean.getInfo().get("上等级"));
         uploadDataBean.addItem(studentBean.getStudentCode(), studentBean.getTestFileRow().getInfo());
         dbManager.addUploadData(uploadDataBean);
+    }
+
+    private String getGrade(){
+        GetClass getClass=GetClass.getInstance();
+        int grade=getClass.getChoseGrade();
+        String gradeString="";
+        switch (grade){
+            case 1: {
+                return "一年级";
+            }
+            case 2: {
+                return "二年级";
+            }
+            case 3: {
+                return "三年级";
+            }
+            case 4: {
+                return "四年级";
+            }
+            case 5: {
+                return "五年级";
+            }
+            case 6: {
+                return "六年级";
+            }
+        }
+        return null;
     }
 }
