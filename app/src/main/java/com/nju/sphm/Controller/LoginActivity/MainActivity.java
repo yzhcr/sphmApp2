@@ -229,7 +229,12 @@ public class MainActivity extends Activity {
                     } else {
                         SharedPreferences sharedPreferences = getSharedPreferences("loginMessage", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("user", user);
+                        editor.putString("password", password);
+                        editor.putString("schoolPath", schoolPath);
+                        editor.putString("schoolid", schoolid);
                         editor.putBoolean("isAutoLogin", false);
+                        editor.commit();
                     }
 
                     thread = new Thread(runnable);

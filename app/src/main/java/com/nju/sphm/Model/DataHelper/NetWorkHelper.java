@@ -113,6 +113,7 @@ public class NetWorkHelper {
                 buffer = new byte[inputStream.available()];
             }
             result = sb.toString();
+            System.out.println(result);
             inputStream.close();
         } catch (Exception e) {
 
@@ -155,7 +156,7 @@ public class NetWorkHelper {
             }
             in.close();
             result = sb.toString();
-
+            System.out.println(result);
         }catch(IOException e){
             e.printStackTrace();
         }
