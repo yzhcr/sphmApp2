@@ -4,9 +4,9 @@
     android:layout_height="wrap_content"
     android:layout_width="fill_parent">
     <ImageView
-        android:layout_height="50dp"
+        android:layout_height="64dp"
         android:id="@+id/ItemImage"
-        android:layout_width="50dp"
+        android:layout_width="64dp"
         android:layout_centerHorizontal="true">
     </ImageView>
     <TextView
@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:text="TextView01"
         android:layout_centerHorizontal="true"
-        android:id="@+id/ItemText">
+        android:id="@+id/ItemText"
+        android:layout_marginTop="5dp">
     </TextView>
 </RelativeLayout>  

@@ -60,8 +60,8 @@
         android:columnWidth="90dp"
         android:stretchMode="columnWidth"
         android:gravity="center"
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="30dp">
 
         </GridView>
