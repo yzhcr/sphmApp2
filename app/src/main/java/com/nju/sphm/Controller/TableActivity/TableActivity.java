@@ -187,8 +187,11 @@ public class TableActivity extends Activity {
     }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        this.finish();
-        tableHelper.lastEditTextLostFocus();
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            this.finish();
+            tableHelper.lastEditTextLostFocus();
+            return true;
+        }
         return super.onKeyDown(keyCode, event);
     }
 }
