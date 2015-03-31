@@ -35,6 +35,7 @@ import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Controller.TableActivity.ClassPickerDialog;
 import com.nju.sphm.Model.DataHelper.DBManager;
+import com.nju.sphm.Model.DataHelper.WebViewHelper;
 import com.nju.sphm.Model.UIHelper.GB2Helper;
 import com.nju.sphm.Model.UIHelper.GetClass;
 import com.nju.sphm.Model.UIHelper.TableHelper;
@@ -129,6 +130,7 @@ public class TimerActivity extends Activity {
     private SimpleAdapter studentAdapter;
     @ViewInject(R.id.btnListen)
     private Button showScoreButton;
+    private Map<Integer, StudentBean> tmpMap = new HashMap<Integer, StudentBean>();
 
 
     /**
@@ -167,6 +169,7 @@ public class TimerActivity extends Activity {
         recordTimeMainView.setVisibility(View.GONE);
         recordTimeSearchView.setVisibility(View.GONE);
         clockLayout.setVisibility(View.GONE);
+        refreshTable();
     }
 
     private void initTable(){
@@ -487,9 +490,7 @@ public class TimerActivity extends Activity {
                 for(StudentBean bean : studentList){
                     if(bean.getStudentCode().equals(fullStudentNumber)){
                         bean.setScore(testProject, recordTime);
-                        dbManager.addTestFileRow(bean.getTestFileRow());
-                        System.out.println(testProject+":"+recordTime);
-                        refreshTable();
+                        tmpMap.put((int)clickedTimeItem.get("num"), bean);
                         break;
                     }
                 }
@@ -611,11 +612,31 @@ public class TimerActivity extends Activity {
         listTimeListView.setVisibility(View.VISIBLE);
     }
 
+    public boolean saveScore(){
+        WebViewHelper webViewHelper = new WebViewHelper(TimerActivity.this);
+        for(Map.Entry entry : tmpMap.entrySet()) {
+            String time = "";
+            StudentBean bean = (StudentBean)entry.getValue();
+            time = bean.getScore(testProject);
+            if (testProject.equals("50米跑")) {
+
+            }else if(testProject.equals("50米×8往返跑")){
+                String tmp[] = time.split("'");
+                int i = Integer.parseInt(tmp[0]) + Integer.parseInt(tmp[1]);
+                time = i+"";
+            }
+            webViewHelper.countScore(time, testProject, bean);
+        }
+        tmpMap.clear();
+        return true;
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
             if(recordTimeMainView.getVisibility()==View.VISIBLE){
                 hideRecordTimeView();
+                saveScore();
                 return true;
             }else if(recordTimeSearchView.getVisibility()==View.VISIBLE){
                 recordTimeMainView.setVisibility(View.VISIBLE);

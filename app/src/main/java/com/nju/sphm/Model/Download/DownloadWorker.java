@@ -61,6 +61,7 @@ public class DownloadWorker {
                 dbm.addStudents(cb.getStudents());
             }
             for (TestFileBean tfb : testFileList) {
+                System.out.println(tfb.getFileName());
                 ArrayList<TestFileRowBean> testFileRowBeanList = testFileHelper.getTestFileRowList(tfb.get_id(), handler);
                 dbm.addTestFileRows(testFileRowBeanList);
             }

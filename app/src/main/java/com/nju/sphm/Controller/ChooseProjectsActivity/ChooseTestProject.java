@@ -279,11 +279,10 @@ public class ChooseTestProject extends Activity {
     public void uploadButton(View v){
         downloadORupload=2;
         NetWorkHelper netWorkHelper = NetWorkHelper.getInstance();
-
         if (!netWorkHelper.hasWifi(this)) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(ChooseTestProject.this);
             builder.setTitle("您未处于WiFi环境下");
-            builder.setMessage("下载数据会产生大量流量，是否继续？");
+            builder.setMessage("上传数据会产生大量流量，是否继续？");
             //builder.setIcon(R.drawable.ic_launcher);
             builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                 @Override
@@ -358,14 +357,13 @@ public class ChooseTestProject extends Activity {
                         thread.start();
                     }
                     if(downloadORupload==2){
-                        Thread thread=new Thread(uploadRunnable);
-                        thread.start();
-
+                            Thread thread = new Thread(uploadRunnable);
+                            thread.start();
                     }
                     break;
                 }
                 case 0:{
-                    Toast toast = Toast.makeText(getApplicationContext(), "网络错误", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getApplicationContext(), "网络错", Toast.LENGTH_SHORT);
                     toast.show();
                     break;
                 }
@@ -390,6 +388,7 @@ public class ChooseTestProject extends Activity {
                     loginHandler.obtainMessage(0).sendToTarget();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 loginHandler.obtainMessage(0).sendToTarget();
             }
         }
@@ -421,21 +420,28 @@ public class ChooseTestProject extends Activity {
         @Override
         public void run() {
             boolean issuccess=false;
+            System.out.println(schoolid);
+            System.out.println("555");
             try{
+                System.out.println(schoolid+"sss");
                 UploadHelper uploadHelper=new UploadHelper();
                 ArrayList<UploadDataBean> uploadDataBeanArrayList=dbManager.getUploadDatas(schoolid);
+
                 for(UploadDataBean uploadDataBean:uploadDataBeanArrayList){
                     Gson gson=new Gson();
                     String json=gson.toJson(uploadDataBean);
                     issuccess=uploadHelper.upload(json);
                     //System.out.println(issuccess);
                 }
-                if(issuccess){
+                if(uploadDataBeanArrayList.size()==0){
+                    uploadHandler.obtainMessage(2).sendToTarget();
+                }else if(issuccess){
                     uploadHandler.obtainMessage(1).sendToTarget();
                 }else{
                     uploadHandler.obtainMessage(0).sendToTarget();
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 e.printStackTrace();
 
                 //mHandler.obtainMessage(0).sendToTarget();
@@ -450,11 +456,17 @@ public class ChooseTestProject extends Activity {
                 // 如果成功，则显示从网络获取到的图片
                 case 1: {
                     Toast toast = Toast.makeText(getApplicationContext(), "上传成功", Toast.LENGTH_SHORT);
+                    dbManager.cleanUploadDatas();
                     toast.show();
                     break;
                 }
                 case 0:{
                     Toast toast = Toast.makeText(getApplicationContext(), "网络错误", Toast.LENGTH_SHORT);
+                    toast.show();
+                    break;
+                }
+                case 2:{
+                    Toast toast = Toast.makeText(getApplicationContext(), "没有需要上传的数据", Toast.LENGTH_SHORT);
                     toast.show();
                     break;
                 }

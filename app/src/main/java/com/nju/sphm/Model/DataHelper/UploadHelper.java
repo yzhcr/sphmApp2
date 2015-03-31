@@ -12,6 +12,7 @@ public class UploadHelper {
         String url=netWorkHelper.getIp()+"/api/testfile/";
         String result=netWorkHelper.requestDataByPost(url, json);
         UploadBean uploadBean=null;
+        System.out.println(result);
         if(result!=null){
             Gson gson = new Gson();
             uploadBean = gson.fromJson(result, UploadBean.class);

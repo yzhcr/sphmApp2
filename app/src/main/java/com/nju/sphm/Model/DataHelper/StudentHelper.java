@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.nju.sphm.Bean.ClassBean;
 import com.nju.sphm.Bean.ClassListBean;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -17,7 +18,17 @@ public class StudentHelper {
     private String yearHead = "?schoolYear=";
 
     public ArrayList<ClassBean> getClassList(String path, int schoolYear, Handler handler) {
-        System.out.println(schoolYear);
+
+        String[] pathsplit=path.split("/");
+        String newPath="";
+        try {
+            for (int i = 0; i < pathsplit.length; i++) {
+                newPath = newPath + URLEncoder.encode(pathsplit[i], "UTF-8") + "/";
+            }
+            path = newPath;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         ArrayList<ClassBean> classBeanList = new ArrayList<ClassBean>();
         String returnString = networkHelper.requestDataByGet(urlHead + path + yearHead + schoolYear, handler, "学生信息");
         if(returnString != null){

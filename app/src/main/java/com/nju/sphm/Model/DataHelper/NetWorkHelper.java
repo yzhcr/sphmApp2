@@ -83,21 +83,23 @@ public class NetWorkHelper {
 
     public String requestDataByGet(String urlStr, Handler handler, String fileName){
         String result = null;
-        byte buffer[] = new byte[0];
+        char buffer[] = new char[64];
         int size=1;
         int len=0;
         int hasRead=0;
         int index=0;
         StringBuffer sb = new StringBuffer("");
+
         Message message;
         try {
             URL url = new URL(urlStr);
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             size = connection.getContentLength();
             InputStream inputStream = connection.getInputStream();
-            while((len=inputStream.read(buffer))!=-1){
-                hasRead+=len;
-                String str = new String(buffer,"utf-8");
+            InputStreamReader reader = new InputStreamReader(inputStream, "UTF-8");
+            while((len=reader.read(buffer))!=-1){
+                String str = new String(buffer, 0, len);
+                hasRead+=str.getBytes().length;
                 sb.append(str);
                 //System.out.println(str);
                 if(handler!=null) {
@@ -110,8 +112,8 @@ public class NetWorkHelper {
                     message.setData(bundle);
                     handler.sendMessage(message);
                 }
-                buffer = new byte[inputStream.available()];
             }
+            System.out.println(size+":"+hasRead);
             result = sb.toString();
             System.out.println(result);
             inputStream.close();
@@ -122,6 +124,52 @@ public class NetWorkHelper {
 
         return result;
     }
+
+//    public String requestDataByGet(String urlStr, Handler handler, String fileName){
+//        String result = null;
+//        byte buffer[] = new byte[0];
+//        //char buffer[] = new char[1024];
+//        int size=1;
+//        int len=0;
+//        int hasRead=0;
+//        int index=0;
+//        StringBuffer sb = new StringBuffer("");
+//
+//        Message message;
+//        try {
+//            URL url = new URL(urlStr);
+//            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+//            size = connection.getContentLength();
+//            InputStream inputStream = connection.getInputStream();
+//            InputStreamReader reader = new InputStreamReader(inputStream, "UTF-8");
+//            while((len=inputStream.read(buffer))!=-1){
+//                hasRead+=len;
+//                //String str = new String(buffer,"utf-8");
+//                String str = new String(buffer);
+//                sb.append(str);
+//                //System.out.println(str);
+//                if(handler!=null) {
+//                    index = (int) (hasRead * 100) / size;
+//                    message = new Message();
+//                    message.what = 1;
+//                    Bundle bundle = new Bundle();
+//                    bundle.putInt("index", index);
+//                    bundle.putString("fileName", fileName);
+//                    message.setData(bundle);
+//                    handler.sendMessage(message);
+//                }
+//                buffer = new byte[inputStream.available()];
+//            }
+//            result = sb.toString();
+//            System.out.println(result);
+//            inputStream.close();
+//        } catch (Exception e) {
+//
+//            e.printStackTrace();
+//        }
+//
+//        return result;
+//    }
 
     public String requestDataByPost(String accessURL, String json){
         String result=null;

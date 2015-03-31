@@ -23,7 +23,7 @@ public class LoginHelper {
         LoginBean loginBean=null;
         try{
             // Configure and open a connection to the site you will send the request
-            //System.out.println(path);
+
             String[] pathsplit=path.split("/");
             String newPath="";
             for(int i=0;i<pathsplit.length;i++){

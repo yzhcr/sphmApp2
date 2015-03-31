@@ -92,35 +92,6 @@ public class TestMainActivity extends ActionBarActivity {
     @OnClick(R.id.btn3)
     public void btn3(View v) {
         try {
-//            Runnable r = new NetWorkHandler();
-//            Thread thread = new Thread(r);
-//            thread.start();
-            //ArrayList<String> list = dao.getClassIdList("5445bd0bfa40c7df3ad57efe");
-//            LoginDAO dao = new LoginDAO();
-//            ArrayList list= dao.getUsers();
-            //db.setText(list.size() + "");
-//            TestFileHelper helper = new TestFileHelper();
-//            System.out.println(helper.getTestFileRowList("54508151802097dd4e306470").size());
-//            StudentHelper helper = new StudentHelper();
-//            ArrayList<ClassBean> list = helper.getClassList("/运营服务中心/江苏省/南京市/江宁区/南京市江宁区铜山中心小学/",2014);
-//            ArrayList<StudentBean> sl = list.get(1).getStudents();
-//            dbm.addStudents(sl);
-//            String o = list.get(1).get_id();
-//            ArrayList<StudentBean> s2 = dbm.getStudents(o);
-//            for(StudentBean bean:s2){
-//                System.out.println(bean.getInfoJSON());
-//            }
-//            OrganizationHelper helper = new OrganizationHelper();
-//            ArrayList<OrganizationBean> l = helper.getOrganizationList("/运营服务中心/江苏省/南京市/江宁区/南京市江宁区铜山中心小学/",2014);
-//            dbm.addOrganizations(l);
-//            int size1=1;
-//            int size2=0;
-//            for(OrganizationBean b: l){
-//                size1+=b.getChildren().size();
-//                size2+=dbm.getOrganizations(b.get_id()).size();
-//            }
-//            System.out.println(size1+";"+size2);
-
             for(TestFileRowBean b : dbm.getTestFileRows("54508151802097dd4e306470")){
                     System.out.println(b.getInfoJSON());
 

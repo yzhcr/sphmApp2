@@ -310,4 +310,18 @@ public class DBManager {
         return result;
     }
 
+    public boolean cleanUploadDatas(){
+        db.execSQL("delete from uploaddatas");
+        return true;
+    }
+
+    public boolean needUpload(){
+        try {
+            db.execSQL("select * from uploaddatas");
+            return true;
+        } catch(Exception e){
+            return false;
+        }
+    }
+
 }

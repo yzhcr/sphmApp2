@@ -7,7 +7,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.google.gson.Gson;
-import com.google.gson.internal.LinkedTreeMap;
 import com.nju.sphm.Bean.ScoreBean;
 import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Bean.UploadDataBean;
@@ -54,14 +53,7 @@ public class WebViewHelper {
         data="{\"info\":"+data+"}";
         Gson gson = new Gson();
         scoreBean = gson.fromJson(data, ScoreBean.class);
-        //LinkedTreeMap<String, Object> info=(LinkedTreeMap)scoreBean.getInfo().get("得分");
-        //scoreMap=info;
-        // data即js的返回值
-        LinkedTreeMap<String, Object> info=(LinkedTreeMap)scoreBean.getInfo().get("上等级");
-        if(info!=null) {
-            System.out.println("上等级不为null");
-            saveUpload();
-        }
+        saveUpload();
     }
 
     private void saveUpload(){

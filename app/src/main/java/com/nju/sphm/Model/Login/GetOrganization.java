@@ -41,7 +41,8 @@ public class GetOrganization {
                     treeList.add(areaNode);
                     schoolOrganList=areaO.getChildren();
                     for(OrganizationBean schoolO:schoolOrganList){
-                        //System.out.println(schoolO.getFullPath());
+//                        System.out.println("```````````````");
+//                        System.out.println(schoolO.getFullPath());
                         TreeNode schoolNode = new TreeNode(schoolO.getName(), TreeNode.TOP_LEVEL + 4, schoolO.get_id(), areaO.get_id(), false, false,schoolO.getFullPath());
                         //System.out.println(schoolNode.getPath());
                         treeList.add(schoolNode);
