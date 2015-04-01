@@ -45,7 +45,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -160,7 +159,7 @@ public class TimerActivity extends Activity {
         getStudentInfo();
         tableTitleString=intent.getStringExtra("tableTitle");
         initTable();
-        tableHelper.setAllEditTextUnEdited();
+
     }
 
     @OnClick(R.id.btnListen)
@@ -178,6 +177,7 @@ public class TimerActivity extends Activity {
         tableHelper.setDbManager(dbManager);
         tableHelper.setTableTitle(tableTitle, tableTitleString, this);
         tableHelper.setTable(table, tableTitleString, studentList,testProject,null,this);
+        tableHelper.setAllEditTextUnEdited();
     }
 
     private void refreshTable(){
@@ -193,6 +193,7 @@ public class TimerActivity extends Activity {
                 tableHelper.setTable(table, tableTitleString, femaleStudentList,testProject,null,this);
                 break;
         }
+        tableHelper.setAllEditTextUnEdited();
         scrollToTop();
     }
 
@@ -491,7 +492,7 @@ public class TimerActivity extends Activity {
                 for(StudentBean bean : studentList){
                     if(bean.getStudentCode().equals(fullStudentNumber)){
                         bean.setScore(testProject, recordTime);
-                        saveScore(bean);
+                        tmpMap.put((int)clickedTimeItem.get("num"), bean);
                         break;
                     }
                 }
@@ -587,6 +588,7 @@ public class TimerActivity extends Activity {
         studentItemList.push(item);
     }
 
+
     public void toggleKeyBoard() {
         inputmanger.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
@@ -610,9 +612,6 @@ public class TimerActivity extends Activity {
     }
 
     public boolean saveScore(){
-        WebViewHelper webViewHelper = new WebViewHelper(TimerActivity.this);
-        Stack<StudentBean> studentStack = new Stack<StudentBean>();
-        Stack<String> scoreStack = new Stack<String>();
         for(Map.Entry entry : tmpMap.entrySet()) {
             String time = "";
             StudentBean bean = (StudentBean)entry.getValue();
@@ -624,26 +623,10 @@ public class TimerActivity extends Activity {
                 int i = Integer.parseInt(tmp[0]) + Integer.parseInt(tmp[1]);
                 time = i+"";
             }
-            studentStack.push(bean);
-            scoreStack.push(time);
+            WebViewHelper webViewHelper = new WebViewHelper(TimerActivity.this);
+            webViewHelper.countScore(time, testProject, bean);
         }
-        webViewHelper.countScores(scoreStack, testProject, studentStack);
         tmpMap.clear();
-        return true;
-    }
-
-    public boolean saveScore(StudentBean bean){
-        WebViewHelper webViewHelper = new WebViewHelper(TimerActivity.this);
-        String time = "";
-        time = bean.getScore(testProject);
-        if (testProject.equals("50米跑")) {
-
-        }else if(testProject.equals("50米×8往返跑")){
-            String tmp[] = time.split("'");
-            int i = Integer.parseInt(tmp[0]) + Integer.parseInt(tmp[1]);
-            time = i+"";
-        }
-        webViewHelper.countScore(time, testProject, bean);
         return true;
     }
 
@@ -652,7 +635,7 @@ public class TimerActivity extends Activity {
         if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
             if(recordTimeMainView.getVisibility()==View.VISIBLE){
                 hideRecordTimeView();
-                //saveScore();
+                saveScore();
                 return true;
             }else if(recordTimeSearchView.getVisibility()==View.VISIBLE){
                 recordTimeMainView.setVisibility(View.VISIBLE);

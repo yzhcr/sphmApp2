@@ -317,7 +317,7 @@ public class MainActivity extends Activity {
         downloadProgressBar = (ProgressBar)view.findViewById(R.id.downloadProgressBar);
         downloadTextView = (TextView)view.findViewById(R.id.downloadTextView);
         downloadWindow = new AlertDialog.Builder(this)
-                .setTitle("正在下载数据")
+                .setTitle("")
                 .setView(view)
                 .create();
         downloadWindow.setCancelable(false);
