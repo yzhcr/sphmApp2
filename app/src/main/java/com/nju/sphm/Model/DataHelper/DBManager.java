@@ -270,14 +270,16 @@ public class DBManager {
             }
 
             db.setTransactionSuccessful();  //设置事务成功完成
-            return true;
+
         }catch (Exception e) {
             e.printStackTrace();
+            db.endTransaction();
             return false;
         }finally
         {
             db.endTransaction();    //结束事务
         }
+        return true;
     }
 
     public ArrayList<UploadDataBean> getUploadDatas(String organizationID){
