@@ -14,6 +14,7 @@ import com.nju.sphm.Model.UIHelper.ChooseTestFiles;
 import com.nju.sphm.Model.UIHelper.GetClass;
 
 import java.util.HashMap;
+import java.util.Stack;
 
 /**
  * Created by hcr1 on 2015/3/28.
@@ -25,9 +26,30 @@ public class WebViewHelper {
     ScoreBean scoreBean;
     String testName;
     String score;
+    Stack<StudentBean> studentStack = new Stack<StudentBean>();
+    Stack<String> scoreStack = new Stack<String>();
+    static int finish = 1;
+    static int wait = 0;
+
     public WebViewHelper(Activity activity){
         webView=new WebView(activity);
         dbManager=new DBManager(activity);
+    }
+
+    public void countScores(Stack<String> scoreStack, String testName, Stack<StudentBean> studentStack){
+        this.studentStack = studentStack;
+        this.scoreStack = scoreStack;
+        this.testName=testName;
+        doStack();
+    }
+
+    public void doStack(){
+        while(wait == 1){}
+        if(!studentStack.empty()) {
+            wait = 1;
+            countScore(scoreStack.pop(), testName, studentStack.pop());
+            doStack();
+        }
     }
 
     public void countScore(final String score,final String testName,final StudentBean studentBean){
@@ -54,6 +76,7 @@ public class WebViewHelper {
         Gson gson = new Gson();
         scoreBean = gson.fromJson(data, ScoreBean.class);
         saveUpload();
+        wait = 0;
     }
 
     private void saveUpload(){
