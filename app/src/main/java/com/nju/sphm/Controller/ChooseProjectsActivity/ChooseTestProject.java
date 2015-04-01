@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ import com.nju.sphm.Bean.TestFileBean;
 import com.nju.sphm.Bean.TestFileRowBean;
 import com.nju.sphm.Bean.UploadDataBean;
 import com.nju.sphm.Controller.CountDownTimerActivity.CountDownTimerActivity;
+import com.nju.sphm.Controller.LoginActivity.MainActivity;
 import com.nju.sphm.Controller.TableActivity.TableActivity;
 import com.nju.sphm.Controller.TimerActivity.TimerActivity;
 import com.nju.sphm.Model.DataHelper.DBManager;
@@ -56,10 +58,12 @@ public class ChooseTestProject extends Activity {
     private ArrayList<TestFileRowBean> testFileRowList;
     private String schoolid=null;
     private String schoolPath=null;
-    @ViewInject(R.id.downloadButton)
-    private Button downloadButton;
-    @ViewInject(R.id.uploadButton)
-    private Button uploadButton;
+    @ViewInject(R.id.download)
+    private LinearLayout download;
+    @ViewInject(R.id.upload)
+    private LinearLayout upload;
+    @ViewInject(R.id.logout)
+    private LinearLayout logout;
     private AlertDialog downloadWindow;
     private ProgressBar downloadProgressBar;
     private TextView downloadTextView;
@@ -275,8 +279,8 @@ public class ChooseTestProject extends Activity {
     }
 
     private int downloadORupload=0;
-    @OnClick(R.id.uploadButton)
-    public void uploadButton(View v){
+    @OnClick(R.id.upload)
+    public void upload(View v){
         downloadORupload=2;
         NetWorkHelper netWorkHelper = NetWorkHelper.getInstance();
         if (!netWorkHelper.hasWifi(this)) {
@@ -309,8 +313,8 @@ public class ChooseTestProject extends Activity {
 
     }
 
-    @OnClick(R.id.downloadButton)
-    public void downloadButton(View v){
+    @OnClick(R.id.download)
+    public void download(View v){
 
         downloadORupload=1;
         NetWorkHelper netWorkHelper = NetWorkHelper.getInstance();
@@ -518,6 +522,35 @@ public class ChooseTestProject extends Activity {
             super.handleMessage(msg);
         }
 
+    }
+    @OnClick(R.id.logout)
+    public void logout(View v){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(ChooseTestProject.this);
+        builder.setTitle("是否确定登出？");
+        //builder.setIcon(R.drawable.ic_launcher);
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+                SharedPreferences sharedPreferences = getSharedPreferences("loginMessage", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();//获取编辑器
+                editor.putBoolean("isAutoLogin", false);
+                editor.commit();
+                Intent i = new Intent();
+                i.setClass(ChooseTestProject.this, MainActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+        builder.setCancelable(false);
+        builder.create().show();
     }
 
 }
