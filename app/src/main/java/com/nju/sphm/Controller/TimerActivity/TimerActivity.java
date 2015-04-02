@@ -94,6 +94,8 @@ public class TimerActivity extends Activity {
     private String classId;
     private int choseGrade;
     private int choseClass;
+    @ViewInject(R.id.chooseSexLayout)
+    private RelativeLayout chooseSexLayout;
     @ViewInject(R.id.showAll)
     private TextView showAll;
     @ViewInject(R.id.showMale)
@@ -142,6 +144,7 @@ public class TimerActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.timer);
         ViewUtils.inject(this);
+        chooseSexLayout.setVisibility(View.GONE);
         showScoreButton.setText("成绩查看");
         tvTime.setText(R.string.init_time_100millisecond);
         initHandler();
@@ -170,6 +173,7 @@ public class TimerActivity extends Activity {
         recordTimeMainView.setVisibility(View.GONE);
         recordTimeSearchView.setVisibility(View.GONE);
         clockLayout.setVisibility(View.GONE);
+        chooseSexLayout.setVisibility(View.VISIBLE);
         refreshTable();
     }
 
@@ -602,6 +606,7 @@ public class TimerActivity extends Activity {
         recordTimeMainView.setVisibility(View.VISIBLE);
         recordTimeSearchView.setVisibility(View.GONE);
         clockLayout.setVisibility(View.GONE);
+        chooseSexLayout.setVisibility(View.VISIBLE);
 
     }
 
@@ -610,6 +615,7 @@ public class TimerActivity extends Activity {
         recordTimeSearchView.setVisibility(View.GONE);
         clockLayout.setVisibility(View.VISIBLE);
         listTimeListView.setVisibility(View.VISIBLE);
+        chooseSexLayout.setVisibility(View.GONE);
     }
 
     public boolean saveScore(){

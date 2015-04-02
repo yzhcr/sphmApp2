@@ -123,6 +123,7 @@ public class CountDownTimerActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.countdowntimer);
         ViewUtils.inject(this);
+        chooseSexLayout.setVisibility(View.GONE);
         initDialog();
         initRing();
         Intent intent=getIntent();
@@ -150,7 +151,6 @@ public class CountDownTimerActivity extends Activity {
         etMin.setText(times[0]);
         etSec.setText(times[1]);
         timeOK();
-
     }
 
 
@@ -392,7 +392,7 @@ public class CountDownTimerActivity extends Activity {
             btnStop.setText("停止");
         } else {
             //跳转到记录界面
-            System.out.println("jieshu");
+
             showRecordTableView();
         }
     }
@@ -400,11 +400,13 @@ public class CountDownTimerActivity extends Activity {
     private void showRecordTableView(){
         recordTableView.setVisibility(View.VISIBLE);
         timeListView.setVisibility(View.GONE);
+        chooseSexLayout.setVisibility(View.VISIBLE);
     }
 
     private void hideRecordTableView(){
         recordTableView.setVisibility(View.GONE);
         timeListView.setVisibility(View.VISIBLE);
+        chooseSexLayout.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.btnStop)

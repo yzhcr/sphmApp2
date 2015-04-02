@@ -31,6 +31,7 @@
             android:textSize="20sp"
             android:id="@+id/btnStart"
             android:text="开始"
+            android:background="@drawable/showall"
             />
 
         <Button
@@ -39,6 +40,8 @@
             android:textSize="20sp"
             android:id="@+id/btnStop"
             android:text="停止"
+            android:background="@drawable/showmale"
+
             />
         <Button
             android:layout_width="wrap_content"
@@ -46,6 +49,8 @@
             android:textSize="20sp"
             android:id="@+id/btnListen"
             android:text="响铃试听"
+            android:background="@drawable/showfemale"
+
             />
 
     </LinearLayout>
