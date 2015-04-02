@@ -7,7 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 public class TableActivity extends Activity {
     @ViewInject(R.id.changeClass)
-    private Button btn_choose;
+    private ImageButton btn_choose;
     @ViewInject(R.id.choseclass)
     private TextView choseclass;
     @ViewInject(R.id.title)

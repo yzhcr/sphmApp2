@@ -20,6 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -75,7 +76,7 @@ public class TimerActivity extends Activity {
     private LinkedList<Map<String, Object>> timeItemList;
     private SimpleAdapter adapter;
     @ViewInject(R.id.changeClass)
-    private Button btn_choose;
+    private ImageButton btn_choose;
     @ViewInject(R.id.choseclass)
     private TextView choseclass;
     @ViewInject(R.id.title)
@@ -176,7 +177,7 @@ public class TimerActivity extends Activity {
         getStudentInfo();
         tableHelper.setDbManager(dbManager);
         tableHelper.setTableTitle(tableTitle, tableTitleString, this);
-        tableHelper.setTable(table, tableTitleString, studentList,testProject,null,this);
+        tableHelper.setTable(table, tableTitleString, studentList, testProject, null, this);
         tableHelper.setAllEditTextUnEdited();
     }
 
@@ -492,7 +493,7 @@ public class TimerActivity extends Activity {
                 for(StudentBean bean : studentList){
                     if(bean.getStudentCode().equals(fullStudentNumber)){
                         bean.setScore(testProject, recordTime);
-                        tmpMap.put((int)clickedTimeItem.get("num"), bean);
+                        tmpMap.put((int) clickedTimeItem.get("num"), bean);
                         break;
                     }
                 }

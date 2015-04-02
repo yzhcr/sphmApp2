@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -73,7 +74,7 @@ public class CountDownTimerActivity extends Activity {
     private int playRingId;
     private String startTime;
     @ViewInject(R.id.changeClass)
-    private Button btn_choose;
+    private ImageButton btn_choose;
     @ViewInject(R.id.choseclass)
     private TextView choseclass;
     @ViewInject(R.id.title)

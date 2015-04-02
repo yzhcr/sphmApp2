@@ -14,8 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
@@ -48,7 +48,7 @@ import java.util.HashMap;
 
 public class ChooseTestProject extends Activity {
     @ViewInject(R.id.changeTestData)
-    private Button changeTestData;
+    private ImageButton changeTestData;
     @ViewInject(R.id.chosetestdata)
     private TextView choseTestData;
     @ViewInject(R.id.gridview)
@@ -367,7 +367,7 @@ public class ChooseTestProject extends Activity {
                     break;
                 }
                 case 0:{
-                    Toast toast = Toast.makeText(getApplicationContext(), "网络错", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getApplicationContext(), "网络错误", Toast.LENGTH_SHORT);
                     toast.show();
                     break;
                 }
