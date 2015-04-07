@@ -59,7 +59,12 @@ public class DBManager {
             bean.setInfoJSON(c.getString(c.getColumnIndex("info")));
             bean.setOrganization(c.getString(c.getColumnIndex("organizationID")));
             bean.setStudentCode(c.getString(c.getColumnIndex("studentCode")));
-            bean.setTestFileRow(getTestFileRow(bean.getStudentCode(), testFileID));
+            TestFileRowBean tfb = getTestFileRow(bean.getStudentCode(), testFileID);
+            if(tfb.getTestfile().equals("")){
+                tfb.setTestfile(testFileID);
+                tfb.setStudentCode(bean.getStudentCode());
+            }
+            bean.setTestFileRow(tfb);
             list.add(bean);
         }
         c.close();
@@ -109,6 +114,7 @@ public class DBManager {
             for (TestFileRowBean bean : list) {
                 db.execSQL("REPLACE INTO testfilerows VALUES(?, ?, ?, ?, ?)", new Object[]{bean.get_id(), bean.get_v(),
                         bean.getTestfile(), bean.getStudentCode(), bean.getInfoJSON()});
+                System.out.println(bean.get_id()+":"+bean.getTestfile()+":"+bean.getStudentCode()+":"+bean.getInfoJSON());
             }
             db.setTransactionSuccessful();  //设置事务成功完成
         }catch (Exception e) {
@@ -139,6 +145,7 @@ public class DBManager {
         try {
             db.execSQL("REPLACE INTO testfilerows VALUES(?, ?, ?, ?, ?)", new Object[]{bean.get_id(), bean.get_v(),
                     bean.getTestfile(), bean.getStudentCode(), bean.getInfoJSON()});
+            System.out.println(bean.get_id()+":"+bean.getTestfile()+":"+bean.getStudentCode()+":"+bean.getInfoJSON());
             db.setTransactionSuccessful();  //设置事务成功完成
         }catch (Exception e) {
             e.printStackTrace();

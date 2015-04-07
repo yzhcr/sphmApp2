@@ -627,7 +627,7 @@ public class TimerActivity extends Activity {
 
             }else if(testProject.equals("50米×8往返跑")){
                 String tmp[] = time.split("'");
-                int i = Integer.parseInt(tmp[0]) + Integer.parseInt(tmp[1]);
+                int i = (int)(Double.parseDouble(tmp[0]) + Double.parseDouble(tmp[1]));
                 time = i+"";
             }
             WebViewHelper webViewHelper = new WebViewHelper(TimerActivity.this);
