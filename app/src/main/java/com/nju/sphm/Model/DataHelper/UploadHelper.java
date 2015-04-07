@@ -9,7 +9,7 @@ import com.nju.sphm.Bean.UploadBean;
 public class UploadHelper {
     NetWorkHelper netWorkHelper=NetWorkHelper.getInstance();
     public boolean upload(String json){
-        String url=netWorkHelper.getIp()+"/api/testfile/add/";
+        String url=netWorkHelper.getIp()+"/api/testfile/";
         String result=netWorkHelper.requestDataByPost(url, json);
         UploadBean uploadBean=null;
         System.out.println(result);
