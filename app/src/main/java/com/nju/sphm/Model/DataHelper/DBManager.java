@@ -10,6 +10,7 @@ import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Bean.TestFileBean;
 import com.nju.sphm.Bean.TestFileRowBean;
 import com.nju.sphm.Bean.UploadDataBean;
+import com.nju.sphm.Model.Interface.DBManagerInterface;
 
 import org.json.JSONObject;
 
@@ -21,7 +22,7 @@ import java.util.Map;
 /**
  * Created by HuangQiushuo on 2015/1/22.
  */
-public class DBManager {
+public class DBManager implements DBManagerInterface{
     private DBHelper helper;
     private SQLiteDatabase db;
 

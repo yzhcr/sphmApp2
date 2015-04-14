@@ -454,7 +454,7 @@ public class TimerActivity extends Activity {
 
     private void initTimeRecordListView() {
         timeItemList = new LinkedList<Map<String, Object>>();
-        timeAdapter = new SimpleAdapter(this, timeItemList, R.layout.record_time_listview_time_item,
+        timeAdapter = new SimpleAdapter(this, timeItemList, R.layout.record_time_listview_item,
                 new String[]{"num", "recordTime", "studentName", "studentNumber", "studentSex", "fullStudentNumber"},
                 new int[]{R.id.tvNum, R.id.tvRecordTime, R.id.tvStudentName,
                         R.id.tvStudentNumber, R.id.tvStudentSex, R.id.tvFullStudentNumber});
@@ -626,9 +626,14 @@ public class TimerActivity extends Activity {
             if (testProject.equals("50米跑")) {
 
             }else if(testProject.equals("50米×8往返跑")){
-                String tmp[] = time.split("'");
-                int i = (int)(Double.parseDouble(tmp[0]) + Double.parseDouble(tmp[1]));
-                time = i+"";
+                if(time.contains("'")) {
+                    String tmp[] = time.split("'");
+                    int i = Integer.parseInt(tmp[0]) + Integer.parseInt(tmp[1]);
+                    time = i + "";
+                }else{
+                    int i = (int)Double.parseDouble(time);
+                    time = i+"";
+                }
             }
             WebViewHelper webViewHelper = new WebViewHelper(TimerActivity.this);
             webViewHelper.countScore(time, testProject, bean);

@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
+import com.nju.sphm.Model.Interface.NetWorkHelperInterface;
+
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 
@@ -22,7 +24,7 @@ import java.net.URL;
 /**
  * Created by HuangQiushuo on 2015/1/22.
  */
-public class NetWorkHelper {
+public class NetWorkHelper implements NetWorkHelperInterface{
     private NetWorkHelper(){}
     private static NetWorkHelper instance=null;
     private static CookieManager cookieManager;
@@ -34,7 +36,7 @@ public class NetWorkHelper {
         return instance;
     }
 
-    public static void initCookie()
+    private static void initCookie()
     {
         cookieManager = new CookieManager();
         CookieHandler.setDefault(cookieManager);

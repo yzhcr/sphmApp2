@@ -5,6 +5,7 @@ import android.os.Handler;
 import com.google.gson.Gson;
 import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.OrganizationListBean;
+import com.nju.sphm.Model.Interface.OrganizationHelperInterface;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 /**
  * Created by HuangQiushuo on 2015/1/21.
  */
-public class OrganizationHelper {
+public class OrganizationHelper implements OrganizationHelperInterface {
     private NetWorkHelper networkHelper = NetWorkHelper.getInstance();
     private String urlHead = networkHelper.getIp()+"/api/organization";
     private String yearHead = "?schoolYear=";

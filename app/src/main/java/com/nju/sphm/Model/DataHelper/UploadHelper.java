@@ -2,11 +2,12 @@ package com.nju.sphm.Model.DataHelper;
 
 import com.google.gson.Gson;
 import com.nju.sphm.Bean.UploadBean;
+import com.nju.sphm.Model.Interface.UploadHelperInterface;
 
 /**
  * Created by hcr1 on 2015/3/28.
  */
-public class UploadHelper {
+public class UploadHelper implements UploadHelperInterface{
     NetWorkHelper netWorkHelper=NetWorkHelper.getInstance();
     public boolean upload(String json){
         String url=netWorkHelper.getIp()+"/api/testfile/add/";

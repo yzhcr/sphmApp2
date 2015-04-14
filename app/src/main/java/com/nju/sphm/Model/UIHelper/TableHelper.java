@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.Model.DataHelper.WebViewHelper;
+import com.nju.sphm.Model.Interface.TableHelperInterface;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 /**
  * Created by hcr1 on 2015/3/19.
  */
-public class TableHelper {
+public class TableHelper implements TableHelperInterface{
     private DBManager dbManager;
     private EditText lastEditText;
     private ArrayList<EditText> editTextList=new ArrayList<EditText>();

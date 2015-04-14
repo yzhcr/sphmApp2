@@ -7,13 +7,14 @@ import com.nju.sphm.Bean.TestFileBean;
 import com.nju.sphm.Bean.TestFileListBean;
 import com.nju.sphm.Bean.TestFileRowBean;
 import com.nju.sphm.Bean.TestFileRowListBean;
+import com.nju.sphm.Model.Interface.TestFileHelperInterface;
 
 import java.util.ArrayList;
 
 /**
  * Created by HuangQiushuo on 2015/1/21.
  */
-public class TestFileHelper {
+public class TestFileHelper implements TestFileHelperInterface{
     private NetWorkHelper networkHelper = NetWorkHelper.getInstance();
     private String testFileHead = networkHelper.getIp()+"/api/testfile/user/?";
     private String yearHead = "schoolYear=";

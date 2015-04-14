@@ -76,7 +76,7 @@ public class TimeRecordActivity extends Activity {
 
     private void initTimeRecordListView() {
         timeItemList = new LinkedList<Map<String, Object>>();
-        timeAdapter = new SimpleAdapter(this, timeItemList, R.layout.record_time_listview_time_item,
+        timeAdapter = new SimpleAdapter(this, timeItemList, R.layout.record_time_listview_item,
                 new String[]{"num", "recordTime", "studentName", "studentNumber", "studentSex", "fullStudentNumber"},
                 new int[]{R.id.tvNum, R.id.tvRecordTime, R.id.tvStudentName,
                         R.id.tvStudentNumber, R.id.tvStudentSex, R.id.tvFullStudentNumber});
