@@ -1,4 +1,4 @@
-package com.nju.sphm.Controller.LoginActivity;
+package com.nju.sphm.Controller.LoginActivities;
 
 /**
  * Created by hcr1 on 2015/1/7.

@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
         <activity
-            android:name=".Controller.LoginActivity.MainActivity"
+            android:name=".Controller.LoginActivities.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,25 +21,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Controller.LoginActivity.ChooseSchoolActivity"
+            android:name=".Controller.LoginActivities.ChooseSchoolActivity"
             android:label="@string/title_activity_choose_school" >
         </activity>
         <activity
-            android:name=".Controller.ChooseProjectsActivity.ChooseTestProject"
+            android:name=".Controller.ChooseProjectsActivities.ChooseTestProject"
             android:label="@string/title_activity_choose_test_project" >
         </activity>
         <activity
-            android:name=".Controller.TableActivity.TableActivity"
+            android:name=".Controller.TableActivities.TableActivity"
             android:label="@string/title_activity_table" >
         </activity>
         <activity
-            android:name=".Controller.TimerActivity.TimerActivity"
+            android:name=".Controller.TimerActivities.TimerActivity"
             android:screenOrientation="portrait"> </activity>
         <activity
-            android:name=".Controller.CountDownTimerActivity.CountDownTimerActivity"
+            android:name=".Controller.CountDownTimerActivities.CountDownTimerActivity"
             android:screenOrientation="portrait"> </activity>
         <activity
-            android:name=".Controller.TimerActivity.TimeRecordActivity"
+            android:name=".Controller.TimerActivities.TimeRecordActivity"
             android:screenOrientation="portrait"> </activity>
     </application>
 

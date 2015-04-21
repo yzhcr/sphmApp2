@@ -1,11 +1,9 @@
 package com.nju.sphm.Model.UIHelper;
 
-import com.nju.sphm.Model.Interface.SearchHelperInterface;
-
 /**
  * Created by HuangQiushuo on 2015/3/27.
  */
-public class GB2Helper implements SearchHelperInterface{
+public class GB2Helper {
 
         private static GB2Helper gb2Helper = null;
 

@@ -1,4 +1,4 @@
-package com.nju.sphm.Controller.ChooseProjectsActivity;
+package com.nju.sphm.Controller.ChooseProjectsActivities;
 
 import android.content.Context;
 import android.widget.FrameLayout;

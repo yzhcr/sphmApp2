@@ -1,4 +1,4 @@
-package com.nju.sphm.Controller.LoginActivity;
+package com.nju.sphm.Controller.LoginActivities;
 
 import android.view.LayoutInflater;
 import android.view.View;

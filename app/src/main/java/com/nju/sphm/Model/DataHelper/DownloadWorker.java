@@ -1,4 +1,4 @@
-package com.nju.sphm.Model.Download;
+package com.nju.sphm.Model.DataHelper;
 
 import android.content.Context;
 import android.os.Handler;
@@ -12,13 +12,14 @@ import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.Model.DataHelper.OrganizationHelper;
 import com.nju.sphm.Model.DataHelper.StudentHelper;
 import com.nju.sphm.Model.DataHelper.TestFileHelper;
+import com.nju.sphm.Model.Interface.DownloadHelperInterface;
 
 import java.util.ArrayList;
 
 /**
  * Created by HuangQiushuo on 2015/2/3.
  */
-public class DownloadWorker {
+public class DownloadWorker implements DownloadHelperInterface{
     private OrganizationHelper organizationHelper;
     private StudentHelper studentHelper;
     private TestFileHelper testFileHelper;

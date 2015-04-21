@@ -1,4 +1,4 @@
-package com.nju.sphm.Controller.TimerActivity;
+package com.nju.sphm.Controller.TimerActivities;
 
 /**
  * Created by HuangQiushuo on 2015/1/6.
@@ -34,7 +34,7 @@ import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.StudentBean;
-import com.nju.sphm.Controller.TableActivity.ClassPickerDialog;
+import com.nju.sphm.Controller.TableActivities.ClassPickerDialog;
 import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.Model.DataHelper.WebViewHelper;
 import com.nju.sphm.Model.UIHelper.GB2Helper;

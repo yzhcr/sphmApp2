@@ -1,10 +1,10 @@
-package com.nju.sphm.Controller.TableActivity;
+package com.nju.sphm.Controller.TableActivities;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
-import com.nju.sphm.Controller.TableActivity.ClassPicker.OnClassChangedListener;
+import com.nju.sphm.Controller.TableActivities.ClassPicker.OnClassChangedListener;
 import com.nju.sphm.Model.UIHelper.GetClass;
 
 public class ClassPickerDialog extends AlertDialog implements OnClickListener

@@ -1,10 +1,10 @@
-package com.nju.sphm.Controller.ChooseProjectsActivity;
+package com.nju.sphm.Controller.ChooseProjectsActivities;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
-import com.nju.sphm.Controller.ChooseProjectsActivity.TestFilePicker.OnTestFileChangedListener;
+import com.nju.sphm.Controller.ChooseProjectsActivities.TestFilePicker.OnTestFileChangedListener;
 
 public class TestFilePickerDialog extends AlertDialog implements OnClickListener
 {

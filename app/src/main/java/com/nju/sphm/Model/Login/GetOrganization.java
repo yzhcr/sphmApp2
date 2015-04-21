@@ -1,7 +1,7 @@
 package com.nju.sphm.Model.Login;
 
 import com.nju.sphm.Bean.OrganizationBean;
-import com.nju.sphm.Controller.LoginActivity.TreeNode;
+import com.nju.sphm.Controller.LoginActivities.TreeNode;
 import com.nju.sphm.Model.DataHelper.OrganizationHelper;
 
 import java.util.ArrayList;

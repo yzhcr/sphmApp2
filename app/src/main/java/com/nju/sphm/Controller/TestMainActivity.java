@@ -15,11 +15,11 @@ import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.nju.sphm.Bean.TestFileRowBean;
 import com.nju.sphm.Bean.UploadDataBean;
-import com.nju.sphm.Controller.CountDownTimerActivity.CountDownTimerActivity;
-import com.nju.sphm.Controller.LoginActivity.MainActivity;
+import com.nju.sphm.Controller.CountDownTimerActivities.CountDownTimerActivity;
+import com.nju.sphm.Controller.LoginActivities.MainActivity;
 import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.Model.DataHelper.NetWorkHelper;
-import com.nju.sphm.Model.Download.DownloadWorker;
+import com.nju.sphm.Model.DataHelper.DownloadWorker;
 import com.nju.sphm.R;
 
 import java.io.BufferedReader;

@@ -1,4 +1,4 @@
-package com.nju.sphm.Controller.LoginActivity;
+package com.nju.sphm.Controller.LoginActivities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -24,9 +24,9 @@ import android.widget.Toast;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
-import com.nju.sphm.Controller.ChooseProjectsActivity.ChooseTestProject;
+import com.nju.sphm.Controller.ChooseProjectsActivities.ChooseTestProject;
 import com.nju.sphm.Model.DataHelper.NetWorkHelper;
-import com.nju.sphm.Model.Download.DownloadWorker;
+import com.nju.sphm.Model.DataHelper.DownloadWorker;
 import com.nju.sphm.Model.Login.Login;
 import com.nju.sphm.R;
 

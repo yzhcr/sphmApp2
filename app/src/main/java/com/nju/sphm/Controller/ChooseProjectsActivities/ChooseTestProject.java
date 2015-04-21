@@ -1,4 +1,4 @@
-package com.nju.sphm.Controller.ChooseProjectsActivity;
+package com.nju.sphm.Controller.ChooseProjectsActivities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -30,14 +30,14 @@ import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.TestFileBean;
 import com.nju.sphm.Bean.TestFileRowBean;
 import com.nju.sphm.Bean.UploadDataBean;
-import com.nju.sphm.Controller.CountDownTimerActivity.CountDownTimerActivity;
-import com.nju.sphm.Controller.LoginActivity.MainActivity;
-import com.nju.sphm.Controller.TableActivity.TableActivity;
-import com.nju.sphm.Controller.TimerActivity.TimerActivity;
+import com.nju.sphm.Controller.CountDownTimerActivities.CountDownTimerActivity;
+import com.nju.sphm.Controller.LoginActivities.MainActivity;
+import com.nju.sphm.Controller.TableActivities.TableActivity;
+import com.nju.sphm.Controller.TimerActivities.TimerActivity;
 import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.Model.DataHelper.NetWorkHelper;
 import com.nju.sphm.Model.DataHelper.UploadHelper;
-import com.nju.sphm.Model.Download.DownloadWorker;
+import com.nju.sphm.Model.DataHelper.DownloadWorker;
 import com.nju.sphm.Model.Login.Login;
 import com.nju.sphm.Model.UIHelper.ChooseTestFiles;
 import com.nju.sphm.Model.UIHelper.GetClass;

@@ -1,4 +1,4 @@
-package com.nju.sphm.Controller.TableActivity;
+package com.nju.sphm.Controller.TableActivities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
