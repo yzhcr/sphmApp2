@@ -3,13 +3,14 @@ package com.nju.sphm.Model.Login;
 import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Controller.LoginActivities.TreeNode;
 import com.nju.sphm.Model.DataHelper.OrganizationHelper;
+import com.nju.sphm.Model.Interface.GetOrganizationInterface;
 
 import java.util.ArrayList;
 
 /**
  * Created by hcr1 on 2015/1/8.
  */
-public class GetOrganization {
+public class GetOrganization implements GetOrganizationInterface{
     ArrayList<OrganizationBean> organList=new ArrayList<OrganizationBean>();
     ArrayList<OrganizationBean> cityOrganList=new ArrayList<OrganizationBean>();
     ArrayList<OrganizationBean> areaOrganList=new ArrayList<OrganizationBean>();
@@ -50,58 +51,6 @@ public class GetOrganization {
                 }
             }
         }
-        /*for(OrganizationBean o:organList) {
-            String[] path = o.getFullPath().split("/");
-            //南京市
-            if (path.length == 3) {
-                for (TreeNode treeNode : treeList) {
-                    if (path[2].equals(treeNode.getContentText())) {
-                        TreeNode node = new TreeNode(o.getName(), TreeNode.TOP_LEVEL + 2, o.get_id(), treeNode.getId(), true, false);
-                        treeList.add(node);
-                        break;
-                    }
-                }
-            }
-        }
-        for(OrganizationBean o:organList) {
-            String[] path = o.getFullPath().split("/");
-            //区
-            if (path.length == 4) {
-                for (TreeNode treeNode : treeList) {
-                    if (path[3].equals(treeNode.getContentText())) {
-                        TreeNode node = new TreeNode(o.getName(), TreeNode.TOP_LEVEL + 3, o.get_id(), treeNode.getId(), true, false);
-                        treeList.add(node);
-                        break;
-                    }
-                }
-            }
-        }
-        for(OrganizationBean o:organList) {
-            String[] path = o.getFullPath().split("/");
-            if(path.length==5){
-                for(TreeNode treeNode:treeList){
-                    if(path[4].equals(treeNode.getContentText())){
-                        TreeNode node=new TreeNode(o.getName(),TreeNode.TOP_LEVEL+4,o.get_id(),treeNode.getId(),false,false);
-                        treeList.add(node);
-                        break;
-                    }
-                }
-            }
-            *//*System.out.println(o.getName());
-            System.out.println(path[1]);
-            System.out.println(path.length);*//*
-        }*/
         return treeList;
     }
-
-    /*private void removeGradeClass(ArrayList<OrganizationBean> o){
-        for(int i = 0 , len= o.size();i<len;++i){
-            if(o.get(i).getType().equals("年级")||o.get(i).getType().equals("班级")){
-                o.remove(i);
-                --len;
-                --i;
-            }
-        }
-    }*/
-
 }

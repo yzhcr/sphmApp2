@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.nju.sphm.Bean.LoginBean;
 import com.nju.sphm.Bean.UserBean;
 import com.nju.sphm.Bean.UserListBean;
-import com.nju.sphm.Model.Interface.LoginHelperInterface;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 /**
  * Created by hcr1 on 2015/1/12.
  */
-public class LoginHelper implements LoginHelperInterface {
+public class LoginHelper{
     private NetWorkHelper networkHelper = NetWorkHelper.getInstance();
 
 
