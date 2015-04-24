@@ -27,7 +27,7 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.nju.sphm.Controller.ChooseProjectsActivities.ChooseTestProject;
 import com.nju.sphm.Model.DataHelper.NetWorkHelper;
 import com.nju.sphm.Model.DataHelper.DownloadWorker;
-import com.nju.sphm.Model.Login.Login;
+import com.nju.sphm.Model.Login.LoginLogic;
 import com.nju.sphm.R;
 
 import java.io.BufferedReader;
@@ -263,7 +263,7 @@ public class MainActivity extends Activity {
         @Override
         public void run() {
             try{
-                Login loginlogic = new Login();
+                LoginLogic loginlogic = new LoginLogic();
                 boolean infoIsTrue = loginlogic.login(user, password, schoolPath);
                 if (infoIsTrue) {
                     loginHandler.obtainMessage(1).sendToTarget();

@@ -7,18 +7,18 @@ import java.util.ArrayList;
 /**
  * Created by hcr1 on 2015/1/13.
  */
-public class GetClass {
+public class ChooseClassHelper {
     ArrayList<OrganizationBean> gradeList;
     private int choseGrade=1;
     private int choseClass=1;
     private int GradeNumMax=0;
     private int GradeNumMin=0;
-    private GetClass(){}
-    private static GetClass instance=null;
+    private ChooseClassHelper(){}
+    private static ChooseClassHelper instance=null;
 
-    public static GetClass getInstance(){
+    public static ChooseClassHelper getInstance(){
         if(instance==null){
-            instance=new GetClass();
+            instance=new ChooseClassHelper();
         }
         return instance;
     }

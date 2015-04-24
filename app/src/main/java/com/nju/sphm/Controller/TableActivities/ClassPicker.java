@@ -5,7 +5,7 @@ import android.widget.FrameLayout;
 import android.widget.NumberPicker;
 import android.widget.NumberPicker.OnValueChangeListener;
 
-import com.nju.sphm.Model.UIHelper.GetClass;
+import com.nju.sphm.Model.UIHelper.ChooseClassHelper;
 import com.nju.sphm.R;
 
 public class ClassPicker extends FrameLayout
@@ -13,12 +13,12 @@ public class ClassPicker extends FrameLayout
 	private final NumberPicker mGradeSpinner;
 	private final NumberPicker mClassSpinner;
 
-    private GetClass getClassLogic=GetClass.getInstance();
-    private int choseGrade=getClassLogic.getChoseGrade();
-    private int choseClass=getClassLogic.getChoseClass();
-    private int gradeNumMax=getClassLogic.getGradeNumMax();
-    private int gradeNumMin=getClassLogic.getGradeNumMin();
-    private int classNum=getClassLogic.getClassNum(choseGrade);
+    private ChooseClassHelper chooseClassHelperLogic = ChooseClassHelper.getInstance();
+    private int choseGrade= chooseClassHelperLogic.getChoseGrade();
+    private int choseClass= chooseClassHelperLogic.getChoseClass();
+    private int gradeNumMax= chooseClassHelperLogic.getGradeNumMax();
+    private int gradeNumMin= chooseClassHelperLogic.getGradeNumMin();
+    private int classNum= chooseClassHelperLogic.getClassNum(choseGrade);
 
 
 
@@ -73,7 +73,7 @@ public class ClassPicker extends FrameLayout
 	private void updateGradeControl()
     {
         mGradeSpinner.invalidate();
-        classNum=getClassLogic.getClassNum(mGradeSpinner.getValue());
+        classNum= chooseClassHelperLogic.getClassNum(mGradeSpinner.getValue());
         mClassSpinner.setMaxValue(classNum);
         mClassSpinner.setValue(1);
         choseClass=1;

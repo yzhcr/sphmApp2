@@ -7,17 +7,17 @@ import java.util.ArrayList;
 /**
  * Created by hcr1 on 2015/2/14.
  */
-public class ChooseTestFiles {
+public class ChooseTestFilesHelper {
     ArrayList<TestFileBean> testFileList;
     private int chosenTestFile=0;
-    private ChooseTestFiles(){
+    private ChooseTestFilesHelper(){
     }
 
-    private static ChooseTestFiles instance=null;
+    private static ChooseTestFilesHelper instance=null;
 
-    public static ChooseTestFiles getInstance(){
+    public static ChooseTestFilesHelper getInstance(){
         if(instance==null){
-            instance=new ChooseTestFiles();
+            instance=new ChooseTestFilesHelper();
         }
         return instance;
     }

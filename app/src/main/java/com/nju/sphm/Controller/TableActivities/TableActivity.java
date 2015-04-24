@@ -18,7 +18,7 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Model.DataHelper.DBManager;
-import com.nju.sphm.Model.UIHelper.GetClass;
+import com.nju.sphm.Model.UIHelper.ChooseClassHelper;
 import com.nju.sphm.Model.UIHelper.TableHelper;
 import com.nju.sphm.R;
 
@@ -39,7 +39,7 @@ public class TableActivity extends Activity {
     private String schoolPath=null;
     private String testProject=null;
     private ArrayList<OrganizationBean> gradeList=null;
-    private GetClass getClass=GetClass.getInstance();
+    private ChooseClassHelper chooseClassHelper = ChooseClassHelper.getInstance();
     private ArrayList<StudentBean> studentList=null;
     private ArrayList<StudentBean> maleStudentList=new ArrayList<StudentBean>();
     private ArrayList<StudentBean> femaleStudentList=new ArrayList<StudentBean>();
@@ -74,8 +74,8 @@ public class TableActivity extends Activity {
         dbManager=new DBManager(this);
         title.setText(testProject);
 
-        int choseGrade=getClass.getChoseGrade();
-        int choseClass=getClass.getChoseClass();
+        int choseGrade= chooseClassHelper.getChoseGrade();
+        int choseClass= chooseClassHelper.getChoseClass();
         choseclass.setText(choseGrade+"年"+choseClass+"班");
         //System.out.println(schoolid);
         getStudentInfo();
@@ -94,9 +94,9 @@ public class TableActivity extends Activity {
         dialog.setOnClassSetListener(new ClassPickerDialog.OnClassSetListener() {
             public void OnClassSet(AlertDialog dialog, int choseGrade, int choseClass) {
                 choseclass.setText(choseGrade+"年"+choseClass+"班");
-                GetClass getClass=GetClass.getInstance();
-                getClass.setChoseGrade(choseGrade);
-                getClass.setChoseClass(choseClass);
+                ChooseClassHelper chooseClassHelper = ChooseClassHelper.getInstance();
+                chooseClassHelper.setChoseGrade(choseGrade);
+                chooseClassHelper.setChoseClass(choseClass);
                 getStudentInfo();
                 switch (whichIsChosen){
                     case 0:
@@ -172,9 +172,9 @@ public class TableActivity extends Activity {
     }
 
     private void getStudentInfo(){
-        int chosenGrade=getClass.getChoseGrade();
-        int chosenClass=getClass.getChoseClass();
-        String classID=getClass.findClassId(chosenGrade,chosenClass);
+        int chosenGrade= chooseClassHelper.getChoseGrade();
+        int chosenClass= chooseClassHelper.getChoseClass();
+        String classID= chooseClassHelper.findClassId(chosenGrade,chosenClass);
         studentList=dbManager.getStudents(classID, testFileId);
         maleStudentList.clear();
         femaleStudentList.clear();

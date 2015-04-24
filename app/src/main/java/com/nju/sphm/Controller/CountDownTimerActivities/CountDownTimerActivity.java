@@ -36,7 +36,7 @@ import com.nju.sphm.Bean.OrganizationBean;
 import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Controller.TableActivities.ClassPickerDialog;
 import com.nju.sphm.Model.DataHelper.DBManager;
-import com.nju.sphm.Model.UIHelper.GetClass;
+import com.nju.sphm.Model.UIHelper.ChooseClassHelper;
 import com.nju.sphm.Model.UIHelper.TableHelper;
 import com.nju.sphm.R;
 
@@ -88,7 +88,7 @@ public class CountDownTimerActivity extends Activity {
     private ArrayList<StudentBean> maleStudentList=new ArrayList<StudentBean>();
     private ArrayList<StudentBean> femaleStudentList=new ArrayList<StudentBean>();
     private int whichIsChosen=0;
-    private GetClass getClass=GetClass.getInstance();
+    private ChooseClassHelper chooseClassHelper = ChooseClassHelper.getInstance();
     @ViewInject(R.id.chooseSexLayout)
     private RelativeLayout chooseSexLayout;
     @ViewInject(R.id.clockLayout)
@@ -137,8 +137,8 @@ public class CountDownTimerActivity extends Activity {
         tvTime.setClickable(false);
         title.setText(testProject);
         addClassInfo();
-        choseGrade=getClass.getChoseGrade();
-        choseClass=getClass.getChoseClass();
+        choseGrade= chooseClassHelper.getChoseGrade();
+        choseClass= chooseClassHelper.getChoseClass();
         choseclass.setText(choseGrade+"年"+choseClass+"班");
         //chooseSexLayout.setVisibility(View.GONE);
         tableTitleString=intent.getStringExtra("tableTitle");
@@ -160,8 +160,8 @@ public class CountDownTimerActivity extends Activity {
         ArrayList<OrganizationBean> sortGradeList=new ArrayList<OrganizationBean>();
         int gradeNum=gradeList.size();
         if(gradeNum==3){
-            getClass.setGradeNumMax(3);
-            getClass.setGradeNumMin(1);
+            chooseClassHelper.setGradeNumMax(3);
+            chooseClassHelper.setGradeNumMin(1);
             for(OrganizationBean o:gradeList){
                 if(o.getName().equals("一年级")){
                     sortGradeList.add(o);
@@ -180,8 +180,8 @@ public class CountDownTimerActivity extends Activity {
         }
         if(gradeNum==6){
             if(testProject.equals("1分钟仰卧起坐")) {
-                getClass.setGradeNumMax(6);
-                getClass.setGradeNumMin(3);
+                chooseClassHelper.setGradeNumMax(6);
+                chooseClassHelper.setGradeNumMin(3);
                 //getClass.setChoseGrade(3);
                 //getClass.setChoseClass(1);
                 for (OrganizationBean o : gradeList) {
@@ -206,8 +206,8 @@ public class CountDownTimerActivity extends Activity {
                 }
             }
             else{
-                getClass.setGradeNumMax(6);
-                getClass.setGradeNumMin(1);
+                chooseClassHelper.setGradeNumMax(6);
+                chooseClassHelper.setGradeNumMin(1);
                 //getClass.setChoseGrade(1);
                 //getClass.setChoseClass(1);
                 for (OrganizationBean o : gradeList) {
@@ -243,7 +243,7 @@ public class CountDownTimerActivity extends Activity {
             }
         }
 
-        getClass.setGradeList(sortGradeList);
+        chooseClassHelper.setGradeList(sortGradeList);
     }
 
     @OnClick(R.id.changeClass)
@@ -253,9 +253,9 @@ public class CountDownTimerActivity extends Activity {
         dialog.setOnClassSetListener(new ClassPickerDialog.OnClassSetListener() {
             public void OnClassSet(AlertDialog dialog, int choseGrade, int choseClass) {
                 choseclass.setText(choseGrade+"年"+choseClass+"班");
-                GetClass getClass=GetClass.getInstance();
-                getClass.setChoseGrade(choseGrade);
-                getClass.setChoseClass(choseClass);
+                ChooseClassHelper chooseClassHelper = ChooseClassHelper.getInstance();
+                chooseClassHelper.setChoseGrade(choseGrade);
+                chooseClassHelper.setChoseClass(choseClass);
                 refreshTable();
             }
         });
@@ -548,9 +548,9 @@ public class CountDownTimerActivity extends Activity {
     }
 
     private void getStudentInfo(){
-        int chosenGrade=getClass.getChoseGrade();
-        int chosenClass=getClass.getChoseClass();
-        String classID=getClass.findClassId(chosenGrade,chosenClass);
+        int chosenGrade= chooseClassHelper.getChoseGrade();
+        int chosenClass= chooseClassHelper.getChoseClass();
+        String classID= chooseClassHelper.findClassId(chosenGrade,chosenClass);
         studentList=dbManager.getStudents(classID, testFileID);
         maleStudentList.clear();
         femaleStudentList.clear();

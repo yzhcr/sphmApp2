@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
 import com.nju.sphm.Controller.TableActivities.ClassPicker.OnClassChangedListener;
-import com.nju.sphm.Model.UIHelper.GetClass;
+import com.nju.sphm.Model.UIHelper.ChooseClassHelper;
 
 public class ClassPickerDialog extends AlertDialog implements OnClickListener
 {
@@ -13,10 +13,10 @@ public class ClassPickerDialog extends AlertDialog implements OnClickListener
     //private Calendar mDate = Calendar.getInstance();
     private OnClassSetListener mOnClassSetListener;
 
-    private GetClass getClassLogic=GetClass.getInstance();
+    private ChooseClassHelper chooseClassHelperLogic = ChooseClassHelper.getInstance();
     //private int gradeNum=getClassLogic.getGradeNum();
-    private int mChoseGrade=getClassLogic.getChoseGrade();
-    private int mChoseClass=getClassLogic.getChoseClass();
+    private int mChoseGrade= chooseClassHelperLogic.getChoseGrade();
+    private int mChoseClass= chooseClassHelperLogic.getChoseClass();
     
 	@SuppressWarnings("deprecation")
 	public ClassPickerDialog(Context context)

@@ -38,9 +38,9 @@ import com.nju.sphm.Model.DataHelper.DBManager;
 import com.nju.sphm.Model.DataHelper.NetWorkHelper;
 import com.nju.sphm.Model.DataHelper.UploadHelper;
 import com.nju.sphm.Model.DataHelper.DownloadWorker;
-import com.nju.sphm.Model.Login.Login;
-import com.nju.sphm.Model.UIHelper.ChooseTestFiles;
-import com.nju.sphm.Model.UIHelper.GetClass;
+import com.nju.sphm.Model.Login.LoginLogic;
+import com.nju.sphm.Model.UIHelper.ChooseTestFilesHelper;
+import com.nju.sphm.Model.UIHelper.ChooseClassHelper;
 import com.nju.sphm.R;
 
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class ChooseTestProject extends Activity {
     private DownloadHandler handler = new DownloadHandler();
 
     //TestFileBean chosenTestFile=null;
-    private ChooseTestFiles chooseTestFiles=ChooseTestFiles.getInstance();
+    private ChooseTestFilesHelper chooseTestFilesHelper = ChooseTestFilesHelper.getInstance();
     private String testFileId=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,11 +88,11 @@ public class ChooseTestProject extends Activity {
         dbManager=new DBManager(this);
         testFileList=dbManager.getTestFiles(schoolid);
 
-        int chosenTestFile=chooseTestFiles.getChosenTestFile();
+        int chosenTestFile= chooseTestFilesHelper.getChosenTestFile();
         choseTestData.setText(testFileList.get(chosenTestFile).getFileName());
 
-        chooseTestFiles.setTestFileList(testFileList);
-        testFileId=chooseTestFiles.getChosenTestFileId();
+        chooseTestFilesHelper.setTestFileList(testFileList);
+        testFileId= chooseTestFilesHelper.getChosenTestFileId();
 
         loadGrid();
     }
@@ -156,8 +156,8 @@ public class ChooseTestProject extends Activity {
                     Toast.LENGTH_SHORT).show();*/
             String choseProject=(String) item.get("ItemText");
             ArrayList<OrganizationBean> gradeList=dbManager.getOrganizations(schoolid);
-            GetClass getClass=GetClass.getInstance();
-            getClass.addClassInfo(gradeList,choseProject);
+            ChooseClassHelper chooseClassHelper = ChooseClassHelper.getInstance();
+            chooseClassHelper.addClassInfo(gradeList,choseProject);
             switch (choseProject){
                 case "BMI": {
                     Intent i = new Intent();
@@ -252,8 +252,8 @@ public class ChooseTestProject extends Activity {
         dialog.setOnTestFileSetListener(new TestFilePickerDialog.OnTestFileSetListener() {
             public void OnTestFileSet(AlertDialog dialog, int choseTestFile) {
                 choseTestData.setText(testFileList.get(choseTestFile-1).getFileName());
-                chooseTestFiles.setChosenTestFile(choseTestFile-1);
-                testFileId=chooseTestFiles.getChosenTestFileId();
+                chooseTestFilesHelper.setChosenTestFile(choseTestFile-1);
+                testFileId= chooseTestFilesHelper.getChosenTestFileId();
             }
         });
         dialog.show();
@@ -383,7 +383,7 @@ public class ChooseTestProject extends Activity {
                 schoolPath=sharedPreferences.getString("schoolPath",null);
                 String user=sharedPreferences.getString("user",null);
                 String password=sharedPreferences.getString("password",null);
-                Login loginlogic = new Login();
+                LoginLogic loginlogic = new LoginLogic();
                 boolean infoIsTrue = loginlogic.login(user, password, schoolPath);
                 if (infoIsTrue) {
                     loginHandler.obtainMessage(1).sendToTarget();

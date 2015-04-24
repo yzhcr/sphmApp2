@@ -6,7 +6,7 @@ import android.widget.NumberPicker;
 import android.widget.NumberPicker.OnValueChangeListener;
 
 import com.nju.sphm.Bean.TestFileBean;
-import com.nju.sphm.Model.UIHelper.ChooseTestFiles;
+import com.nju.sphm.Model.UIHelper.ChooseTestFilesHelper;
 import com.nju.sphm.R;
 
 import java.util.ArrayList;
@@ -14,11 +14,11 @@ import java.util.ArrayList;
 public class TestFilePicker extends FrameLayout
 {
 	private final NumberPicker mTestFileSpinner;
-    ArrayList<TestFileBean> testFileList=ChooseTestFiles.getInstance().getTestFileList();
+    ArrayList<TestFileBean> testFileList= ChooseTestFilesHelper.getInstance().getTestFileList();
     private int testFileNum=testFileList.size();
     //private int classNum=getClassLogic.getClassNum(gradeNum / 2);
 
-    private int choseTestFile=ChooseTestFiles.getInstance().getChosenTestFile()+1;
+    private int choseTestFile= ChooseTestFilesHelper.getInstance().getChosenTestFile()+1;
     //private int choseClass=1;
 
     private OnTestFileChangedListener mOnTestFileChangedListener;

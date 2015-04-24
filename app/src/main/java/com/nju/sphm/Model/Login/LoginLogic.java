@@ -6,7 +6,7 @@ import com.nju.sphm.Model.Interface.LoginInterface;
 /**
  * Created by hcr1 on 2015/1/12.
  */
-public class Login implements LoginInterface{
+public class LoginLogic implements LoginInterface{
     LoginHelper loginHelper =new LoginHelper();
 
     public boolean login(String username,String password,String path){

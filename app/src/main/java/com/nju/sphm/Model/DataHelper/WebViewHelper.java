@@ -11,8 +11,8 @@ import com.nju.sphm.Bean.ScoreBean;
 import com.nju.sphm.Bean.StudentBean;
 import com.nju.sphm.Bean.UploadDataBean;
 import com.nju.sphm.Model.Interface.WebViewHelperInterface;
-import com.nju.sphm.Model.UIHelper.ChooseTestFiles;
-import com.nju.sphm.Model.UIHelper.GetClass;
+import com.nju.sphm.Model.UIHelper.ChooseTestFilesHelper;
+import com.nju.sphm.Model.UIHelper.ChooseClassHelper;
 
 import java.util.HashMap;
 
@@ -59,11 +59,11 @@ public class WebViewHelper implements WebViewHelperInterface{
     }
 
     private void saveUpload(){
-        ChooseTestFiles chooseTestFiles=ChooseTestFiles.getInstance();
-        String testFileName=chooseTestFiles.getChosenTestFileName();
-        int schoolYear=chooseTestFiles.getSchoolYear();
-        String type=chooseTestFiles.getType();
-        String schoolId=chooseTestFiles.getSchoolId();
+        ChooseTestFilesHelper chooseTestFilesHelper = ChooseTestFilesHelper.getInstance();
+        String testFileName= chooseTestFilesHelper.getChosenTestFileName();
+        int schoolYear= chooseTestFilesHelper.getSchoolYear();
+        String type= chooseTestFilesHelper.getType();
+        String schoolId= chooseTestFilesHelper.getSchoolId();
         UploadDataBean uploadDataBean=new UploadDataBean();
         uploadDataBean.setFileName(testFileName);
         uploadDataBean.setSchoolYear(schoolYear);
@@ -89,8 +89,8 @@ public class WebViewHelper implements WebViewHelperInterface{
     }
 
     private String getGrade(){
-        GetClass getClass=GetClass.getInstance();
-        int grade=getClass.getChoseGrade();
+        ChooseClassHelper chooseClassHelper = ChooseClassHelper.getInstance();
+        int grade= chooseClassHelper.getChoseGrade();
         String gradeString="";
         switch (grade){
             case 1: {
